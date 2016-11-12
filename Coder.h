@@ -6,8 +6,8 @@
 #define AUDIOPROTOCOL_CODER_H
 
 #define PI  3.141592
-#define SAMPLE_RATE  76000
-//#define SAMPLE_RATE  44100
+//#define SAMPLE_RATE  76000
+#define SAMPLE_RATE  44100
 #define BEAK_LASTS  87.2
 #define PORT_RAMP_LASTS  12
 #define PORT_LASTS  63.2

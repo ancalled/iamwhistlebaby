@@ -2,10 +2,12 @@
 // Created by Andrey Koltochnik on 11/12/16.
 //
 
-#ifndef AUDIOPROTOCOL_YIN_H
-#define AUDIOPROTOCOL_YIN_H
+#ifndef AUDIOPROTOCOL_DEC2_H
+#define AUDIOPROTOCOL_DEC2_H
 
 #define TRESHOLD 0.15
+#define MIN_FREQ 1500
+#define MAX_FREQ 12000
 
 
 
@@ -16,7 +18,7 @@ public:
 
     Decoder2(float sr, int bufSize);
 
-    float getPitch(float *buffer);
+    float getPitch(float *samples, int from, int size);
 
     float getProbability();
 
@@ -26,10 +28,12 @@ private:
     int bufferSize;
     int halfBufferSize;
     float sampleRate;
-    float *samples;
+    float *buf;
     float probability;
+    int minLag;
+    int maxLag;
 
-    void difference(float *buffer);
+    void difference(float *samples, int from, int size);
 
     void cumulativeMeanNormalizedDifference();
 
@@ -41,4 +45,4 @@ private:
 };
 
 
-#endif //AUDIOPROTOCOL_YIN_H
+#endif //AUDIOPROTOCOL_DEC2_H

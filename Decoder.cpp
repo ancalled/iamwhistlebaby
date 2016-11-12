@@ -17,7 +17,7 @@ vector<Decoder::Result> Decoder::decode(float *samples, int from, int len) {
 
 
 Decoder::Result Decoder::decode_frame(int frameNum, float *samples, int from, int frameSize) {
-//    if (samples.length != frameSize) return null;
+//    if (buf.length != frameSize) return null;
 
     float max = 0;
     int maxIdx = -1;
