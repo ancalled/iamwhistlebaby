@@ -40,6 +40,7 @@ void Coder::encode_symbol(char symb, float *samples, int from, float ampl) {
     portamento_beak(freq, freq, freq, samples, from, ampl);
 }
 
+
 void Coder::portamento_beak(float currFreq, float prevFreq, float nextFreq, float *values, int from, float ampl) {
     float freq = prevFreq + (currFreq - prevFreq) / 2;
     float step = (currFreq - freq) / PORT_RAMP_LEN;
