@@ -4,6 +4,7 @@
 #include "Decoder.h"
 #include "Decoder2.h"
 #include "audioData.h"
+#include "Veslo.h"
 
 using namespace std;
 
@@ -85,40 +86,21 @@ int main() {
 */
 
 int main() {
-    int winSize = 512;
-    Decoder2 decoder;
-    decoder.initialize(SAMPLE_RATE, winSize);
+//    const int sampleRate = 38000;
+    const int sampleRate = 44100;
+    Veslo veslo(sampleRate);
+//    Decoder2 decoder;
+//    decoder.initialize(SAMPLE_RATE, winSize);
 
     int frame = 0;
     int from = 0;
-    while (from + winSize < NUM_SAMPLES) {
-        float freq = decoder.getPitch(audio, from, winSize);
-        float prob = decoder.getProbability();
-        float err = 0;
-        char symb = '-';
+    while (from + WIN_SIZE < NUM_SAMPLES) {
+        veslo.listen(audio, from);
 
-        for (int i = 0; i < sizeof(AP::SYMBS) / sizeof(AP::SYMBS[0]) - 1; i++) {
-            float bottom = AP::SYMBS[i].frequence;
-            float top = AP::SYMBS[i + 1].frequence;
-
-            if (freq > bottom && freq < top) {
-                float ln = top - bottom;
-                float diff1 = freq - bottom;
-                float diff2 = top - freq;
-                if (diff1 < diff2) {
-                    symb = AP::SYMBS[i].symbol;
-                    err = diff1 / ln;
-                } else {
-                    symb = AP::SYMBS[i + 1].symbol;
-                    err = diff2 / ln;
-                }
-                break;
-            }
-
-        }
-        cout << "[" << frame << "] " << freq << "\t" << symb << '\t' << err << '\t' << prob << endl;
-        from += winSize;
+        from += WIN_SIZE;
         frame++;
     }
+
+    cout << veslo.getMessage() << endl;
 }
 

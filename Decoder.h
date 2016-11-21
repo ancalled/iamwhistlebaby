@@ -8,30 +8,43 @@
 #include "Coder.h"
 #include <vector>
 
+#define TRESHOLD 0.15
 #define MIN_FREQ 1500
 #define MAX_FREQ 12000
-#define FRAME_SIZE 512
+#define WIN_SIZE 500
+#define HB_SIZE 250
+
 using namespace std;
 
 class Decoder {
+
 public:
-    struct Result {
-        char symb;
-        double error;
-        int frame;
-    };
+    Decoder();
 
-    const int minLag = SAMPLE_RATE / MAX_FREQ;
-    const int maxLag = SAMPLE_RATE / MIN_FREQ;
+    Decoder(int sr);
 
-    vector<Decoder::Result> decode(float *samples, int from, int len);
+    float getPitch(int *samples, int from);
+
+    float getProbability();
+
+    void initialize(int sr);
 
 private:
-    Result decode_frame(int frameNum, float *samples, int from, int frameSize);
+    int sampleRate;
+    int buf[HB_SIZE];
+    float normalized[HB_SIZE];
+    float probability;
+    int minLag;
+    int maxLag;
 
-    float atf(float *samples, int from, int size, int lag);
+    void difference(int *samples, int from);
 
-    float quadInterpAdj(float left, float mid, float right);
+    void cumulativeMeanNormalizedDifference();
+
+    int absoluteThreshold();
+
+    float parabolicInterpolation(int tauEstimate);
+
 
 };
 
