@@ -20,13 +20,12 @@ void Decoder::initialize(int sr) {
         buf[i] = 0;
     }
 
-    for (int i = 0; i < HB_SIZE; i++) {
-        normalized[i] = 0;
-    }
+//    for (int i = 0; i < HB_SIZE; i++) {
+//        normalized[i] = 0;
+//    }
 
-    minLag = SAMPLE_RATE / MAX_FREQ;
-    maxLag = SAMPLE_RATE / MIN_FREQ;
-
+    minLag = sampleRate / MAX_FREQ;
+    maxLag = sampleRate / MIN_FREQ;
 }
 
 
@@ -35,32 +34,37 @@ float Decoder::getProbability() {
 }
 
 float Decoder::getPitch(int *samples, int from) {
-    int tauEstimate = -1;
+    int tauEstimate;
     float pitchInHertz = -1;
 
 
-    difference(samples, from);
+    int avg = difference(samples, from);
+    int threshold = avg / 6;
 
-    cumulativeMeanNormalizedDifference();
-
-    tauEstimate = absoluteThreshold();
-
+    tauEstimate = findFirstMin(threshold);
     if (tauEstimate != -1) {
-
-        pitchInHertz = sampleRate / parabolicInterpolation(tauEstimate);
-//        pitchInHertz = sampleRate / tauEstimate;
+        pitchInHertz = sampleRate / tauEstimate;
     }
+
+//    cumulativeMeanNormalizedDifference();
+//
+//    tauEstimate = absoluteThreshold();
+//
+//    if (tauEstimate != -1) {
+//        pitchInHertz = sampleRate / parabolicInterpolation(tauEstimate);
+//    }
 
 
     return pitchInHertz;
 }
 
 
-void Decoder::difference(int *samples, int from) {
+int Decoder::difference(int *samples, int from) {
     int idx;
     int tau;
     int delta;
-    for (tau = 1; tau < HB_SIZE; tau++) {
+    int sm = 0;
+    for (tau = minLag; tau < maxLag; tau++) {
 
         for (idx = from; idx < from + HB_SIZE; idx++) {
             delta = samples[idx] - samples[idx + tau];
@@ -70,75 +74,93 @@ void Decoder::difference(int *samples, int from) {
             } else {
                 buf[tau] += v;
             }
+            sm += v;
         }
     }
+    return sm / maxLag;
 }
 
-void Decoder::cumulativeMeanNormalizedDifference() {
-    int tau;
-    buf[0] = 1;
-    int runningSum = 0;
-    for (tau = 1; tau < HB_SIZE; tau++) {
-        runningSum += buf[tau];
-        float sm = tau / (float)runningSum;
-        normalized[tau] =  buf[tau] * sm;
-    }
-}
 
-int Decoder::absoluteThreshold() {
-    int tau;
-    for (tau = minLag + 2; tau < HB_SIZE; tau++) {
-        if (normalized[tau] < TRESHOLD) {
-            while (tau + 1 < HB_SIZE && normalized[tau + 1] < normalized[tau]) {
+int Decoder::findFirstMin(int threshold) {
+    for (int tau = minLag + 2; tau < maxLag; tau++) {
+        if (buf[tau] < threshold) {
+            while (tau + 1 < maxLag && buf[tau + 1] < buf[tau]) {
                 tau++;
             }
 
-            probability = 1 - normalized[tau];
-            break;
+            probability = 1; //todo this is cheat!
+            return tau;
         }
     }
-    // if no pitch found, tau => -1
-    if (tau == HB_SIZE || normalized[tau] >= TRESHOLD) {
-        tau = -1;
-        probability = 0;
-    }
-    return tau;
+    return -1;
 }
 
 
-float Decoder::parabolicInterpolation(int tauEstimate) {
-    float betterTau;
-    int x0;
-    int x2;
-
-    if (tauEstimate < 1) {
-        x0 = tauEstimate;
-    } else {
-        x0 = tauEstimate - 1;
-    }
-    if (tauEstimate + 1 < HB_SIZE) {
-        x2 = tauEstimate + 1;
-    } else {
-        x2 = tauEstimate;
-    }
-    if (x0 == tauEstimate) {
-        if (normalized[tauEstimate] <= normalized[x2]) {
-            betterTau = tauEstimate;
-        } else {
-            betterTau = x2;
-        }
-    } else if (x2 == tauEstimate) {
-        if (normalized[tauEstimate] <= normalized[x0]) {
-            betterTau = tauEstimate;
-        } else {
-            betterTau = x0;
-        }
-    } else {
-        float s0, s1, s2;
-        s0 = normalized[x0];
-        s1 = normalized[tauEstimate];
-        s2 = normalized[x2];
-        betterTau = tauEstimate + (s2 - s0) / (2 * (2 * s1 - s2 - s0));
-    }
-    return betterTau;
-}
+//void Decoder::cumulativeMeanNormalizedDifference() {
+//    int tau;
+//    buf[0] = 1;
+//    int runningSum = 0;
+//    for (tau = minLag; tau < maxLag; tau++) {
+//        runningSum += buf[tau];
+//        float sm = tau / (float) runningSum;
+//        normalized[tau] = buf[tau] * sm;
+//    }
+//}
+//
+//
+//int Decoder::absoluteThreshold() {
+//    int tau;
+//    for (tau = minLag + 2; tau < maxLag; tau++) {
+//        if (normalized[tau] < TRESHOLD) {
+//            while (tau + 1 < maxLag && normalized[tau + 1] < normalized[tau]) {
+//                tau++;
+//            }
+//
+//            probability = 1 - normalized[tau];
+//            break;
+//        }
+//    }
+//    // if no pitch found, tau => -1
+//    if (tau == maxLag || normalized[tau] >= TRESHOLD) {
+//        tau = -1;
+//        probability = 0;
+//    }
+//    return tau;
+//}
+//
+//float Decoder::parabolicInterpolation(int tauEstimate) {
+//    float betterTau;
+//    int x0;
+//    int x2;
+//
+//    if (tauEstimate < 1) {
+//        x0 = tauEstimate;
+//    } else {
+//        x0 = tauEstimate - 1;
+//    }
+//    if (tauEstimate + 1 < maxLag) {
+//        x2 = tauEstimate + 1;
+//    } else {
+//        x2 = tauEstimate;
+//    }
+//    if (x0 == tauEstimate) {
+//        if (normalized[tauEstimate] <= normalized[x2]) {
+//            betterTau = tauEstimate;
+//        } else {
+//            betterTau = x2;
+//        }
+//    } else if (x2 == tauEstimate) {
+//        if (normalized[tauEstimate] <= normalized[x0]) {
+//            betterTau = tauEstimate;
+//        } else {
+//            betterTau = x0;
+//        }
+//    } else {
+//        float s0, s1, s2;
+//        s0 = normalized[x0];
+//        s1 = normalized[tauEstimate];
+//        s2 = normalized[x2];
+//        betterTau = tauEstimate + (s2 - s0) / (2 * (2 * s1 - s2 - s0));
+//    }
+//    return betterTau;
+//}

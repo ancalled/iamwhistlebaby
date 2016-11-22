@@ -86,8 +86,8 @@ int main() {
 */
 
 int main() {
-//    const int sampleRate = 38000;
-    const int sampleRate = 44100;
+    const int sampleRate = 38000;
+//    const int sampleRate = 44100;
     Veslo veslo(sampleRate);
 //    Decoder2 decoder;
 //    decoder.initialize(SAMPLE_RATE, winSize);

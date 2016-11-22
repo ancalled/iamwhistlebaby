@@ -11,8 +11,11 @@
 #define TRESHOLD 0.15
 #define MIN_FREQ 1500
 #define MAX_FREQ 12000
-#define WIN_SIZE 500
-#define HB_SIZE 250
+
+#define WIN_SIZE 300
+#define HB_SIZE 150
+//#define WIN_SIZE 500
+//#define HB_SIZE 250
 
 using namespace std;
 
@@ -32,18 +35,20 @@ public:
 private:
     int sampleRate;
     int buf[HB_SIZE];
-    float normalized[HB_SIZE];
+//    float normalized[HB_SIZE];
     float probability;
     int minLag;
     int maxLag;
 
-    void difference(int *samples, int from);
+    int difference(int *samples, int from);
 
-    void cumulativeMeanNormalizedDifference();
+    int findFirstMin(int threshold);
 
-    int absoluteThreshold();
+//    void cumulativeMeanNormalizedDifference();
 
-    float parabolicInterpolation(int tauEstimate);
+//    int absoluteThreshold();
+
+//    float parabolicInterpolation(int tauEstimate);
 
 
 };
