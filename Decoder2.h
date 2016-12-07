@@ -6,8 +6,8 @@
 #define AUDIOPROTOCOL_DEC2_H
 
 #define TRESHOLD 0.15
-#define MIN_FREQ 1500
-#define MAX_FREQ 12000
+//#define MIN_FREQ 1500
+//#define MAX_FREQ 12000
 
 
 

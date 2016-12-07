@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <cstdint>
 #include "Decoder.h"
 // Created by ancalled on 11/11/16.
 //
@@ -33,13 +34,15 @@ float Decoder::getProbability() {
     return probability;
 }
 
-float Decoder::getPitch(int *samples, int from) {
+float Decoder::getPitch(uint8_t *samples, const int from) {
     int tauEstimate;
     float pitchInHertz = -1;
 
 
     int avg = difference(samples, from);
     int threshold = avg / 6;
+    buf[0] = avg;
+
 
     tauEstimate = findFirstMin(threshold);
     if (tauEstimate != -1) {
@@ -59,11 +62,21 @@ float Decoder::getPitch(int *samples, int from) {
 }
 
 
-int Decoder::difference(int *samples, int from) {
+//vector<Decoder::Pitch> Decoder::findTopPitches(const int *samples, const int from) {
+int Decoder::findTopPitches(uint8_t *samples, const int from, Decoder::Pitch *res) {
+    int avg = difference(samples, from);
+    buf[minLag] = avg;
+
+    return findLocalMins(avg, res);
+}
+
+
+int Decoder::difference(uint8_t *samples, const int from) {
     int idx;
     int tau;
     int delta;
     int sm = 0;
+
     for (tau = minLag; tau < maxLag; tau++) {
 
         for (idx = from; idx < from + HB_SIZE; idx++) {
@@ -74,14 +87,38 @@ int Decoder::difference(int *samples, int from) {
             } else {
                 buf[tau] += v;
             }
-            sm += v;
+            if (idx == from + HB_SIZE - 1) {
+                sm += buf[tau];
+            }
         }
     }
-    return sm / maxLag;
+
+    return sm / (maxLag - minLag);
 }
 
 
-int Decoder::findFirstMin(int threshold) {
+int Decoder::findLocalMins(const int avg, Decoder::Pitch *res) {
+    int i = 0;
+    for (int tau = minLag; tau < maxLag; tau++) {
+        if (buf[tau] < avg) {
+            while (tau + 1 < maxLag && buf[tau + 1] < buf[tau]) {
+                tau++;
+            }
+
+            res[i++] = {tau, 1 - (float) buf[tau] / avg};
+
+            while (tau + 1 < maxLag && buf[tau + 1] > buf[tau]) {
+                tau++;
+            }
+
+            if (i >= sizeof(res) / sizeof(res[0])) break;
+        }
+    }
+    return i;
+}
+
+
+int Decoder::findFirstMin(const int threshold) {
     for (int tau = minLag + 2; tau < maxLag; tau++) {
         if (buf[tau] < threshold) {
             while (tau + 1 < maxLag && buf[tau + 1] < buf[tau]) {
@@ -94,6 +131,8 @@ int Decoder::findFirstMin(int threshold) {
     }
     return -1;
 }
+
+
 
 
 //void Decoder::cumulativeMeanNormalizedDifference() {

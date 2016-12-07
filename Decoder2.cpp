@@ -26,8 +26,8 @@ void Decoder2::initialize(float sr, int bufSize) {
         buf[i] = 0;
     }
 
-    minLag = SAMPLE_RATE / MAX_FREQ;
-    maxLag = SAMPLE_RATE / MIN_FREQ;
+//    minLag = SAMPLE_RATE / MAX_FREQ;
+//    maxLag = SAMPLE_RATE / MIN_FREQ;
 
 }
 

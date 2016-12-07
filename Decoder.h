@@ -9,11 +9,11 @@
 #include <vector>
 
 #define TRESHOLD 0.15
-#define MIN_FREQ 1500
-#define MAX_FREQ 12000
+#define MIN_FREQ 1300
+#define MAX_FREQ 5000
 
-#define WIN_SIZE 300
-#define HB_SIZE 150
+#define WIN_SIZE 200
+#define HB_SIZE 100
 //#define WIN_SIZE 500
 //#define HB_SIZE 250
 
@@ -22,15 +22,24 @@ using namespace std;
 class Decoder {
 
 public:
+    struct Pitch {
+        int tau;
+        float prob;
+    };
+
     Decoder();
 
     Decoder(int sr);
 
-    float getPitch(int *samples, int from);
+    float getPitch(uint8_t *samples, const int from);
+
+//    std::vector<Decoder::Pitch> findTopPitches(const int *samples, const int from);
+    int findTopPitches(uint8_t *samples, const int from, Decoder::Pitch *res);
 
     float getProbability();
 
     void initialize(int sr);
+
 
 private:
     int sampleRate;
@@ -40,9 +49,12 @@ private:
     int minLag;
     int maxLag;
 
-    int difference(int *samples, int from);
+    int difference(uint8_t *samples, const int from);
 
-    int findFirstMin(int threshold);
+    int findFirstMin(const int threshold);
+
+//    vector<Pitch> findLocalMins(const int avg);
+    int findLocalMins(const int avg, Decoder::Pitch *res);
 
 //    void cumulativeMeanNormalizedDifference();
 

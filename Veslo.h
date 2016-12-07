@@ -11,46 +11,56 @@
 #include "Decoder.h"
 
 class Veslo {
+    static const int TOP_PITCHES = 5;
+
+public:
+
+    struct Candidate {
+        int tau = 0;
+        float prob = 0;
+        int frames = 0;
+        int firstFrame = 0;
+        int lastFrame = 0;
+    };
+
+    struct Segment {
+        Candidate* candidates[TOP_PITCHES];
+        int candSize = 0;
+    };
 
 
 private:
 
-    struct SymbAppearence {
-        char symbol;
-        int count;
-    };
+//    struct SymbDetect {
+//        char symbol;
+//        float error;
+//    };
 
-    struct SymbDetect {
-        char symbol;
-        float error;
-    };
+//    std::vector<Veslo::Segment> segments;
 
-    std::map<char, int> symbs;
+    Veslo::Segment* segments[20];
+    Veslo::Segment* current;
+    int segSize = 0;
 
-//    Decoder2 dec;
     Decoder dec;
-    std::string message = "";
-    int winSize = 0;
     int frames = 0;
     int processed = 0;
     int maxFrames = 0;
-
+    int segFrame = 0;
 
 public:
 
     Veslo(int sr);
 
-    void listen(int *samples, int from);
+    void listen_old(int *samples, int from);
 
-    int hasMessage();
+    void listen(uint8_t *samples, const int from, const int frame);
 
-    std::string getMessage();
 
-    void clearState();
+    void printAll();
 
 private:
-    SymbDetect findSymbol(float freq);
-
+//    SymbDetect findSymbol(float freq);
 };
 
 enum State {
