@@ -1,9 +1,7 @@
 #include <iostream>
 #include <cstring>
-#include "Coder.h"
-#include "Decoder.h"
-#include "Veslo.h"
 #include "tablesynth.h"
+#include "YinDecoder.h"
 
 using namespace std;
 
@@ -14,8 +12,9 @@ int main() {
 //    uint32_t sampleRate = 44100;
 //    uint32_t sampleRate = 62500;
 
-    const char *mes = "hjntdb982ilj6etj6e3l\0";
-//    const char *mes = "hjntdb9\0";
+//    const char *mes = "hjntdb982ilj6etj6e3l\0";
+    const char *mes = "01581359815183159913\0";
+
     tablesynth synth(sampleRate);
 
     uint32_t size = (uint32_t) (strlen(mes) * (sampleRate * (TOP_TIME + RAMP_TIME) / 1000)) + 1;

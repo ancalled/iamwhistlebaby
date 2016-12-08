@@ -6,7 +6,6 @@
 #include <cstdint>
 #include <cstdio>
 #include "YinDecoder.h"
-#include "Coder.h"
 
 
 YinDecoder::YinDecoder(u_int32_t sr, u_int32_t bufSize, float minFreq, float maxFreq) :

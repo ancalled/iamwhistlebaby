@@ -5,7 +5,6 @@
 #ifndef AUDIOPROTOCOL_DECODER_H
 #define AUDIOPROTOCOL_DECODER_H
 
-#include "Coder.h"
 #include <vector>
 
 #define TRESHOLD 0.15

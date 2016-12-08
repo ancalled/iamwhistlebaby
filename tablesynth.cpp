@@ -14,10 +14,10 @@ tablesynth::tablesynth(uint32_t sampleRate) : sampleRate(sampleRate) {
 
     rampSamples = (uint16_t) ((sampleRate * RAMP_TIME) / 1000);
     topSamples = (uint16_t) ((sampleRate * TOP_TIME) / 1000);
-    for (uint16_t i = 0; i < SYMBS; i++) {
-        float f = sineFrameSize / (sampleRate / FREQS[i]);
-        phaseSteps[i] = toFixedPoint(f, 2);
-    }
+//    for (uint16_t i = 0; i < SYMBS; i++) {
+//        float f = sineFrameSize / (sampleRate / SYMBOLS[i].freq);
+//        phaseSteps[i] = toFixedPoint(f, 2);
+//    }
 
     for (uint16_t i = 0; i < SIN_QUADRANT; i++) {
         sineQuadrant[i] = (uint8_t) (128 * (1 + sin((2 * M_PI * i) / sineFrameSize)));
@@ -34,8 +34,10 @@ uint32_t tablesynth::generate(uint8_t *samples, uint32_t size, const char *mes) 
     uint8_t amplStep = (uint8_t) (rampSamples / halfampl);
     for (int i = 0; i < len; i++) {
         char ch = mes[i];
-        uint64_t phaseStep = findPhaseStep(ch);
-        if (phaseStep) {
+        sound_symbol ss = findSymbol(ch);
+        if (ss.symbol != '\0') {
+            uint64_t phaseStep = ss.phaseStep;
+
             if (!prevPhaseStep) {
                 prevPhaseStep = phaseStep;
             }
@@ -81,19 +83,14 @@ uint32_t tablesynth::generateFrame(uint8_t *samples, uint32_t samples_size, uint
     return i;
 }
 
-uint64_t tablesynth::findPhaseStep(char ch) {
-    uint8_t idx;
-
-    if (ch >= 'a' && ch <= 'v') {
-        idx = ch - 'a' + 10;
-    } else if (ch >= '0' && ch <= '9') {
-        idx = ch - '0';
-    } else {
-        // BAD_CHIRP_CODE_WARNING;
-        return 0L;
+tablesynth::sound_symbol tablesynth::findSymbol(char ch) {
+    for (int i = 0; i < SYMBS; i++) {
+        sound_symbol s = SYMBOLS[i];
+        if (s.symbol == ch) {
+            return s;
+        }
     }
-
-    return phaseSteps[idx];
+    return {'\0', -1, 0};
 }
 
 /*
