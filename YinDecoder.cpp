@@ -3,41 +3,36 @@
 //
 
 #include <cstdlib>
-#include "Decoder2.h"
+#include <cstdint>
+#include "YinDecoder.h"
 #include "Coder.h"
 
 
-Decoder2::Decoder2() {
-}
 
-Decoder2::Decoder2(float sr, int bufSize) {
-    initialize(sr, bufSize);
-}
-
-void Decoder2::initialize(float sr, int bufSize) {
+YinDecoder::YinDecoder(u_int32_t sr, u_int32_t bufSize) {
     bufferSize = bufSize;
     sampleRate = sr;
     halfBufferSize = bufferSize / 2;
     probability = 0.0;
 
     //initialize array and set it to zero
-    buf = (float *) malloc(sizeof(float) * halfBufferSize);
+    buf = (u_int32_t *) malloc(sizeof(u_int32_t) * halfBufferSize);
     for (int i = 0; i < halfBufferSize; i++) {
         buf[i] = 0;
     }
 
 //    minLag = SAMPLE_RATE / MAX_FREQ;
 //    maxLag = SAMPLE_RATE / MIN_FREQ;
-
 }
 
 
-float Decoder2::getProbability() {
+
+float YinDecoder::getProbability() {
     return probability;
 }
 
-float Decoder2::getPitch(float *samples, int from, int size) {
-    int tauEstimate = -1;
+float YinDecoder::getPitch(uint8_t *samples, uint32_t from, uint32_t size) {
+    int tauEstimate;
     float pitchInHertz = -1;
 
     difference(samples, from, size);
@@ -55,10 +50,10 @@ float Decoder2::getPitch(float *samples, int from, int size) {
 }
 
 
-void Decoder2::difference(float *samples, int from, int size) {
+void YinDecoder::difference(uint8_t *samples, uint32_t from, uint32_t size) {
     int index;
     int tau;
-    float delta;
+    u_int32_t delta;
     for (tau = minLag; tau < halfBufferSize; tau++) {
         int ln = size > halfBufferSize ? halfBufferSize : size;
 
@@ -69,7 +64,7 @@ void Decoder2::difference(float *samples, int from, int size) {
     }
 }
 
-void Decoder2::cumulativeMeanNormalizedDifference() {
+void YinDecoder::cumulativeMeanNormalizedDifference() {
     int tau;
     buf[0] = 1;
     float runningSum = 0;
@@ -79,7 +74,7 @@ void Decoder2::cumulativeMeanNormalizedDifference() {
     }
 }
 
-int Decoder2::absoluteThreshold() {
+int YinDecoder::absoluteThreshold() {
     int tau;
     for (tau = minLag + 2; tau < halfBufferSize; tau++) {
         if (buf[tau] < TRESHOLD) {
@@ -100,7 +95,7 @@ int Decoder2::absoluteThreshold() {
 }
 
 
-float Decoder2::parabolicInterpolation(int tauEstimate) {
+float YinDecoder::parabolicInterpolation(int tauEstimate) {
     float betterTau;
     int x0;
     int x2;

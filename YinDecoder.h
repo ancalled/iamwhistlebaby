@@ -11,29 +11,26 @@
 
 
 
-class Decoder2 {
+class YinDecoder {
 
 public:
-    Decoder2();
 
-    Decoder2(float sr, int bufSize);
+    YinDecoder(u_int32_t sr, u_int32_t bufSize);
 
-    float getPitch(float *samples, int from, int size);
+    float getPitch(uint8_t *samples, uint32_t from, uint32_t size);
 
     float getProbability();
 
-    void initialize(float sr, int bufSize);
-
 private:
-    int bufferSize;
-    int halfBufferSize;
-    float sampleRate;
-    float *buf;
+    u_int32_t bufferSize;
+    u_int32_t halfBufferSize;
+    u_int32_t sampleRate;
+    u_int32_t *buf;
     float probability;
     int minLag;
     int maxLag;
 
-    void difference(float *samples, int from, int size);
+    void difference(uint8_t *samples, uint32_t from, uint32_t size);
 
     void cumulativeMeanNormalizedDifference();
 

@@ -7,7 +7,6 @@
 
 using namespace std;
 
-
 int main() {
 
 //    uint32_t sampleRate = 19200;  //atmega adc prescale = 64
@@ -15,36 +14,33 @@ int main() {
     uint32_t sampleRate = 44100;
 //    uint32_t sampleRate = 62500;
 
-//    const char *mes = "ntdb982ilj6etj6e3l\0";
-//    const char *mes = "ntdb982il\0";
     const char *mes = "hjntdb982ilj6etj6e3l\0";
     tablesynth synth(sampleRate);
 
     uint32_t size = (uint32_t) (strlen(mes) * (sampleRate * (TOP_TIME + RAMP_TIME) / 1000)) + 1;
     uint8_t samples[size];
+//    uint8_t* samples;
 
     uint32_t gen = synth.generate(samples, size, mes);
     printf("Generated %d samples\n", gen);
 
-    Veslo veslo(sampleRate);
-    veslo.listen(samples, 0, 0);
+    // Decoding
+
+    uint32_t frameSize = 512;
+    YinDecoder dec(sampleRate, frameSize);
+    int frame = 0;
+    uint32_t n = 0;
+    while (n < size) {
+        uint32_t sz = n + frameSize < size ? frameSize : size - n;
+        float pitch = dec.getPitch(samples, n, sz);
+        float prob = dec.getProbability();
+        printf("[%d] %.2f\t(%.2f)\n", frame, pitch, prob);
+        n += frameSize;
+        frame++;
+    }
+
 }
 
 
 
-//int main1() {
-//    const int sampleRate = 19000;
-//    Veslo veslo(sampleRate);
-//
-//    int frame = 0;
-//    int from = 0;
-//    while (from + WIN_SIZE < NUM_SAMPLES) {
-//        veslo.listen(audio, from, frame);
-//
-//        from += WIN_SIZE;
-//        frame++;
-//    }
-//
-//    veslo.printAll();
-//}
 

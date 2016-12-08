@@ -7,7 +7,7 @@
 
 
 #include <map>
-#include "Decoder2.h"
+#include "YinDecoder.h"
 #include "Decoder.h"
 
 class Veslo {
