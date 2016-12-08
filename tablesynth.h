@@ -52,7 +52,7 @@ private:
 
     uint64_t findPhaseStep(char ch);
 
-    uint64_t toFixedPoint(double f, int8_t point);
+    uint64_t toFixedPoint(double f, int8_t p);
 
 
 

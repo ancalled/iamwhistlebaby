@@ -5,9 +5,6 @@
 #ifndef AUDIOPROTOCOL_DEC2_H
 #define AUDIOPROTOCOL_DEC2_H
 
-#define TRESHOLD 0.15
-//#define MIN_FREQ 1500
-//#define MAX_FREQ 12000
 
 
 
@@ -15,26 +12,26 @@ class YinDecoder {
 
 public:
 
-    YinDecoder(u_int32_t sr, u_int32_t bufSize);
+    YinDecoder(uint32_t sr, uint32_t bufSize, float minFreq, float maxFreq);
 
-    float getPitch(uint8_t *samples, uint32_t from, uint32_t size);
+    float getPitch(int16_t *samples, uint32_t from, uint32_t size, float threshold);
 
     float getProbability();
 
 private:
-    u_int32_t bufferSize;
-    u_int32_t halfBufferSize;
-    u_int32_t sampleRate;
-    u_int32_t *buf;
+    uint32_t bufferSize;
+    uint32_t halfBufferSize;
+    uint32_t sampleRate;
+    float *buf;
     float probability;
-    int minLag;
-    int maxLag;
+    uint16_t minLag;
+    uint16_t maxLag;
 
-    void difference(uint8_t *samples, uint32_t from, uint32_t size);
+    void difference(int16_t *samples, uint32_t from, uint32_t size);
 
     void cumulativeMeanNormalizedDifference();
 
-    int absoluteThreshold();
+    int absoluteThreshold(float threshold);
 
     float parabolicInterpolation(int tauEstimate);
 

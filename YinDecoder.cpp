@@ -4,81 +4,87 @@
 
 #include <cstdlib>
 #include <cstdint>
+#include <cstdio>
 #include "YinDecoder.h"
 #include "Coder.h"
 
 
+YinDecoder::YinDecoder(u_int32_t sr, u_int32_t bufSize, float minFreq, float maxFreq) :
+        bufferSize(bufSize), sampleRate(sr) {
 
-YinDecoder::YinDecoder(u_int32_t sr, u_int32_t bufSize) {
-    bufferSize = bufSize;
-    sampleRate = sr;
-    halfBufferSize = bufferSize / 2;
     probability = 0.0;
-
-    //initialize array and set it to zero
-    buf = (u_int32_t *) malloc(sizeof(u_int32_t) * halfBufferSize);
-    for (int i = 0; i < halfBufferSize; i++) {
-        buf[i] = 0;
-    }
-
-//    minLag = SAMPLE_RATE / MAX_FREQ;
-//    maxLag = SAMPLE_RATE / MIN_FREQ;
+    minLag = (uint16_t) (sr / maxFreq);
+//    minLag = 1;
+    maxLag = (uint16_t) (sr / minFreq);
+    buf = (float *) malloc(sizeof(float) * maxLag);
 }
-
 
 
 float YinDecoder::getProbability() {
     return probability;
 }
 
-float YinDecoder::getPitch(uint8_t *samples, uint32_t from, uint32_t size) {
+float YinDecoder::getPitch(int16_t *samples, uint32_t from, uint32_t size, float threshold) {
     int tauEstimate;
     float pitchInHertz = -1;
 
     difference(samples, from, size);
+//    for (int tau = minLag; tau < maxLag; tau++) {
+//        printf("%.4f\n", buf[tau]);
+//    }
+//    printf("---------------------------------------------\n");
 
     cumulativeMeanNormalizedDifference();
-
-    tauEstimate = absoluteThreshold();
+    tauEstimate = absoluteThreshold(threshold);
 
     if (tauEstimate != -1) {
+        float ftau = parabolicInterpolation(tauEstimate);
+//        printf("%.4f\n", ftau);
 
-        pitchInHertz = sampleRate / parabolicInterpolation(tauEstimate);
+        pitchInHertz = sampleRate / ftau;
     }
 
     return pitchInHertz;
 }
 
 
-void YinDecoder::difference(uint8_t *samples, uint32_t from, uint32_t size) {
-    int index;
+void YinDecoder::difference(int16_t *samples, uint32_t from, uint32_t size) {
+    int i;
     int tau;
-    u_int32_t delta;
-    for (tau = minLag; tau < halfBufferSize; tau++) {
-        int ln = size > halfBufferSize ? halfBufferSize : size;
+    int16_t delta;
+    for (tau = minLag; tau < maxLag; tau++) {
+        int ln = size > maxLag ? maxLag : size;
 
-        for (index = from; index < from + ln; index++) {
-            delta = samples[index] - samples[index + tau];
-            buf[tau] += delta * delta;
+        for (i = from; i < from + ln; i++) {
+            delta = samples[i] - samples[i + tau];
+            float sqr = delta * delta;
+            if (i == from) {
+                buf[tau] = sqr;
+            } else {
+                buf[tau] += sqr;
+            }
         }
     }
 }
 
 void YinDecoder::cumulativeMeanNormalizedDifference() {
     int tau;
-    buf[0] = 1;
+    buf[minLag] = 1;
     float runningSum = 0;
-    for (tau = minLag + 1; tau < halfBufferSize; tau++) {
+    for (tau = minLag + 1; tau < maxLag; tau++) {
         runningSum += buf[tau];
         buf[tau] *= tau / runningSum;
+//        buf[tau] *= (tau - minLag) / runningSum;
     }
 }
 
-int YinDecoder::absoluteThreshold() {
+int YinDecoder::absoluteThreshold(float threshold) {
     int tau;
-    for (tau = minLag + 2; tau < halfBufferSize; tau++) {
-        if (buf[tau] < TRESHOLD) {
-            while (tau + 1 < halfBufferSize && buf[tau + 1] < buf[tau]) {
+    for (tau = minLag + 2; tau < maxLag; tau++) {
+        uint32_t v = buf[tau];
+//        printf("%.4f\n", v);
+        if (v < threshold) {
+            while (tau + 1 < maxLag && buf[tau + 1] < buf[tau]) {
                 tau++;
             }
 
@@ -86,8 +92,9 @@ int YinDecoder::absoluteThreshold() {
             break;
         }
     }
+//    printf("---------------------------------------------\n");
     // if no pitch found, tau => -1
-    if (tau == halfBufferSize || buf[tau] >= TRESHOLD) {
+    if (tau == maxLag || buf[tau] >= threshold) {
         tau = -1;
         probability = 0;
     }
@@ -105,7 +112,7 @@ float YinDecoder::parabolicInterpolation(int tauEstimate) {
     } else {
         x0 = tauEstimate - 1;
     }
-    if (tauEstimate + 1 < halfBufferSize) {
+    if (tauEstimate + 1 < maxLag) {
         x2 = tauEstimate + 1;
     } else {
         x2 = tauEstimate;

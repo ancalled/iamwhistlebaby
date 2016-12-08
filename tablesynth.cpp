@@ -60,7 +60,8 @@ uint32_t tablesynth::generateFrame(uint8_t *samples, uint32_t samples_size, uint
         int idx = (p & 0x80 ? 255 - p : p);
         uint8_t smpl = sineQuadrant[idx];
         if (phase.b[3] & 1) {
-            smpl = 255 - smpl;
+//            smpl = 255 - smpl;
+            smpl = - smpl;
         }
 
         smpl = (smpl * amplitude) >> 8;
@@ -95,20 +96,13 @@ uint64_t tablesynth::findPhaseStep(char ch) {
     return phaseSteps[idx];
 }
 
-uint64_t tablesynth::toFixedPoint(double f, int8_t point) {
+/*
+ * f - float value,
+ * p - points in bytes
+ */
+uint64_t tablesynth::toFixedPoint(double f, int8_t p) {
     uint32_t fp = 0;
-    for (int i = 0; i < 4; i++) {
-        if (i <= point) {
-            int mp = 1 << 8 * (point - i);
-            double x = f * mp;
-            int i1 = (int) floor(x);
-            int b = i1 & 255;
-            fp += b << 8 * i;
-        } /*else {
-            //todo do for higher bytes
-        }*/
-    }
-
+    for (int8_t i = 0; i <= p; i++)
+        fp += ((uint32_t) floor(f * (1 << 8 * (p - i))) & 255) << 8 * i;
     return fp;
-
 }
