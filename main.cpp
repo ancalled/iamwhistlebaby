@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include "YinDecoder.h"
-#include "synthesizer.h"
+#include "Synthesizer.h"
 
 using namespace std;
 
@@ -15,7 +15,7 @@ int main() {
     const char *mes = "hjntdb982ilj6etj6e3l\0";
 //    const char *mes = "01581359815183159913\0";
 
-    synthesizer synth(sampleRate);
+    Synthesizer synth(sampleRate);
 
     uint32_t size = (uint32_t) (strlen(mes) * (sampleRate * (TOP_TIME + RAMP_TIME) / 1000)) + 1;
     int8_t samples[size];

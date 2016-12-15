@@ -5,9 +5,9 @@
 #include <cstddef>
 #include <cstring>
 #include <cmath>
-#include "synthesizer.h"
+#include "Synthesizer.h"
 
-synthesizer::synthesizer(uint32_t sampleRate) : sampleRate(sampleRate) {
+Synthesizer::Synthesizer(uint32_t sampleRate) : sampleRate(sampleRate) {
     frame = 0;
     argument = 0;
     rampSamples = (uint16_t) ((sampleRate * RAMP_TIME) / 1000);
@@ -15,7 +15,7 @@ synthesizer::synthesizer(uint32_t sampleRate) : sampleRate(sampleRate) {
 }
 
 
-uint32_t synthesizer::generate(int8_t *samples, uint32_t size, const char *mes) {
+uint32_t Synthesizer::generate(int8_t *samples, uint32_t size, const char *mes) {
     uint32_t proc = 0;
     size_t len = strlen(mes);
     float freq = 0, prevFreq = 0;
@@ -37,13 +37,6 @@ uint32_t synthesizer::generate(int8_t *samples, uint32_t size, const char *mes) 
 
             for (int j = 0; j < topSamples + rampSamples; j++) {
                 double arg = (2 * PI * (argument++) * freq) / sampleRate;
-//                if (argument >= sampleRate) {
-//                    argument = 0;
-//                }
-//                printf("%d\n", argument);
-//                printf("%.8f\n", arg);
-//                printf("%.8f\n", freq);
-
                 double sn = sin(arg);
                 double smpl = amplitude * sn;
                 int8_t bt = (int8_t) round(smpl);
@@ -66,7 +59,7 @@ uint32_t synthesizer::generate(int8_t *samples, uint32_t size, const char *mes) 
 }
 
 
-synthesizer::sound_symbol synthesizer::findSymbol(char ch) {
+Synthesizer::sound_symbol Synthesizer::findSymbol(char ch) {
     for (int i = 0; i < SYMBS; i++) {
         sound_symbol s = SYMBOLS[i];
         if (s.symbol == ch) {
@@ -76,6 +69,6 @@ synthesizer::sound_symbol synthesizer::findSymbol(char ch) {
     return {'\0', -1, 0};
 }
 
-uint32_t synthesizer::expectedSize(size_t symbols) {
+uint32_t Synthesizer::expectedSize(size_t symbols) {
     return symbols * (rampSamples + topSamples);
 }

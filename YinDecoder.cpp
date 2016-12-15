@@ -17,10 +17,6 @@ YinDecoder::YinDecoder(u_int32_t sr, u_int32_t bufSize, float minFreq, float max
     maxLag = (uint16_t) (sr / minFreq);
     buf = (float *) malloc(sizeof(float) * maxLag);
 
-#ifdef GNUPLOT_DEBUG
-    asdfFile = fopen("asdf-log.dat", "w");
-    pitchesFile = fopen("pitches-log.dat", "w");
-#endif
 }
 
 
@@ -42,14 +38,6 @@ float YinDecoder::getPitch(int16_t *samples, uint32_t from, uint32_t size, float
         ftau = parabolicInterpolation(tauEstimate);
         pitchInHertz = sampleRate / ftau;
     }
-
-#ifdef GNUPLOT_DEBUG
-    fprintf(pitchesFile, "%.4f\n", ftau);
-    for (int tau = 0; tau < maxLag; tau++) {
-        fprintf(asdfFile, "%.4f\t", tau < minLag ? 1.0 : buf[tau]);
-    }
-    fprintf(asdfFile, "\n");
-#endif
 
     return pitchInHertz;
 }

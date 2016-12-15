@@ -14,7 +14,7 @@
 #define TOP_TIME 75.36
 # define PI		3.14159265358979323846
 
-class synthesizer {
+class Synthesizer {
     struct sound_symbol {
         char symbol;
         float freq;
@@ -69,7 +69,7 @@ class synthesizer {
 //            {'9', 4750, 0x800000UL}
 //    };
 public:
-    synthesizer(uint32_t sampleRate);
+    Synthesizer(uint32_t sampleRate);
 
     uint32_t generate(int8_t *samples, uint32_t size, const char *mes);
 
