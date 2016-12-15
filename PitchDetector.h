@@ -8,11 +8,11 @@
 
 
 
-class YinDecoder {
+class PitchDetector {
 
 public:
 
-    YinDecoder(uint32_t sr, uint32_t bufSize, float minFreq, float maxFreq);
+    PitchDetector(uint32_t sr, uint32_t bufSize, float minFreq, float maxFreq);
 
     float getPitch(int16_t *samples, uint32_t from, uint32_t size, float threshold);
 

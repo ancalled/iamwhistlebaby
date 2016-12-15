@@ -5,10 +5,10 @@
 #include <cstdlib>
 #include <cstdint>
 #include <cstdio>
-#include "YinDecoder.h"
+#include "PitchDetector.h"
 
 
-YinDecoder::YinDecoder(u_int32_t sr, u_int32_t bufSize, float minFreq, float maxFreq) :
+PitchDetector::PitchDetector(u_int32_t sr, u_int32_t bufSize, float minFreq, float maxFreq) :
         bufferSize(bufSize), sampleRate(sr) {
 
     probability = 0.0;
@@ -20,11 +20,11 @@ YinDecoder::YinDecoder(u_int32_t sr, u_int32_t bufSize, float minFreq, float max
 }
 
 
-float YinDecoder::getProbability() {
+float PitchDetector::getProbability() {
     return probability;
 }
 
-float YinDecoder::getPitch(int16_t *samples, uint32_t from, uint32_t size, float threshold) {
+float PitchDetector::getPitch(int16_t *samples, uint32_t from, uint32_t size, float threshold) {
     int tauEstimate;
     float pitchInHertz = -1;
 
@@ -43,7 +43,7 @@ float YinDecoder::getPitch(int16_t *samples, uint32_t from, uint32_t size, float
 }
 
 
-void YinDecoder::difference(int16_t *samples, uint32_t from, uint32_t size) {
+void PitchDetector::difference(int16_t *samples, uint32_t from, uint32_t size) {
     int i;
     int tau;
     int16_t delta;
@@ -61,7 +61,7 @@ void YinDecoder::difference(int16_t *samples, uint32_t from, uint32_t size) {
     }
 }
 
-void YinDecoder::cumulativeMeanNormalizedDifference() {
+void PitchDetector::cumulativeMeanNormalizedDifference() {
     int tau;
     buf[minLag] = 1;
     float runningSum = 0;
@@ -72,7 +72,7 @@ void YinDecoder::cumulativeMeanNormalizedDifference() {
     }
 }
 
-int YinDecoder::absoluteThreshold(float threshold) {
+int PitchDetector::absoluteThreshold(float threshold) {
     int tau;
     for (tau = minLag + 2; tau < maxLag; tau++) {
         uint32_t v = buf[tau];
@@ -94,7 +94,7 @@ int YinDecoder::absoluteThreshold(float threshold) {
 }
 
 
-float YinDecoder::parabolicInterpolation(int tauEstimate) {
+float PitchDetector::parabolicInterpolation(int tauEstimate) {
     float betterTau;
     int x0;
     int x2;
@@ -133,6 +133,6 @@ float YinDecoder::parabolicInterpolation(int tauEstimate) {
     return betterTau;
 }
 
-float *YinDecoder::getBuf() {
+float *PitchDetector::getBuf() {
     return buf;
 }

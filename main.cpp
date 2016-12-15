@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cstring>
-#include "YinDecoder.h"
+#include "PitchDetector.h"
 #include "Synthesizer.h"
 
 using namespace std;
@@ -31,7 +31,7 @@ int main() {
 //    uint32_t frameSize = 512;
     uint32_t frameSize = (uint32_t) (sampleRate * (RAMP_TIME + TOP_TIME) / 1000 / framesPerSound);
     float threshold = 0.35;
-    YinDecoder dec(sampleRate, frameSize, 1500.0, 15000.0);
+    PitchDetector dec(sampleRate, frameSize, 1500.0, 15000.0);
     int frame = 0;
     uint32_t n = 0;
     int16_t buf[frameSize];
