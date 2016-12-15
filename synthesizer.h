@@ -69,7 +69,13 @@ class synthesizer {
 //            {'9', 4750, 0x800000UL}
 //    };
 public:
-    uint32_t generate(int8_t* samples, uint32_t size, const char* mes);
+    synthesizer(uint32_t sampleRate);
+
+    uint32_t generate(int8_t *samples, uint32_t size, const char *mes);
+
+    sound_symbol findSymbol(char ch);
+
+    uint32_t expectedSize(size_t symbols);
 
 private:
     uint32_t sampleRate;
@@ -78,8 +84,6 @@ private:
     uint16_t rampSamples;
     uint16_t topSamples;
 public:
-    synthesizer(uint32_t sampleRate);
-    sound_symbol findSymbol(char ch);
 };
 
 

@@ -16,6 +16,11 @@ YinDecoder::YinDecoder(u_int32_t sr, u_int32_t bufSize, float minFreq, float max
 //    minLag = 1;
     maxLag = (uint16_t) (sr / minFreq);
     buf = (float *) malloc(sizeof(float) * maxLag);
+
+#ifdef GNUPLOT_DEBUG
+    asdfFile = fopen("asdf-log.dat", "w");
+    pitchesFile = fopen("pitches-log.dat", "w");
+#endif
 }
 
 
@@ -28,20 +33,23 @@ float YinDecoder::getPitch(int16_t *samples, uint32_t from, uint32_t size, float
     float pitchInHertz = -1;
 
     difference(samples, from, size);
-//    for (int tau = minLag; tau < maxLag; tau++) {
-//        printf("%.4f\n", buf[tau]);
-//    }
-//    printf("---------------------------------------------\n");
 
     cumulativeMeanNormalizedDifference();
     tauEstimate = absoluteThreshold(threshold);
 
+    float ftau = -1;
     if (tauEstimate != -1) {
-        float ftau = parabolicInterpolation(tauEstimate);
-//        printf("%.4f\n", ftau);
-
+        ftau = parabolicInterpolation(tauEstimate);
         pitchInHertz = sampleRate / ftau;
     }
+
+#ifdef GNUPLOT_DEBUG
+    fprintf(pitchesFile, "%.4f\n", ftau);
+    for (int tau = 0; tau < maxLag; tau++) {
+        fprintf(asdfFile, "%.4f\t", tau < minLag ? 1.0 : buf[tau]);
+    }
+    fprintf(asdfFile, "\n");
+#endif
 
     return pitchInHertz;
 }
@@ -53,7 +61,6 @@ void YinDecoder::difference(int16_t *samples, uint32_t from, uint32_t size) {
     int16_t delta;
     for (tau = minLag; tau < maxLag; tau++) {
         int ln = size > maxLag ? maxLag : size;
-
         for (i = from; i < from + ln; i++) {
             delta = samples[i] - samples[i + tau];
             float sqr = delta * delta;
@@ -72,8 +79,8 @@ void YinDecoder::cumulativeMeanNormalizedDifference() {
     float runningSum = 0;
     for (tau = minLag + 1; tau < maxLag; tau++) {
         runningSum += buf[tau];
-        buf[tau] *= tau / runningSum;
-//        buf[tau] *= (tau - minLag) / runningSum;
+//        buf[tau] *= tau / runningSum;
+        buf[tau] *= (tau - minLag) / runningSum;
     }
 }
 
@@ -81,7 +88,6 @@ int YinDecoder::absoluteThreshold(float threshold) {
     int tau;
     for (tau = minLag + 2; tau < maxLag; tau++) {
         uint32_t v = buf[tau];
-//        printf("%.4f\n", v);
         if (v < threshold) {
             while (tau + 1 < maxLag && buf[tau + 1] < buf[tau]) {
                 tau++;
@@ -91,7 +97,6 @@ int YinDecoder::absoluteThreshold(float threshold) {
             break;
         }
     }
-//    printf("---------------------------------------------\n");
     // if no pitch found, tau => -1
     if (tau == maxLag || buf[tau] >= threshold) {
         tau = -1;
@@ -138,4 +143,8 @@ float YinDecoder::parabolicInterpolation(int tauEstimate) {
         betterTau = tauEstimate + (s2 - s0) / (2 * (2 * s1 - s2 - s0));
     }
     return betterTau;
+}
+
+float *YinDecoder::getBuf() {
+    return buf;
 }

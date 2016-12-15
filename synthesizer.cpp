@@ -75,3 +75,7 @@ synthesizer::sound_symbol synthesizer::findSymbol(char ch) {
     }
     return {'\0', -1, 0};
 }
+
+uint32_t synthesizer::expectedSize(size_t symbols) {
+    return symbols * (rampSamples + topSamples);
+}

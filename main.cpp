@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cstring>
-#include "tablesynth.h"
 #include "YinDecoder.h"
 #include "synthesizer.h"
 

@@ -18,6 +18,8 @@ public:
 
     float getProbability();
 
+    float* getBuf();
+
 private:
     uint32_t bufferSize;
     uint32_t halfBufferSize;
@@ -26,6 +28,11 @@ private:
     float probability;
     uint16_t minLag;
     uint16_t maxLag;
+
+#ifdef GNUPLOT_DEBUG
+    std::FILE *asdfFile;
+    std::FILE *pitchesFile;
+#endif
 
     void difference(int16_t *samples, uint32_t from, uint32_t size);
 
