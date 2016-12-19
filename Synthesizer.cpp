@@ -7,6 +7,8 @@
 #include <cmath>
 #include "Synthesizer.h"
 
+using namespace wsl;
+
 Synthesizer::Synthesizer(uint32_t sampleRate) : sampleRate(sampleRate) {
     frame = 0;
     argument = 0;
@@ -59,7 +61,7 @@ uint32_t Synthesizer::generate(int8_t *samples, uint32_t size, const char *mes) 
 }
 
 
-Synthesizer::sound_symbol Synthesizer::findSymbol(char ch) {
+sound_symbol Synthesizer::findSymbol(char ch) {
     for (int i = 0; i < SYMBS; i++) {
         sound_symbol s = SYMBOLS[i];
         if (s.symbol == ch) {

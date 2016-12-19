@@ -5,8 +5,8 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 #ADD_DEFINITIONS(-DGNUPLOT_DEBUG)
 
-SET(SOURCE_FILES main.cpp PitchDetector.cpp PitchDetector.h Segment.cpp Segment.h Synthesizer.cpp Synthesizer.h)
+SET(SOURCE_FILES main.cpp PitchDetector.cpp PitchDetector.h Synthesizer.cpp Synthesizer.h Decoder.cpp Decoder.h)
 
-#ADD_EXECUTABLE(whistle ${SOURCE_FILES})
-ADD_LIBRARY(whistle ${SOURCE_FILES})
-TARGET_LINK_LIBRARIES(whistle ITKCommon)
+ADD_EXECUTABLE(whistle ${SOURCE_FILES})
+#ADD_LIBRARY(whistle ${SOURCE_FILES})
+#TARGET_LINK_LIBRARIES(whistle ITKCommon)

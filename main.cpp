@@ -2,6 +2,7 @@
 #include <cstring>
 #include "PitchDetector.h"
 #include "Synthesizer.h"
+#include "Decoder.h"
 
 using namespace std;
 
@@ -31,7 +32,8 @@ int main() {
 //    uint32_t frameSize = 512;
     uint32_t frameSize = (uint32_t) (sampleRate * (RAMP_TIME + TOP_TIME) / 1000 / framesPerSound);
     float threshold = 0.35;
-    PitchDetector dec(sampleRate, frameSize, 1500.0, 15000.0);
+    Decoder decoder(sampleRate, frameSize);
+//    PitchDetector dec(sampleRate, frameSize, 1500.0, 15000.0);
     int frame = 0;
     uint32_t n = 0;
     int16_t buf[frameSize];
@@ -42,9 +44,10 @@ int main() {
             buf[i] = samples[n + i] - 127;
         }
 
-        float pitch = dec.getPitch(buf, 0, sz, threshold);
-        float prob = dec.getProbability();
-        printf("%.2f\t%.2f\n", frame, pitch, prob);
+        decoder.processFrame(buf, 0);
+//        float pitch = dec.getPitch(buf, 0, sz, threshold);
+//        float prob = dec.getProbability();
+//        printf("%.2f\t%.2f\n", frame, pitch, prob);
 
         n += frameSize;
         frame++;

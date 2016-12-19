@@ -14,7 +14,7 @@
 #define TOP_TIME 75.36
 # define PI		3.14159265358979323846
 
-class Synthesizer {
+namespace wsl {
     struct sound_symbol {
         char symbol;
         float freq;
@@ -68,12 +68,18 @@ class Synthesizer {
 //            {'8', 3800, 0x666666UL},
 //            {'9', 4750, 0x800000UL}
 //    };
+}
+
+class Synthesizer {
+
 public:
+
+
     Synthesizer(uint32_t sampleRate);
 
     uint32_t generate(int8_t *samples, uint32_t size, const char *mes);
 
-    sound_symbol findSymbol(char ch);
+    wsl::sound_symbol findSymbol(char ch);
 
     uint32_t expectedSize(size_t symbols);
 
