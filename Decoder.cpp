@@ -24,8 +24,10 @@ void Decoder::processFrame(int16_t *samples, uint32_t from) {
         if (diff < 0.01) {
             candidate.frames++;
         } else {
+            printf("%.2f\t%c\t%.2f\t%d\n", candidate.freq, candidate.symbol, candidate.error, candidate.frames);
+
             if (candidate.frames >= framesToDetect) {
-                printf("%.2f\t%d\t%.2f\t%d\n", candidate.freq, candidate.symbol, candidate.error, candidate.frames);
+                message += candidate.symbol;
             }
 
             candidate.frames = 1;
@@ -62,4 +64,8 @@ Decoder::SymbMatch Decoder::match(float pitch) {
     }
 
     return {0, 0};
+}
+
+const std::string &Decoder::getMessage() const {
+    return message;
 }

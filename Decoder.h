@@ -18,6 +18,7 @@ public:
 
     void processFrame(int16_t *samples, uint32_t from);
 
+    const std::string &getMessage() const;
 
 private:
     struct Candidate {
