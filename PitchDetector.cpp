@@ -75,7 +75,7 @@ void PitchDetector::cumulativeMeanNormalizedDifference() {
 int PitchDetector::absoluteThreshold(float threshold) {
     int tau;
     for (tau = minLag + 2; tau < maxLag; tau++) {
-        uint32_t v = buf[tau];
+        float v = buf[tau];
         if (v < threshold) {
             while (tau + 1 < maxLag && buf[tau + 1] < buf[tau]) {
                 tau++;

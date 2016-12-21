@@ -8,7 +8,6 @@
 
 #include <cstdint>
 #define SYMBS 32
-//#define SYMBS 10
 
 #define RAMP_TIME 12.00
 #define TOP_TIME 75.36
