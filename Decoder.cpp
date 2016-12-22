@@ -9,8 +9,8 @@ using namespace wsl;
 
 Decoder::Decoder(uint32_t sr, uint16_t frame) :
         sampleRate(sr),
-        minFreq(600),
-        maxFreq(30000),
+        minFreq(1000),
+        maxFreq(20000),
         frameSize(frame),
         detector(sr, 512, minFreq, maxFreq) {
 
@@ -62,6 +62,12 @@ float Decoder::abs(float val) {
 }
 
 Decoder::SymbMatch Decoder::match(float pitch) {
+    const sound_symbol &first = SYMBOLS[0];
+    if (first.freq - 40 < pitch && pitch < first.freq) {
+        float er = abs(first.freq - pitch) / 100;
+        return {first.symbol, er};
+    }
+
     for (int i = 0; i < SYMBS - 1; i++) {
         sound_symbol s1 = SYMBOLS[i];
         sound_symbol s2 = SYMBOLS[i + 1];
