@@ -9,10 +9,13 @@ ADD_SUBDIRECTORY(whistle_tests)
 ADD_SUBDIRECTORY(media_tests)
 
 SET(VERSION 1)
-SET(BUILD_NUMBER ${build.number})
+SET(BUILD_NUMBER $ENV{BUILD_NUMBER})
 CONFIGURE_FILE("${PROJECT_SOURCE_DIR}/WhistleConfig.h.in" "${PROJECT_SOURCE_DIR}/WhistleConfig.h")
 
 
 ADD_LIBRARY(whistle ${SOURCE_FILES})
 TARGET_LINK_LIBRARIES(whistle)
 #TARGET_LINK_LIBRARIES(whistle ITKCommon)
+
+ENABLE_TESTING()
+ADD_TEST(NAME gtests COMMAND whistle_tests/run_whistle_tests)
