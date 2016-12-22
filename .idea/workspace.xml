@@ -21,11 +21,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac01631b-e1ef-40b4-9456-7db61abc4a10" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WhistleConfig.h.in" />
+    <list default="true" id="ac01631b-e1ef-40b4-9456-7db61abc4a10" name="Default" comment="Build Number From CI Server">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMakeLists.txt" afterPath="$PROJECT_DIR$/CMakeLists.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/media_tests/encode_test.cpp" afterPath="$PROJECT_DIR$/media_tests/encode_test.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WhistleConfig.h.in" afterPath="$PROJECT_DIR$/WhistleConfig.h.in" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/whistle_tests/WhistleTest.cc" afterPath="$PROJECT_DIR$/whistle_tests/WhistleTest.cc" />
     </list>
     <ignored path="AudioProtocol.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -48,8 +48,8 @@
       <file leaf-file-name="WhistleTest.cc" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/whistle_tests/WhistleTest.cc">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="658">
-              <caret line="107" column="37" lean-forward="false" selection-start-line="107" selection-start-column="6" selection-end-line="107" selection-end-column="37" />
+            <state relative-caret-position="254">
+              <caret line="164" column="47" lean-forward="false" selection-start-line="164" selection-start-column="47" selection-end-line="164" selection-end-column="47" />
               <folding>
                 <element signature="e#44#64#0" expanded="true" />
               </folding>
@@ -57,31 +57,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/media_tests/CMakeLists.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="11" column="43" lean-forward="false" selection-start-line="11" selection-start-column="43" selection-end-line="11" selection-end-column="43" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="plot-pitches.sh" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/media_tests/plot-pitches.sh">
+      <file leaf-file-name="WhistleConfig.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/WhistleConfig.h">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="72">
-              <caret line="4" column="27" lean-forward="false" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
+              <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="plot-samples.sh" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/media_tests/plot-samples.sh">
+      <file leaf-file-name="WhistleConfig.h.in" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/WhistleConfig.h.in">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="36">
-              <caret line="2" column="70" lean-forward="false" selection-start-line="2" selection-start-column="70" selection-end-line="2" selection-end-column="70" />
+            <state relative-caret-position="72">
+              <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -120,28 +110,8 @@
       <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="10" column="13" lean-forward="false" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="WhistleConfig.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/WhistleConfig.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="126">
-              <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="WhistleConfig.h.in" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/WhistleConfig.h.in">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="198">
+              <caret line="11" column="25" lean-forward="false" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -197,7 +167,6 @@
         <option value="$PROJECT_DIR$/Synthesizer.cpp" />
         <option value="$PROJECT_DIR$/Decoder.h" />
         <option value="$PROJECT_DIR$/Decoder.cpp" />
-        <option value="$PROJECT_DIR$/whistle_tests/WhistleTest.cc" />
         <option value="$PROJECT_DIR$/media_tests/decode_test.cpp" />
         <option value="$PROJECT_DIR$/media_tests/command.h" />
         <option value="$PROJECT_DIR$/media_tests/CMakeLists.txt" />
@@ -207,6 +176,7 @@
         <option value="$PROJECT_DIR$/media_tests/encode_test.cpp" />
         <option value="$PROJECT_DIR$/WhistleConfig.h" />
         <option value="$PROJECT_DIR$/WhistleConfig.h.in" />
+        <option value="$PROJECT_DIR$/whistle_tests/WhistleTest.cc" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
       </list>
     </option>
@@ -694,9 +664,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18777293" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18777293" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32881" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -749,7 +719,8 @@
     <MESSAGE value="Test commit" />
     <MESSAGE value="Media test subproject added" />
     <MESSAGE value="Some fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Some fixes" />
+    <MESSAGE value="Build Number From CI Server" />
+    <option name="LAST_COMMIT_MESSAGE" value="Build Number From CI Server" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -757,7 +728,7 @@
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <condition expression="frame &gt;= 110" language="ObjectiveC" />
           <url>file://$PROJECT_DIR$/whistle_tests/WhistleTest.cc</url>
-          <line>107</line>
+          <line>108</line>
           <option name="timeStamp" value="81" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
@@ -1004,14 +975,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/whistle_tests/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="3" column="63" lean-forward="false" selection-start-line="3" selection-start-column="63" selection-end-line="3" selection-end-column="63" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/media_tests/plot-samples.sh">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="36">
@@ -1036,16 +999,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/whistle_tests/WhistleTest.cc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="658">
-          <caret line="107" column="37" lean-forward="false" selection-start-line="107" selection-start-column="6" selection-end-line="107" selection-end-column="37" />
-          <folding>
-            <element signature="e#44#64#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/media_tests/decode_test.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="900">
@@ -1062,26 +1015,44 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/whistle_tests/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="3" column="63" lean-forward="false" selection-start-line="3" selection-start-column="63" selection-end-line="3" selection-end-column="63" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/WhistleConfig.h.in">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="72">
+          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/WhistleConfig.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+        <state relative-caret-position="72">
+          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/whistle_tests/WhistleTest.cc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="254">
+          <caret line="164" column="47" lean-forward="false" selection-start-line="164" selection-start-column="47" selection-end-line="164" selection-end-column="47" />
+          <folding>
+            <element signature="e#44#64#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="10" column="13" lean-forward="false" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+        <state relative-caret-position="198">
+          <caret line="11" column="25" lean-forward="false" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="25" />
           <folding />
         </state>
       </provider>

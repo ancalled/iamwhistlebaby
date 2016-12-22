@@ -7,6 +7,7 @@
 #include "gtest/gtest.h"
 #include "Synthesizer.h"
 #include <cstring>
+#include <WhistleConfig.h>
 
 using namespace std;
 
@@ -160,6 +161,8 @@ TEST(WhistleTest, CodeAndDecodeMultiple) {
 
 
 int main(int argc, char **argv) {
+
+    cout << "Running tests for libwhistle ver: " << getVersion() << "" << endl;
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }

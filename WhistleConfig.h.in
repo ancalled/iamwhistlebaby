@@ -1,7 +1,4 @@
 
-#define VERSION @VERSION@
-#define BUILD_NUMBER @BUILD_NUMBER@
-
-const char *getVersion() {
-    return (const char *) (VERSION + "." + BUILD_NUMBER);
+const std::string getVersion() {
+    return "@VERSION@.@BUILD_NUMBER@";
 }

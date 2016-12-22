@@ -9,7 +9,7 @@ ADD_SUBDIRECTORY(whistle_tests)
 ADD_SUBDIRECTORY(media_tests)
 
 SET(VERSION 1)
-SET(BUILD_NUMBER $ENV{build.number})
+SET(BUILD_NUMBER ${build.number})
 CONFIGURE_FILE("${PROJECT_SOURCE_DIR}/WhistleConfig.h.in" "${PROJECT_SOURCE_DIR}/WhistleConfig.h")
 
 
