@@ -47,10 +47,10 @@ int play(int8_t* samples, int size, uint32_t sampleRate) {
 
         ssize_t r = bufSize;
 
-//        for (int i = 0; i < bufSize; i += 2) {
-//            buf[i] = 0;
-//            buf[i + 1] = samples[from++];
-//        }
+        for (int i = 0; i < bufSize; i += 2) {
+            buf[i] = 0;
+            buf[i + 1] = samples[from++];
+        }
 
         printf("Play next %d, from %d\n", (int) r, from);
         /* ... and play it */
