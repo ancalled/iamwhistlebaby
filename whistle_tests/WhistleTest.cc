@@ -43,8 +43,8 @@ size_t levDist(const char *s, size_t n, const char *t, size_t m) {
     return r;
 }
 
-string randomMes() {
-    int len = rand() % 50;
+string randomMes(int maxLength) {
+    int len = rand() % maxLength;
     string mes = "";
     for (int i = 0; i < len; i++) {
         char symbol = wsl::SYMBOLS[rand() % SYMBS].symbol;
@@ -79,6 +79,8 @@ TEST(WhistleTest, Generate) {
 
 
 TEST(WhistleTest, CodeAndDecode) {
+//    uint32_t sampleRate = 19000;
+//    uint32_t sampleRate = 38000;
 //    uint32_t sampleRate = 44100;
     uint32_t sampleRate = 62500;
 
@@ -88,14 +90,12 @@ TEST(WhistleTest, CodeAndDecode) {
     Synthesizer synth(sampleRate);
     Decoder decoder(sampleRate, frameSize);
 
-//    string toEncode = "hjntdb982ilj6etj6e3l\0";
-    string toEncode = "6ik8api2nab8f1930ue38qcnapdijpcpb02mqkohu4pd53\0";
+    string toEncode = "hjntdb982ilj6etj6e3l\0";
 
     uint32_t size = (uint32_t) (toEncode.size() * samplesPerSoud) + 1;
     int8_t samples[size];
 
     uint32_t gen = synth.generate(samples, size, toEncode.c_str());
-//        printf("Generated %d samples\n", gen);
 
     // Decoding
 
@@ -113,7 +113,6 @@ TEST(WhistleTest, CodeAndDecode) {
 
 
     string decoded = decoder.getMessage();
-//        cout << "Decoded: " << decoded << endl;
     EXPECT_EQ(toEncode, decoded);
     size_t dist = levDist(toEncode.c_str(), toEncode.size(), decoded.c_str(), decoded.size());
     cout << "Dist: " << dist << endl;
@@ -132,7 +131,7 @@ TEST(WhistleTest, CodeAndDecodeMultiple) {
 
     for (int i = 0; i < 1000; i++) {
 
-        string toEncode = randomMes();
+        string toEncode = randomMes(33);
 
         uint32_t size = (uint32_t) (toEncode.size() * samplesPerSoud) + 1;
         int8_t samples[size];

@@ -14,48 +14,48 @@ Decoder::Decoder(uint32_t sr, uint16_t frame) :
         frameSize(frame),
         detector(sr, 512, minFreq, maxFreq) {
 
-    framesToDetect = (uint8_t) (sampleRate * TOP_TIME / 1000 / frameSize);
+    transitionFrames = (uint8_t) (sampleRate * RAMP_TIME / 1000 / frameSize);
+    sustainedFrames = (uint8_t) (sampleRate * TOP_TIME / 1000 / frameSize);
 }
 
 void Decoder::processFrame(int16_t *samples, uint32_t from) {
-    float pitch = detector.getPitch(samples, from, frameSize, 0.15);
+    float pitch = detector.getPitch(samples, from, frameSize, DETECTOR_THRESHOLD);
     if (pitch > 0) {
-        if (candidate.freq > 0) {
+        if (state == NONE) state = TRANSITION_FREQ;
+
+        if (candidate.freq > 0 /*state == TRANSITION_FREQ || state == SUSTAINED_FREQ*/) {
 
             float diff = abs((pitch - candidate.freq) / (maxFreq - minFreq));
-            if (diff < 0.001) {
-                candidate.frames++;
+            if (diff < FREQ_DIFF) {
+                if (candidate.transFrames < transitionFrames) {
+                    candidate.transFrames++;
+                } else {
+                    if (state != SUSTAINED_FREQ) state = SUSTAINED_FREQ;
+                    candidate.sustFrames++;
+                }
             } else {
-//            printf("%.2f\t%c\t%.2f\t%d\n", candidate.freq, candidate.symbol, candidate.error, candidate.frames);
-
-                candidate.frames = 1;
-                SymbMatch m = match(pitch);
-                candidate.symbol = m.symbol;
-                candidate.error = m.error;
+//                printf("%.2f\t%c\t%.2f\t%d\n",
+//                       candidate.freq,
+//                       candidate.symbol,
+//                       candidate.error,
+//                       candidate.sustFrames);
+                initCandidate(pitch);
             }
 
             candidate.freq = pitch;
 
-            if (candidate.frames == framesToDetect) {
+            if (candidate.sustFrames == sustainedFrames) {
                 message += candidate.symbol;
-
-                candidate.frames = 1;
-                SymbMatch m = match(pitch);
-                candidate.symbol = m.symbol;
-                candidate.error = m.error;
+                initCandidate(pitch);
             }
 
         } else {
-            candidate.freq = pitch;
-            candidate.frames = 1;
-            SymbMatch m = match(pitch);
-            candidate.symbol = m.symbol;
-            candidate.error = m.error;
+            initCandidate(pitch);
         }
     }
 
-
 }
+
 
 float Decoder::abs(float val) {
     return val > 0 ? val : -val;
@@ -94,7 +94,18 @@ const std::string &Decoder::getMessage() const {
 void Decoder::clearState() {
     message.clear();
     candidate.freq = 0;
-    candidate.frames = 0;
+    candidate.sustFrames = 0;
     candidate.symbol = '\0';
     candidate.error = 0;
+}
+
+void Decoder::initCandidate(float pitch) {
+    candidate.freq = pitch;
+    candidate.sustFrames = 1;
+    candidate.transFrames = 1;
+    SymbMatch m = match(pitch);
+    if (m.symbol != '\0') {
+        candidate.symbol = m.symbol;
+        candidate.error = m.error;
+    }
 }

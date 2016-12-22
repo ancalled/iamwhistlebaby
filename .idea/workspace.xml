@@ -20,6 +20,8 @@
     <list default="true" id="ac01631b-e1ef-40b4-9456-7db61abc4a10" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Decoder.cpp" afterPath="$PROJECT_DIR$/Decoder.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Decoder.h" afterPath="$PROJECT_DIR$/Decoder.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/whistle_tests/WhistleTest.cc" afterPath="$PROJECT_DIR$/whistle_tests/WhistleTest.cc" />
     </list>
     <ignored path="AudioProtocol.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -42,8 +44,8 @@
       <file leaf-file-name="WhistleTest.cc" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/whistle_tests/WhistleTest.cc">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="535">
-              <caret line="130" column="21" lean-forward="false" selection-start-line="130" selection-start-column="21" selection-end-line="130" selection-end-column="21" />
+            <state relative-caret-position="-62">
+              <caret line="115" column="0" lean-forward="false" selection-start-line="115" selection-start-column="0" selection-end-line="115" selection-end-column="0" />
               <folding>
                 <element signature="e#44#64#0" expanded="true" />
               </folding>
@@ -85,25 +87,25 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Decoder.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Decoder.cpp">
+      <file leaf-file-name="Decoder.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Decoder.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="370">
-              <caret line="69" column="0" lean-forward="true" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
+            <state relative-caret-position="550">
+              <caret line="56" column="14" lean-forward="false" selection-start-line="56" selection-start-column="14" selection-end-line="56" selection-end-column="14" />
               <folding>
-                <element signature="e#43#63#0" expanded="true" />
+                <element signature="e#97#115#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Decoder.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Decoder.h">
+      <file leaf-file-name="Decoder.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Decoder.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="244">
-              <caret line="22" column="18" lean-forward="false" selection-start-line="22" selection-start-column="18" selection-end-line="22" selection-end-column="18" />
+            <state relative-caret-position="211">
+              <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
               <folding>
-                <element signature="e#97#115#0" expanded="true" />
+                <element signature="e#43#63#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -190,8 +192,8 @@
         <option value="$PROJECT_DIR$/Synthesizer.h" />
         <option value="$PROJECT_DIR$/Synthesizer.cpp" />
         <option value="$PROJECT_DIR$/Decoder.h" />
-        <option value="$PROJECT_DIR$/whistle_tests/WhistleTest.cc" />
         <option value="$PROJECT_DIR$/Decoder.cpp" />
+        <option value="$PROJECT_DIR$/whistle_tests/WhistleTest.cc" />
       </list>
     </option>
   </component>
@@ -369,7 +371,7 @@
       </FILE-GROUP>
     </UpdatedFiles>
   </component>
-  <component name="RunManager" selected="Google Test.WhistleTest.CodeAndDecodeMultiple">
+  <component name="RunManager" selected="Google Test.WhistleTest.CodeAndDecode">
     <configuration default="false" name="All in WhistleTest.cc" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="whistle" TARGET_NAME="whistle_tests" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="whistle" RUN_TARGET_NAME="whistle_tests" TEST_PATTERN="WhistleTest.*:WhistleTest/*.*:*/WhistleTest.*/*:*/WhistleTest/*.*" TEST_MODE="PATTERN">
       <envs />
       <method />
@@ -587,8 +589,8 @@
     </list>
     <recent_temporary>
       <list size="4">
-        <item index="0" class="java.lang.String" itemvalue="Google Test.WhistleTest.CodeAndDecodeMultiple" />
-        <item index="1" class="java.lang.String" itemvalue="Google Test.WhistleTest.CodeAndDecode" />
+        <item index="0" class="java.lang.String" itemvalue="Google Test.WhistleTest.CodeAndDecode" />
+        <item index="1" class="java.lang.String" itemvalue="Google Test.WhistleTest.CodeAndDecodeMultiple" />
         <item index="2" class="java.lang.String" itemvalue="Google Test.WhistleTest.Generate" />
         <item index="3" class="java.lang.String" itemvalue="Google Test.All in WhistleTest.cc" />
       </list>
@@ -598,34 +600,34 @@
     <option name="remove_strategy" value="false" />
   </component>
   <component name="TestHistory">
-    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 12h 18m 59s.xml">
+    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 13h 16m 42s.xml">
       <configuration name="WhistleTest.CodeAndDecode" configurationId="CMakeGoogleTestRunConfigurationType" />
     </history-entry>
-    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 12h 19m 38s.xml">
+    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 13h 17m 11s.xml">
       <configuration name="WhistleTest.CodeAndDecode" configurationId="CMakeGoogleTestRunConfigurationType" />
     </history-entry>
-    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 12h 22m 15s.xml">
+    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 13h 19m 15s.xml">
       <configuration name="WhistleTest.CodeAndDecode" configurationId="CMakeGoogleTestRunConfigurationType" />
     </history-entry>
-    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 12h 22m 45s.xml">
+    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 13h 19m 21s.xml">
       <configuration name="WhistleTest.CodeAndDecode" configurationId="CMakeGoogleTestRunConfigurationType" />
     </history-entry>
-    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 12h 23m 00s.xml">
+    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 13h 19m 36s.xml">
       <configuration name="WhistleTest.CodeAndDecode" configurationId="CMakeGoogleTestRunConfigurationType" />
     </history-entry>
-    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 12h 24m 24s.xml">
+    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 13h 20m 04s.xml">
       <configuration name="WhistleTest.CodeAndDecode" configurationId="CMakeGoogleTestRunConfigurationType" />
     </history-entry>
-    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 12h 24m 59s.xml">
-      <configuration name="WhistleTest.CodeAndDecode" configurationId="CMakeGoogleTestRunConfigurationType" />
-    </history-entry>
-    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 12h 26m 56s.xml">
-      <configuration name="WhistleTest.CodeAndDecode" configurationId="CMakeGoogleTestRunConfigurationType" />
-    </history-entry>
-    <history-entry file="WhistleTest_CodeAndDecodeMultiple - 2016.12.22 at 12h 19m 18s.xml">
+    <history-entry file="WhistleTest_CodeAndDecodeMultiple - 2016.12.22 at 13h 17m 23s.xml">
       <configuration name="WhistleTest.CodeAndDecodeMultiple" configurationId="CMakeGoogleTestRunConfigurationType" />
     </history-entry>
-    <history-entry file="WhistleTest_CodeAndDecodeMultiple - 2016.12.22 at 12h 27m 16s.xml">
+    <history-entry file="WhistleTest_CodeAndDecodeMultiple - 2016.12.22 at 13h 18m 12s.xml">
+      <configuration name="WhistleTest.CodeAndDecodeMultiple" configurationId="CMakeGoogleTestRunConfigurationType" />
+    </history-entry>
+    <history-entry file="WhistleTest_CodeAndDecodeMultiple - 2016.12.22 at 13h 18m 27s.xml">
+      <configuration name="WhistleTest.CodeAndDecodeMultiple" configurationId="CMakeGoogleTestRunConfigurationType" />
+    </history-entry>
+    <history-entry file="WhistleTest_CodeAndDecodeMultiple - 2016.12.22 at 13h 18m 56s.xml">
       <configuration name="WhistleTest.CodeAndDecodeMultiple" configurationId="CMakeGoogleTestRunConfigurationType" />
     </history-entry>
   </component>
@@ -640,7 +642,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32925585" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32881" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.5344468" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5344468" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -683,19 +685,25 @@
     <MESSAGE value="Google Test Framework Added" />
     <MESSAGE value="main moved to WhistleTest" />
     <MESSAGE value="A lot of small fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="A lot of small fixes" />
+    <MESSAGE value="Test commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Test commit" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <condition expression="frame &gt;= 160" language="ObjectiveC" />
+          <condition expression="frame &gt;= 110" language="ObjectiveC" />
           <url>file://$PROJECT_DIR$/whistle_tests/WhistleTest.cc</url>
           <line>107</line>
           <option name="timeStamp" value="81" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Decoder.cpp</url>
+          <line>17</line>
+          <option name="timeStamp" value="84" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="83" />
+      <option name="time" value="85" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="CMakeGoogleTestRunConfigurationType">
@@ -961,16 +969,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Decoder.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="244">
-          <caret line="22" column="18" lean-forward="false" selection-start-line="22" selection-start-column="18" selection-end-line="22" selection-end-column="18" />
-          <folding>
-            <element signature="e#97#115#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Synthesizer.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1162">
@@ -979,10 +977,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Decoder.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="550">
+          <caret line="56" column="14" lean-forward="false" selection-start-line="56" selection-start-column="14" selection-end-line="56" selection-end-column="14" />
+          <folding>
+            <element signature="e#97#115#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Decoder.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="370">
-          <caret line="69" column="0" lean-forward="true" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
+        <state relative-caret-position="211">
+          <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
           <folding>
             <element signature="e#43#63#0" expanded="true" />
           </folding>
@@ -991,8 +999,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/whistle_tests/WhistleTest.cc">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="535">
-          <caret line="130" column="21" lean-forward="false" selection-start-line="130" selection-start-column="21" selection-end-line="130" selection-end-column="21" />
+        <state relative-caret-position="-62">
+          <caret line="115" column="0" lean-forward="false" selection-start-line="115" selection-start-column="0" selection-end-line="115" selection-end-column="0" />
           <folding>
             <element signature="e#44#64#0" expanded="true" />
           </folding>
