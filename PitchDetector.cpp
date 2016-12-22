@@ -12,7 +12,7 @@ PitchDetector::PitchDetector(u_int32_t sr, u_int32_t bufSize, float minFreq, flo
         bufferSize(bufSize), sampleRate(sr) {
 
     probability = 0.0;
-    minLag = (uint16_t) (sr / maxFreq);
+    minLag = (uint16_t) (sr / (maxFreq * 2));
 //    minLag = 1;
     maxLag = (uint16_t) (sr / minFreq);
     buf = (float *) malloc(sizeof(float) * maxLag);

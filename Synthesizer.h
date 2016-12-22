@@ -55,24 +55,11 @@ namespace wsl {
             {'v', 10548.08, 0x5668EDUL}
     };
 
-//    const sound_symbol SYMBOLS[SYMBS] = {
-//            {'0', 1462, 0x2765A5UL},
-//            {'1', 1583, 0x2AA85DUL},
-//            {'2', 1727, 0x2E89C1UL},
-//            {'3', 1900, 0x333333UL},
-//            {'4', 2111, 0x38E2C9UL},
-//            {'5', 2375, 0x400000UL},
-//            {'6', 2714, 0x492299UL},
-//            {'7', 3167, 0x5557A2UL},
-//            {'8', 3800, 0x666666UL},
-//            {'9', 4750, 0x800000UL}
-//    };
 }
 
 class Synthesizer {
 
 public:
-
 
     Synthesizer(uint32_t sampleRate);
 
@@ -83,11 +70,11 @@ public:
     uint32_t expectedSize(size_t symbols);
 
 private:
-    uint32_t sampleRate;
-    int frame;
-    int argument;
-    uint16_t rampSamples;
-    uint16_t topSamples;
+    const uint32_t sampleRate;
+    const uint16_t rampSamples;
+    const uint16_t topSamples;
+
+
 public:
 };
 

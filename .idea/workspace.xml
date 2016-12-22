@@ -18,10 +18,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac01631b-e1ef-40b4-9456-7db61abc4a10" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/whistle_tests/main.cpp" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Decoder.cpp" afterPath="$PROJECT_DIR$/Decoder.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Decoder.h" afterPath="$PROJECT_DIR$/Decoder.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PitchDetector.cpp" afterPath="$PROJECT_DIR$/PitchDetector.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Synthesizer.cpp" afterPath="$PROJECT_DIR$/Synthesizer.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Synthesizer.h" afterPath="$PROJECT_DIR$/Synthesizer.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/whistle_tests/WhistleTest.cc" afterPath="$PROJECT_DIR$/whistle_tests/WhistleTest.cc" />
     </list>
     <ignored path="AudioProtocol.iws" />
@@ -42,13 +44,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Synthesizer.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Synthesizer.cpp">
+      <file leaf-file-name="WhistleTest.cc" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/whistle_tests/WhistleTest.cc">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="122">
-              <caret line="19" column="22" lean-forward="false" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
+            <state relative-caret-position="337">
+              <caret line="92" column="0" lean-forward="true" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
               <folding>
-                <element signature="e#42#60#0" expanded="true" />
+                <element signature="e#44#64#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -57,10 +59,22 @@
       <file leaf-file-name="PitchDetector.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/PitchDetector.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="468">
-              <caret line="26" column="21" lean-forward="false" selection-start-line="26" selection-start-column="21" selection-end-line="26" selection-end-column="21" />
+            <state relative-caret-position="175">
+              <caret line="28" column="0" lean-forward="false" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
               <folding>
                 <element signature="e#52#70#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Synthesizer.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Synthesizer.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="252">
+              <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+              <folding>
+                <element signature="e#42#60#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -69,8 +83,8 @@
       <file leaf-file-name="Synthesizer.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Synthesizer.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="847">
-              <caret line="81" column="9" lean-forward="false" selection-start-line="81" selection-start-column="4" selection-end-line="81" selection-end-column="9" />
+            <state relative-caret-position="1162">
+              <caret line="76" column="0" lean-forward="false" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -79,8 +93,8 @@
       <file leaf-file-name="Decoder.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Decoder.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2">
-              <caret line="27" column="0" lean-forward="true" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+            <state relative-caret-position="283">
+              <caret line="69" column="0" lean-forward="false" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
               <folding>
                 <element signature="e#43#63#0" expanded="true" />
               </folding>
@@ -91,8 +105,8 @@
       <file leaf-file-name="Decoder.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Decoder.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="309">
-              <caret line="20" column="23" lean-forward="false" selection-start-line="20" selection-start-column="23" selection-end-line="20" selection-end-column="23" />
+            <state relative-caret-position="244">
+              <caret line="22" column="18" lean-forward="false" selection-start-line="22" selection-start-column="18" selection-end-line="22" selection-end-column="18" />
               <folding>
                 <element signature="e#97#115#0" expanded="true" />
               </folding>
@@ -110,14 +124,22 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="WhistleTest.cc" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/whistle_tests/WhistleTest.cc">
+      <file leaf-file-name="PitchDetector.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/PitchDetector.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="46">
-              <caret line="65" column="31" lean-forward="false" selection-start-line="65" selection-start-column="31" selection-end-line="65" selection-end-column="31" />
-              <folding>
-                <element signature="e#44#64#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="576">
+              <caret line="32" column="9" lean-forward="false" selection-start-line="32" selection-start-column="9" selection-end-line="32" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="gtest.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/whistle_tests/lib/gtest-1.7.0/include/gtest/gtest.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="204">
+              <caret line="2058" column="8" lean-forward="false" selection-start-line="2058" selection-start-column="8" selection-end-line="2058" selection-end-column="8" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -128,6 +150,7 @@
     <findStrings>
       <find>u_int16_t</find>
       <find>std::</find>
+      <find>frame</find>
     </findStrings>
     <replaceStrings>
       <replace>uint16_t</replace>
@@ -161,9 +184,6 @@
         <option value="$PROJECT_DIR$/YinDecoder.h" />
         <option value="$PROJECT_DIR$/Segment.h" />
         <option value="$PROJECT_DIR$/main.cpp" />
-        <option value="$PROJECT_DIR$/Decoder.h" />
-        <option value="$PROJECT_DIR$/Synthesizer.h" />
-        <option value="$PROJECT_DIR$/Synthesizer.cpp" />
         <option value="$PROJECT_DIR$/whistle_tests/main.h" />
         <option value="$PROJECT_DIR$/whistle_tests/main.cpp" />
         <option value="$PROJECT_DIR$/whistle_tests/WhistleTest.h" />
@@ -171,6 +191,10 @@
         <option value="$PROJECT_DIR$/PitchDetector.h" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/whistle_tests/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/PitchDetector.cpp" />
+        <option value="$PROJECT_DIR$/Synthesizer.h" />
+        <option value="$PROJECT_DIR$/Synthesizer.cpp" />
+        <option value="$PROJECT_DIR$/Decoder.h" />
         <option value="$PROJECT_DIR$/Decoder.cpp" />
         <option value="$PROJECT_DIR$/whistle_tests/WhistleTest.cc" />
       </list>
@@ -237,6 +261,119 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
+  <component name="RestoreUpdateTree" date="Moments ago" ActionInfo="_Update">
+    <UpdatedFiles>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Updated from server" />
+        <option name="myStatusName" value="Changed on server" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="CHANGED_ON_SERVER" />
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Updated" />
+          <option name="myStatusName" value="Changed" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="UPDATED" />
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/Decoder.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/PitchDetector.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/Synthesizer.h</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/whistle_tests/WhistleTest.cc</PATH>
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Created" />
+          <option name="myStatusName" value="Created" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="CREATED" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Deleted" />
+          <option name="myStatusName" value="Deleted" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="true" />
+          <option name="myId" value="REMOVED_FROM_REPOSITORY" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Restored" />
+          <option name="myStatusName" value="Will be restored" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="RESTORED" />
+        </FILE-GROUP>
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Modified" />
+        <option name="myStatusName" value="Modified" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MODIFIED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Skipped" />
+        <option name="myStatusName" value="Skipped" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="SKIPPED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged with conflicts" />
+        <option name="myStatusName" value="Will be merged with conflicts" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED_WITH_CONFLICTS" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged with tree conflicts" />
+        <option name="myStatusName" value="Merged with tree conflicts" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED_WITH_TREE_CONFLICT" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged with property conflicts" />
+        <option name="myStatusName" value="Will be merged with property conflicts" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED_WITH_PROPERTY_CONFLICT" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged" />
+        <option name="myStatusName" value="Will be merged" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Not in repository" />
+        <option name="myStatusName" value="Not in repository" />
+        <option name="mySupportsDeletion" value="true" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="UNKNOWN" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Locally added" />
+        <option name="myStatusName" value="Locally added" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="LOCALLY_ADDED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Locally removed" />
+        <option name="myStatusName" value="Locally removed" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="LOCALLY_REMOVED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Switched" />
+        <option name="myStatusName" value="Switched" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="SWITCHED" />
+      </FILE-GROUP>
+    </UpdatedFiles>
+  </component>
   <component name="RunManager" selected="Google Test.WhistleTest.CodeAndDecode">
     <configuration default="false" name="All in WhistleTest.cc" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="whistle" TARGET_NAME="whistle_tests" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="whistle" RUN_TARGET_NAME="whistle_tests" TEST_PATTERN="WhistleTest.*:WhistleTest/*.*:*/WhistleTest.*/*:*/WhistleTest/*.*" TEST_MODE="PATTERN">
       <envs />
@@ -247,6 +384,10 @@
       <method />
     </configuration>
     <configuration default="false" name="WhistleTest.CodeAndDecode" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="whistle" TARGET_NAME="run_whistle_tests" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="whistle" RUN_TARGET_NAME="run_whistle_tests" TEST_CLASS="WhistleTest" TEST_METHOD="CodeAndDecode" TEST_MODE="SUITE_TEST">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="WhistleTest.CodeAndDecodeMultiple" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="whistle" TARGET_NAME="run_whistle_tests" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="whistle" RUN_TARGET_NAME="run_whistle_tests" TEST_CLASS="WhistleTest" TEST_METHOD="CodeAndDecodeMultiple" TEST_MODE="SUITE_TEST">
       <envs />
       <method />
     </configuration>
@@ -435,7 +576,7 @@
       <envs />
       <method />
     </configuration>
-    <list size="11">
+    <list size="12">
       <item index="0" class="java.lang.String" itemvalue="Application.AudioProtocol" />
       <item index="1" class="java.lang.String" itemvalue="Application.Build All" />
       <item index="2" class="java.lang.String" itemvalue="Application.whistle" />
@@ -447,12 +588,14 @@
       <item index="8" class="java.lang.String" itemvalue="Google Test.All in WhistleTest.cc" />
       <item index="9" class="java.lang.String" itemvalue="Google Test.WhistleTest.Generate" />
       <item index="10" class="java.lang.String" itemvalue="Google Test.WhistleTest.CodeAndDecode" />
+      <item index="11" class="java.lang.String" itemvalue="Google Test.WhistleTest.CodeAndDecodeMultiple" />
     </list>
     <recent_temporary>
-      <list size="3">
+      <list size="4">
         <item index="0" class="java.lang.String" itemvalue="Google Test.WhistleTest.CodeAndDecode" />
-        <item index="1" class="java.lang.String" itemvalue="Google Test.WhistleTest.Generate" />
-        <item index="2" class="java.lang.String" itemvalue="Google Test.All in WhistleTest.cc" />
+        <item index="1" class="java.lang.String" itemvalue="Google Test.WhistleTest.CodeAndDecodeMultiple" />
+        <item index="2" class="java.lang.String" itemvalue="Google Test.WhistleTest.Generate" />
+        <item index="3" class="java.lang.String" itemvalue="Google Test.All in WhistleTest.cc" />
       </list>
     </recent_temporary>
   </component>
@@ -460,35 +603,35 @@
     <option name="remove_strategy" value="false" />
   </component>
   <component name="TestHistory">
-    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.20 at 19h 06m 23s.xml">
+    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 12h 15m 30s.xml">
       <configuration name="WhistleTest.CodeAndDecode" configurationId="CMakeGoogleTestRunConfigurationType" />
     </history-entry>
-    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.20 at 19h 07m 10s.xml">
+    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 12h 15m 41s.xml">
       <configuration name="WhistleTest.CodeAndDecode" configurationId="CMakeGoogleTestRunConfigurationType" />
     </history-entry>
-    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.20 at 19h 07m 38s.xml">
+    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 12h 16m 38s.xml">
       <configuration name="WhistleTest.CodeAndDecode" configurationId="CMakeGoogleTestRunConfigurationType" />
     </history-entry>
-    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.20 at 19h 12m 05s.xml">
+    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 12h 17m 04s.xml">
       <configuration name="WhistleTest.CodeAndDecode" configurationId="CMakeGoogleTestRunConfigurationType" />
     </history-entry>
-    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.20 at 19h 13m 25s.xml">
+    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 12h 17m 09s.xml">
       <configuration name="WhistleTest.CodeAndDecode" configurationId="CMakeGoogleTestRunConfigurationType" />
     </history-entry>
-    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.20 at 19h 17m 04s.xml">
+    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 12h 18m 09s.xml">
       <configuration name="WhistleTest.CodeAndDecode" configurationId="CMakeGoogleTestRunConfigurationType" />
     </history-entry>
-    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.20 at 19h 22m 15s.xml">
+    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 12h 18m 57s.xml">
       <configuration name="WhistleTest.CodeAndDecode" configurationId="CMakeGoogleTestRunConfigurationType" />
     </history-entry>
-    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.20 at 19h 22m 51s.xml">
+    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 12h 18m 59s.xml">
       <configuration name="WhistleTest.CodeAndDecode" configurationId="CMakeGoogleTestRunConfigurationType" />
     </history-entry>
-    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.20 at 19h 23m 06s.xml">
+    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.22 at 12h 19m 38s.xml">
       <configuration name="WhistleTest.CodeAndDecode" configurationId="CMakeGoogleTestRunConfigurationType" />
     </history-entry>
-    <history-entry file="WhistleTest_CodeAndDecode - 2016.12.20 at 19h 27m 39s.xml">
-      <configuration name="WhistleTest.CodeAndDecode" configurationId="CMakeGoogleTestRunConfigurationType" />
+    <history-entry file="WhistleTest_CodeAndDecodeMultiple - 2016.12.22 at 12h 19m 18s.xml">
+      <configuration name="WhistleTest.CodeAndDecodeMultiple" configurationId="CMakeGoogleTestRunConfigurationType" />
     </history-entry>
   </component>
   <component name="ToolWindowManager">
@@ -502,11 +645,11 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32925585" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32881" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.5344468" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5344468" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2776618" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.42066807" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -543,23 +686,28 @@
     <MESSAGE value="Detector" />
     <MESSAGE value="Separate test app and library" />
     <MESSAGE value="Google Test Framework Added" />
-    <option name="LAST_COMMIT_MESSAGE" value="Google Test Framework Added" />
+    <MESSAGE value="main moved to WhistleTest" />
+    <option name="LAST_COMMIT_MESSAGE" value="main moved to WhistleTest" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="68" />
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <condition expression="frame &gt;= 142" language="ObjectiveC" />
+          <url>file://$PROJECT_DIR$/whistle_tests/WhistleTest.cc</url>
+          <line>107</line>
+          <option name="timeStamp" value="81" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="82" />
     </breakpoint-manager>
-    <watches-manager />
+    <watches-manager>
+      <configuration name="CMakeGoogleTestRunConfigurationType">
+        <watch expression="this-&gt;candidate" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Decoder.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="11" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1170">
@@ -733,14 +881,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Synthesizer.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="847">
-          <caret line="81" column="9" lean-forward="false" selection-start-line="81" selection-start-column="4" selection-end-line="81" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/whistle_tests/main.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="72">
@@ -765,26 +905,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/PitchDetector.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="32" column="55" lean-forward="false" selection-start-line="32" selection-start-column="55" selection-end-line="32" selection-end-column="55" />
-          <folding>
-            <marker date="1481797912705" expanded="true" signature="134:752" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/PitchDetector.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="468">
-          <caret line="26" column="21" lean-forward="false" selection-start-line="26" selection-start-column="21" selection-end-line="26" selection-end-column="21" />
-          <folding>
-            <element signature="e#52#70#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="144">
@@ -801,16 +921,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Synthesizer.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="122">
-          <caret line="19" column="22" lean-forward="false" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
-          <folding>
-            <element signature="e#42#60#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/whistle_tests/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="882">
@@ -819,20 +929,64 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/whistle_tests/lib/gtest-1.7.0/include/gtest/gtest.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="2058" column="8" lean-forward="false" selection-start-line="2058" selection-start-column="8" selection-end-line="2058" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/PitchDetector.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="576">
+          <caret line="32" column="9" lean-forward="false" selection-start-line="32" selection-start-column="9" selection-end-line="32" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/PitchDetector.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="28" column="0" lean-forward="false" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+          <folding>
+            <element signature="e#52#70#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Synthesizer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+          <folding>
+            <element signature="e#42#60#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Decoder.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="309">
-          <caret line="20" column="23" lean-forward="false" selection-start-line="20" selection-start-column="23" selection-end-line="20" selection-end-column="23" />
+        <state relative-caret-position="244">
+          <caret line="22" column="18" lean-forward="false" selection-start-line="22" selection-start-column="18" selection-end-line="22" selection-end-column="18" />
           <folding>
             <element signature="e#97#115#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Synthesizer.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1162">
+          <caret line="76" column="0" lean-forward="false" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Decoder.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2">
-          <caret line="27" column="0" lean-forward="true" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+        <state relative-caret-position="283">
+          <caret line="69" column="0" lean-forward="false" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
           <folding>
             <element signature="e#43#63#0" expanded="true" />
           </folding>
@@ -841,8 +995,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/whistle_tests/WhistleTest.cc">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
-          <caret line="65" column="31" lean-forward="false" selection-start-line="65" selection-start-column="31" selection-end-line="65" selection-end-column="31" />
+        <state relative-caret-position="337">
+          <caret line="92" column="0" lean-forward="true" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
           <folding>
             <element signature="e#44#64#0" expanded="true" />
           </folding>

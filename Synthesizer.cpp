@@ -9,11 +9,9 @@
 
 using namespace wsl;
 
-Synthesizer::Synthesizer(uint32_t sampleRate) : sampleRate(sampleRate) {
-    frame = 0;
-    argument = 0;
-    rampSamples = (uint16_t) ((sampleRate * RAMP_TIME) / 1000);
-    topSamples = (uint16_t) ((sampleRate * TOP_TIME) / 1000);
+Synthesizer::Synthesizer(uint32_t sampleRate) : sampleRate(sampleRate),
+                                                rampSamples((uint16_t) ((sampleRate * RAMP_TIME) / 1000)),
+                                                topSamples((uint16_t) ((sampleRate * TOP_TIME) / 1000)) {
 }
 
 
@@ -23,6 +21,9 @@ uint32_t Synthesizer::generate(int8_t *samples, uint32_t size, const char *mes) 
     float freq = 0, prevFreq = 0;
     const uint8_t halfampl = 1 << 5;
     const uint8_t amplStep = (uint8_t) (rampSamples / halfampl);
+    int frame = 0;
+    int argument = 0;
+
 
     for (int i = 0; i < len; i++) {
         char ch = mes[i];

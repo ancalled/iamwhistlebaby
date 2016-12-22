@@ -20,6 +20,8 @@ public:
 
     const std::string &getMessage() const;
 
+    void clearState();
+
 private:
     struct Candidate {
         float freq;
@@ -48,6 +50,7 @@ private:
 
     float abs(float val);
 };
+
 
 
 #endif //WHISTLE_DECODER_H

@@ -19,37 +19,39 @@ Decoder::Decoder(uint32_t sr, uint16_t frame) :
 
 void Decoder::processFrame(int16_t *samples, uint32_t from) {
     float pitch = detector.getPitch(samples, from, frameSize, 0.15);
-    if (candidate.freq > 0) {
+    if (pitch > 0) {
+        if (candidate.freq > 0) {
 
-        float diff = abs((pitch - candidate.freq) / (maxFreq - minFreq));
-        if (diff < 0.005) {
-            candidate.frames++;
-        } else {
+            float diff = abs((pitch - candidate.freq) / (maxFreq - minFreq));
+            if (diff < 0.001) {
+                candidate.frames++;
+            } else {
 //            printf("%.2f\t%c\t%.2f\t%d\n", candidate.freq, candidate.symbol, candidate.error, candidate.frames);
 
+                candidate.frames = 1;
+                SymbMatch m = match(pitch);
+                candidate.symbol = m.symbol;
+                candidate.error = m.error;
+            }
+
+            candidate.freq = pitch;
+
+            if (candidate.frames == framesToDetect) {
+                message += candidate.symbol;
+
+                candidate.frames = 1;
+                SymbMatch m = match(pitch);
+                candidate.symbol = m.symbol;
+                candidate.error = m.error;
+            }
+
+        } else {
+            candidate.freq = pitch;
             candidate.frames = 1;
             SymbMatch m = match(pitch);
             candidate.symbol = m.symbol;
             candidate.error = m.error;
         }
-
-        candidate.freq = pitch;
-
-        if (candidate.frames == framesToDetect) {
-            message += candidate.symbol;
-
-            candidate.frames = 1;
-            SymbMatch m = match(pitch);
-            candidate.symbol = m.symbol;
-            candidate.error = m.error;
-        }
-
-    } else {
-        candidate.freq = pitch;
-        candidate.frames = 1;
-        SymbMatch m = match(pitch);
-        candidate.symbol = m.symbol;
-        candidate.error = m.error;
     }
 
 
@@ -63,7 +65,7 @@ Decoder::SymbMatch Decoder::match(float pitch) {
     for (int i = 0; i < SYMBS - 1; i++) {
         sound_symbol s1 = SYMBOLS[i];
         sound_symbol s2 = SYMBOLS[i + 1];
-        if (s1.freq < pitch && pitch < s2.freq) {
+        if (s1.freq < pitch && pitch <= s2.freq) {
             sound_symbol found = s2.freq - pitch > pitch - s1.freq ? s1 : s2;
             float er = abs(found.freq - pitch) / (s2.freq - s1.freq);
             return {found.symbol, er};
@@ -81,4 +83,12 @@ Decoder::SymbMatch Decoder::match(float pitch) {
 
 const std::string &Decoder::getMessage() const {
     return message;
+}
+
+void Decoder::clearState() {
+    message.clear();
+    candidate.freq = 0;
+    candidate.frames = 0;
+    candidate.symbol = '\0';
+    candidate.error = 0;
 }
