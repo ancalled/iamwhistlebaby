@@ -42,7 +42,6 @@ int play(int8_t* samples, int size, uint32_t sampleRate) {
     int from = 0;
     uint32_t bufSize = 1024;
     int8_t buf[bufSize];
-    short sh_buf[bufSize];
     while (from < size) {
 
         ssize_t r = bufSize;
