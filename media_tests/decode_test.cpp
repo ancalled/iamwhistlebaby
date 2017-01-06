@@ -12,6 +12,7 @@
 #include <PitchDetector.h>
 #include <algorithm>
 #include <cstring>
+#include <Decoder.h>
 #include "command.h"
 
 #define PLOT_SAMPLES 1
@@ -39,10 +40,10 @@ int main(int argc, char *argv[]) {
         sampleRate = DEFAULT_DECODE_SAMPLE_RATE;
     }
 
-    uint32_t bufSize;
+    uint16_t bufSize;
     if (cmdOptionExists(argv, argv + argc, "-bufsize")) {
         char *bsCh = getCmdOption(argv, argv + argc, "-bufsize");
-        bufSize = (uint32_t) atoi(bsCh);
+        bufSize = (uint16_t) atoi(bsCh);
     } else {
         bufSize = DEFAULT_BUFFER_SIZE;
     }
@@ -100,7 +101,8 @@ int main(int argc, char *argv[]) {
 
     pa_simple *s = NULL;
     int error;
-    PitchDetector dec(sampleRate, bufSize, minFreq, maxFreq);
+    Decoder dec(sampleRate, bufSize);
+//    PitchDetector dec(sampleRate, bufSize, minFreq, maxFreq);
 
     if (!(s = pa_simple_new(NULL, PULSE_AUDIO_NAME, PA_STREAM_RECORD, NULL, "record", &ss, NULL, NULL, &error))) {
         fprintf(stderr, __FILE__": pa_simple_new() failed: %s\n", pa_strerror(error));
@@ -120,8 +122,12 @@ int main(int argc, char *argv[]) {
             return 2;
         }
 
-        float pitch = dec.getPitch(buf, 0, bufSize, 0.25);
+        PitchDetector::DetectResult r = dec.processFrame(buf);
 
+        std::string mes = dec.getMessage();
+        if (mes.length() > 0) {
+            printf("Detected: %s\n", mes.c_str());
+        }
         if (gnuplot) {
             if (plotType == PLOT_SAMPLES) {
                 for (int i = 0; i < bufSize; i++) {
@@ -129,14 +135,15 @@ int main(int argc, char *argv[]) {
                 }
 
             } else if (plotType == PLOT_PITCHES) {
-                printf("%.2f\t%.2f\n", pitch, dec.getProbability());
+                printf("%.2f\t%.2f\n", r.pitch, r.probability);
 
-            } else if (plotType == PLOT_TAUS) {
-                for (int tau = 0; tau < maxTau; tau++) {
-                    printf("%.2f\t", tau < minTau ? 1.0 : dec.getBuf()[tau]);
-                }
-                printf("\n");
             }
+//            else if (plotType == PLOT_TAUS) {
+//                for (int tau = 0; tau < maxTau; tau++) {
+//                    printf("%.2f\t", tau < minTau ? 1.0 : dec.getBuf()[tau]);
+//                }
+//                printf("\n");
+//            }
 
             milliseconds now = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
             if ((now.count() - lastRepaint.count()) > replotMilis) {

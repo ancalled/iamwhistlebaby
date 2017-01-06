@@ -4,42 +4,34 @@
 
 #include <cstdlib>
 #include <cstdint>
-#include <cstdio>
 #include "PitchDetector.h"
 
 
 PitchDetector::PitchDetector(u_int32_t sr, u_int32_t bufSize, float minFreq, float maxFreq) :
         bufferSize(bufSize), sampleRate(sr) {
 
-    probability = 0.0;
     minLag = (uint16_t) (sr / (maxFreq * 2));
-//    minLag = 1;
     maxLag = (uint16_t) (sr / minFreq);
     buf = (float *) malloc(sizeof(float) * maxLag);
 
 }
 
 
-float PitchDetector::getProbability() {
-    return probability;
-}
-
-float PitchDetector::getPitch(int16_t *samples, uint32_t from, uint32_t size, float threshold) {
-    int tauEstimate;
+PitchDetector::DetectResult PitchDetector::getPitch(int16_t *samples, uint32_t from, uint32_t size, float threshold) {
     float pitchInHertz = -1;
 
     difference(samples, from, size);
 
     cumulativeMeanNormalizedDifference();
-    tauEstimate = absoluteThreshold(threshold);
+    ThresholdResult tr = absoluteThreshold(threshold);
 
-    float ftau = -1;
-    if (tauEstimate != -1) {
-        ftau = parabolicInterpolation(tauEstimate);
+    float ftau;
+    if (tr.tau != -1) {
+        ftau = parabolicInterpolation(tr.tau);
         pitchInHertz = sampleRate / ftau;
     }
 
-    return pitchInHertz;
+    return {pitchInHertz, tr.probability};
 }
 
 
@@ -72,8 +64,9 @@ void PitchDetector::cumulativeMeanNormalizedDifference() {
     }
 }
 
-int PitchDetector::absoluteThreshold(float threshold) {
+PitchDetector::ThresholdResult PitchDetector::absoluteThreshold(float threshold) {
     int tau;
+    float probability = 0.0;
     for (tau = minLag + 2; tau < maxLag; tau++) {
         float v = buf[tau];
         if (v < threshold) {
@@ -90,7 +83,7 @@ int PitchDetector::absoluteThreshold(float threshold) {
         tau = -1;
         probability = 0;
     }
-    return tau;
+    return {tau, probability};
 }
 
 
@@ -126,13 +119,8 @@ float PitchDetector::parabolicInterpolation(int tauEstimate) {
         s0 = buf[x0];
         s1 = buf[tauEstimate];
         s2 = buf[x2];
-        // fixed AUBIO implementation, thanks to Karl Helgason:
-        // (2.0f * s1 - s2 - s0) was incorrectly multiplied with -1
         betterTau = tauEstimate + (s2 - s0) / (2 * (2 * s1 - s2 - s0));
     }
     return betterTau;
 }
 
-float *PitchDetector::getBuf() {
-    return buf;
-}

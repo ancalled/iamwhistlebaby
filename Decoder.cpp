@@ -18,14 +18,15 @@ Decoder::Decoder(uint32_t sr, uint16_t frame) :
     sustainedFrames = (uint8_t) (sampleRate * TOP_TIME / 1000 / frameSize);
 }
 
-void Decoder::processFrame(int16_t *samples, uint32_t from) {
-    float pitch = detector.getPitch(samples, from, frameSize, DETECTOR_THRESHOLD);
-    if (pitch > 0) {
+PitchDetector::DetectResult Decoder::processFrame(int16_t *samples, uint32_t from) {
+    PitchDetector::DetectResult r;
+    r = detector.getPitch(samples, from, frameSize, DETECTOR_THRESHOLD);
+    if (r.pitch > 0) {
         if (state == NONE) state = TRANSITION_FREQ;
 
         if (candidate.freq > 0 /*state == TRANSITION_FREQ || state == SUSTAINED_FREQ*/) {
 
-            float diff = abs((pitch - candidate.freq) / (maxFreq - minFreq));
+            float diff = abs((r.pitch - candidate.freq) / (maxFreq - minFreq));
             if (diff < FREQ_DIFF) {
                 if (candidate.transFrames < transitionFrames) {
                     candidate.transFrames++;
@@ -39,21 +40,22 @@ void Decoder::processFrame(int16_t *samples, uint32_t from) {
 //                       candidate.symbol,
 //                       candidate.error,
 //                       candidate.sustFrames);
-                initCandidate(pitch);
+                initCandidate(r.pitch);
             }
 
-            candidate.freq = pitch;
+            candidate.freq = r.pitch;
 
             if (candidate.sustFrames == sustainedFrames) {
                 message += candidate.symbol;
-                initCandidate(pitch);
+                initCandidate(r.pitch);
             }
 
         } else {
-            initCandidate(pitch);
+            initCandidate(r.pitch);
         }
     }
 
+    return r;
 }
 
 

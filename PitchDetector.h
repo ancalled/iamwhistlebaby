@@ -6,26 +6,30 @@
 #define AUDIOPROTOCOL_DEC2_H
 
 
-
-
 class PitchDetector {
 
 public:
 
+    struct DetectResult {
+        float pitch;
+        float probability;
+    };
+
     PitchDetector(uint32_t sr, uint32_t bufSize, float minFreq, float maxFreq);
 
-    float getPitch(int16_t *samples, uint32_t from, uint32_t size, float threshold);
+    PitchDetector::DetectResult getPitch(int16_t *samples, uint32_t from, uint32_t size, float threshold);
 
-    float getProbability();
-
-    float* getBuf();
 
 private:
+
+    struct ThresholdResult {
+        int tau;
+        float probability;
+    };
+
     uint32_t bufferSize;
-    uint32_t halfBufferSize;
     uint32_t sampleRate;
     float *buf;
-    float probability;
     uint16_t minLag;
     uint16_t maxLag;
 
@@ -34,7 +38,7 @@ private:
 
     void cumulativeMeanNormalizedDifference();
 
-    int absoluteThreshold(float threshold);
+    PitchDetector::ThresholdResult absoluteThreshold(float threshold);
 
     float parabolicInterpolation(int tauEstimate);
 
