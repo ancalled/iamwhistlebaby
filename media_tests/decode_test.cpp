@@ -12,7 +12,7 @@
 #include <PitchDetector.h>
 #include <algorithm>
 #include <cstring>
-#include <Decoder.h>
+#include <MessageDecoder.h>
 #include "command.h"
 
 #define PLOT_SAMPLES 1
@@ -20,6 +20,7 @@
 #define PLOT_TAUS 3
 
 #define DEFAULT_DECODE_SAMPLE_RATE 44100
+//#define DEFAULT_DECODE_SAMPLE_RATE 62200
 #define DEFAULT_BUFFER_SIZE 512
 #define DEFAULT_MIN_FREQ 1500
 #define DEFAULT_MAX_FREQ 20000
@@ -27,7 +28,6 @@
 #define PULSE_AUDIO_NAME "decoder"
 
 using namespace std::chrono;
-
 
 
 int main(int argc, char *argv[]) {
@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
 
     pa_simple *s = NULL;
     int error;
-    Decoder dec(sampleRate, bufSize);
+    MessageDecoder dec(sampleRate , bufSize);
 //    PitchDetector dec(sampleRate, bufSize, minFreq, maxFreq);
 
     if (!(s = pa_simple_new(NULL, PULSE_AUDIO_NAME, PA_STREAM_RECORD, NULL, "record", &ss, NULL, NULL, &error))) {
@@ -122,12 +122,19 @@ int main(int argc, char *argv[]) {
             return 2;
         }
 
-        PitchDetector::DetectResult r = dec.processFrame(buf);
+        MessageDecoder::ProcessResult r = dec.processFrame(buf);
+        if (dec.hasResult()) {
+            std::string mes = dec.popMessage();
+            if (mes.length() > 0) {
+                std::time_t now_time = system_clock::to_time_t(system_clock::now());
 
-        std::string mes = dec.getMessage();
-        if (mes.length() > 0) {
-            printf("Detected: %s\n", mes.c_str());
+                char mbstr[100];
+                std::strftime(mbstr, sizeof(mbstr), "%H:%M:%S", std::localtime(&now_time));
+
+                printf("[%s] %s\n", mbstr, mes.c_str());
+            }
         }
+
         if (gnuplot) {
             if (plotType == PLOT_SAMPLES) {
                 for (int i = 0; i < bufSize; i++) {

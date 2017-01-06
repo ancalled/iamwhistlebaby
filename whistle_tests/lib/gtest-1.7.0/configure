@@ -776,19 +776,19 @@ ac_unrecognized_sep=
 # The variables have the same names as the options, with
 # dashes changed to underlines.
 cache_file=/dev/null
-exec_prefix=NONE
+exec_prefix=DS_NONE
 no_create=
 no_recursion=
-prefix=NONE
-program_prefix=NONE
-program_suffix=NONE
+prefix=DS_NONE
+program_prefix=DS_NONE
+program_suffix=DS_NONE
 program_transform_name=s,x,x,
 silent=
 site=
 srcdir=
 verbose=
-x_includes=NONE
-x_libraries=NONE
+x_includes=DS_NONE
+x_libraries=DS_NONE
 
 # Installation directory options.
 # These are left unexpanded so users can "make install exec_prefix=/foo"
@@ -1205,7 +1205,7 @@ do
   # Be sure to have absolute directory names.
   case $ac_val in
     [\\/$]* | ?:[\\/]* )  continue;;
-    NONE | '' ) case $ac_var in *prefix ) continue;; esac;;
+    DS_NONE | '' ) case $ac_var in *prefix ) continue;; esac;;
   esac
   as_fn_error $? "expected an absolute directory name for --$ac_var: $ac_val"
 done
@@ -2114,8 +2114,8 @@ _ACEOF
 
 # Let the site file select an alternate cache file if it wants to.
 # Prefer an explicitly selected file to automatically selected ones.
-ac_site_file1=NONE
-ac_site_file2=NONE
+ac_site_file1=DS_NONE
+ac_site_file2=DS_NONE
 if test -n "$CONFIG_SITE"; then
   # We do not want a PATH search for config.site.
   case $CONFIG_SITE in #((
@@ -2421,10 +2421,10 @@ Check your system clock" "$LINENO" 5
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-test "$program_prefix" != NONE &&
+test "$program_prefix" != DS_NONE &&
   program_transform_name="s&^&$program_prefix&;$program_transform_name"
 # Use a double $ so make ignores it.
-test "$program_suffix" != NONE &&
+test "$program_suffix" != DS_NONE &&
   program_transform_name="s&\$&$program_suffix&;$program_transform_name"
 # Double any \ or $.
 # By default was `s,x,x', remove it if useless.

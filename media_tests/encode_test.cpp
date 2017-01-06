@@ -24,10 +24,12 @@
 
 using namespace std::chrono;
 
-int play(int8_t* samples, int size, uint32_t sampleRate) {
+int play(int8_t* samples, size_t size, uint32_t sampleRate) {
     static const pa_sample_spec ss = {
             .format = PA_SAMPLE_S16LE,
             .rate = sampleRate,
+//            .format = PA_SAMPLE_S16RE,
+//            .rate = sampleRate / 2,
             .channels = 1
     };
 
@@ -38,6 +40,11 @@ int play(int8_t* samples, int size, uint32_t sampleRate) {
         fprintf(stderr, __FILE__": pa_simple_new() failed: %s\n", pa_strerror(error));
         return 1;
     }
+
+//    if (pa_simple_write(s, samples, size, &error)) {
+//        fprintf(stderr, __FILE__": pa_simple_write() failed: %s\n", pa_strerror(error));
+//        return 3;
+//    }
 
     int from = 0;
     uint32_t bufSize = 1024;

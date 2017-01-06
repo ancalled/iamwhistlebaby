@@ -19,7 +19,8 @@ uint32_t Synthesizer::generate(int8_t *samples, uint32_t size, const char *mes) 
     uint32_t proc = 0;
     size_t len = strlen(mes);
     float freq = 0, prevFreq = 0;
-    const uint8_t halfampl = 1 << 5;
+//    const uint8_t halfampl = 1 << 5;
+    const uint8_t halfampl = 1 << 4;
     const uint8_t amplStep = (uint8_t) (rampSamples / halfampl);
     int frame = 0;
     int argument = 0;

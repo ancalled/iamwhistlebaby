@@ -3,7 +3,7 @@
 //
 
 
-#include <Decoder.h>
+#include <MessageDecoder.h>
 #include "gtest/gtest.h"
 #include "Synthesizer.h"
 #include <cstring>
@@ -82,16 +82,17 @@ TEST(WhistleTest, Generate) {
 TEST(WhistleTest, CodeAndDecode) {
 //    uint32_t sampleRate = 19000;
 //    uint32_t sampleRate = 38000;
-//    uint32_t sampleRate = 44100;
-    uint32_t sampleRate = 62500;
+    uint32_t sampleRate = 44100;
+//    uint32_t sampleRate = 62500;
 
     int8_t framesPerSound = 10;
     int16_t samplesPerSoud = (int16_t) (sampleRate * (RAMP_TIME + TOP_TIME) / 1000);
     uint16_t frameSize = (uint16_t) (samplesPerSoud / framesPerSound);
     Synthesizer synth(sampleRate);
-    Decoder decoder(sampleRate, frameSize);
+    MessageDecoder decoder(sampleRate, frameSize);
 
     string toEncode = "hjntdb982ilj6etj6e3l\0";
+//    string toEncode = "hjpk93soli6k530de9\0";
 
     uint32_t size = (uint32_t) (toEncode.size() * samplesPerSoud) + 1;
     int8_t samples[size];
@@ -112,8 +113,9 @@ TEST(WhistleTest, CodeAndDecode) {
         frame++;
     }
 
+    decoder.stopDetection();
 
-    string decoded = decoder.getMessage();
+    string decoded = decoder.popMessage();
     EXPECT_EQ(toEncode, decoded);
     size_t dist = levDist(toEncode.c_str(), toEncode.size(), decoded.c_str(), decoded.size());
     cout << "Dist: " << dist << endl;
@@ -128,11 +130,11 @@ TEST(WhistleTest, CodeAndDecodeMultiple) {
     int16_t samplesPerSoud = (int16_t) (sampleRate * (RAMP_TIME + TOP_TIME) / 1000);
     uint16_t frameSize = (uint16_t) (samplesPerSoud / framesPerSound);
     Synthesizer synth(sampleRate);
-    Decoder decoder(sampleRate, frameSize);
+    MessageDecoder decoder(sampleRate, frameSize);
 
     for (int i = 0; i < 100; i++) {
 
-        string toEncode = randomMes(30);
+        string toEncode = randomMes(31);
 
         uint32_t size = (uint32_t) (toEncode.size() * samplesPerSoud) + 1;
         int8_t samples[size];
@@ -149,11 +151,11 @@ TEST(WhistleTest, CodeAndDecodeMultiple) {
             frame++;
         }
 
-        string decoded = decoder.getMessage();
+        string decoded = decoder.popMessage();
 //        cout << "Decoded: " << decoded << endl;
         EXPECT_EQ(toEncode, decoded);
         size_t dist = levDist(toEncode.c_str(), toEncode.size(), decoded.c_str(), decoded.size());
-        cout << "Dist: " << dist << endl;
+//        cout << "Dist: " << dist << endl;
         decoder.clearState();
     }
 }
