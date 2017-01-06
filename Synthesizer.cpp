@@ -70,7 +70,7 @@ sound_symbol Synthesizer::findSymbol(char ch) {
             return s;
         }
     }
-    return {'\0', -1, 0};
+    return {'\0', -1};
 }
 
 uint32_t Synthesizer::expectedSize(size_t symbols) {

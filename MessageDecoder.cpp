@@ -14,8 +14,8 @@ MessageDecoder::MessageDecoder(uint32_t sr, uint16_t frameSize) :
         frameSize(frameSize),
         detector(sr, DEFAULT_BUF_SIZE, minFreq, maxFreq) {
 
-    transitionFrames = (uint8_t) (2 * sampleRate * RAMP_TIME / 1000 / frameSize);
-    sustainedFrames = (uint8_t) (2 * sampleRate * TOP_TIME / 1000 / frameSize);
+    transitionFrames = (uint8_t) (sampleRate * RAMP_TIME / 1000 / frameSize);
+    sustainedFrames = (uint8_t) (sampleRate * TOP_TIME / 1000 / frameSize);
     frameCnt = 0;
     lastEffectiveFrame = 0;
 

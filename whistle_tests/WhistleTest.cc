@@ -150,6 +150,7 @@ TEST(WhistleTest, CodeAndDecodeMultiple) {
             n += frameSize;
             frame++;
         }
+        decoder.stopDetection();
 
         string decoded = decoder.popMessage();
 //        cout << "Decoded: " << decoded << endl;
