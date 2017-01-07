@@ -54,7 +54,7 @@ string randomMes(int maxLength) {
     return mes;
 }
 
-void fill(int8_t *source, uint32_t from, int srcSize, int16_t *dest, uint16_t destSize) {
+void fill(int16_t *source, uint32_t from, int srcSize, int16_t *dest, uint16_t destSize) {
     uint32_t sz = from + destSize < srcSize ? destSize : srcSize - from;
     for (uint32_t i = 0; i < sz; i++) {
         dest[i] = (int16_t) (source[from + i] - 127);
@@ -71,7 +71,7 @@ TEST(WhistleTest, Generate) {
         Synthesizer synth(sampleRate);
 
         uint32_t size = (uint32_t) (mesLen * sampleRate * (TOP_TIME + RAMP_TIME) / 1000);
-        int8_t samples[size];
+        int16_t samples[size];
 
         uint32_t gen = synth.generate(samples, size, mes);
 //        EXPECT_EQ(size, gen);
@@ -95,7 +95,7 @@ TEST(WhistleTest, CodeAndDecode) {
 //    string toEncode = "hjpk93soli6k530de9\0";
 
     uint32_t size = (uint32_t) (toEncode.size() * samplesPerSoud) + 1;
-    int8_t samples[size];
+    int16_t samples[size];
 
     uint32_t gen = synth.generate(samples, size, toEncode.c_str());
 
@@ -103,11 +103,11 @@ TEST(WhistleTest, CodeAndDecode) {
 
     int frame = 0;
     uint32_t n = 0;
-    int16_t buf[frameSize];
+//    int16_t buf[frameSize];
 
     while (n < gen) {
-        fill(samples, n, gen, buf, frameSize);
-        decoder.processFrame(buf, 0);
+//        fill(samples, n, gen, buf, frameSize);
+        decoder.processFrame(samples, n);
 
         n += frameSize;
         frame++;
@@ -137,15 +137,15 @@ TEST(WhistleTest, CodeAndDecodeMultiple) {
         string toEncode = randomMes(31);
 
         uint32_t size = (uint32_t) (toEncode.size() * samplesPerSoud) + 1;
-        int8_t samples[size];
+        int16_t samples[size];
         uint32_t gen = synth.generate(samples, size, toEncode.c_str());
 
         int frame = 0;
         uint32_t n = 0;
-        int16_t buf[frameSize];
+//        int16_t buf[frameSize];
         while (n < gen) {
-            fill(samples, n, gen, buf, frameSize);
-            decoder.processFrame(buf, 0);
+//            fill(samples, n, gen, buf, frameSize);
+            decoder.processFrame(samples, n);
 
             n += frameSize;
             frame++;

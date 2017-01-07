@@ -14,11 +14,12 @@ void callback(void *ptr, AudioQueueRef queue, AudioQueueBufferRef buf_ref) {
 
 int main(int argc, char *argv[]) {
     int sr = 44100;
-    Synthesizer synth(sr * 2);
+    Synthesizer synth(sr);
 
+//    std::string toEncode = "hjntdb982ilj6etj6e3l\0";
     std::string toEncode = "hjntdb982ilj6etj6e3l\0";
     int16_t samplesPerSoud = (int16_t) (sr * (RAMP_TIME + TOP_TIME) / 1000);
-    uint32_t size = (uint32_t) (toEncode.size() * samplesPerSoud) + 1;
+    uint32_t size = (uint32_t) (2 * toEncode.size() * samplesPerSoud) + 1;
 
     AudioQueueRef queue;
     AudioStreamBasicDescription fmt = {0};
@@ -43,12 +44,12 @@ int main(int argc, char *argv[]) {
     queueBuffer->mAudioDataByteSize = size;
     printf("Size: %d\n", queueBuffer->mAudioDataByteSize);
 
-    int8_t *samp = (int8_t *) queueBuffer->mAudioData;
+    int16_t *samp = (int16_t *) queueBuffer->mAudioData;
     uint32_t gen = synth.generate(samp, size, toEncode.c_str());
     printf("Generated %d samples.", gen);
 
     AudioQueueEnqueueBuffer(queue, queueBuffer, 0, NULL);
-    AudioQueueSetParameter(queue, kAudioQueueParam_Volume, 1.0);
+    AudioQueueSetParameter(queue, kAudioQueueParam_Volume, 20.0);
     AudioQueueStart(queue, NULL);
 
     CFRunLoopRunInMode(

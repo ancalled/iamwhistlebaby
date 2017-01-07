@@ -15,12 +15,12 @@ Synthesizer::Synthesizer(uint32_t sampleRate) : sampleRate(sampleRate),
 }
 
 
-uint32_t Synthesizer::generate(int8_t *samples, uint32_t size, const char *mes) {
+uint32_t Synthesizer::generate(int16_t *samples, uint32_t size, const char *mes) {
     uint32_t proc = 0;
     size_t len = strlen(mes);
     float freq = 0, prevFreq = 0;
-//    const uint8_t halfampl = 1 << 5;
-    const uint8_t halfampl = 1 << 4;
+    const int16_t halfampl = 1 << 8;
+//    const int16_t halfampl = 1 << 4;
     const uint8_t amplStep = (uint8_t) (rampSamples / halfampl);
     int frame = 0;
     int argument = 0;
@@ -37,18 +37,20 @@ uint32_t Synthesizer::generate(int8_t *samples, uint32_t size, const char *mes) 
                 prevFreq = freq;
             }
             float freqGradient = (ss.freq - prevFreq) / rampSamples;
-            uint8_t amplitude = halfampl;
+            int16_t amplitude = halfampl;
 
             for (int j = 0; j < topSamples + rampSamples; j++) {
                 double arg = (2 * PI * (argument++) * freq) / sampleRate;
                 double sn = sin(arg);
                 double smpl = amplitude * sn;
-                int8_t bt = (int8_t) round(smpl);
+                int16_t bt = (int16_t) round(smpl);
                 samples[proc++] = bt;
                 if (j < rampSamples) {
                     freq += freqGradient;
-                    if (!(j % amplStep) && !(amplitude & 0x80)) {
+                    if (!(j % amplStep)) {
+//                    if (!(j % amplStep)&& !(amplitude & 0x80)) {
                         amplitude++;
+//                    }
                     }
                 }
 

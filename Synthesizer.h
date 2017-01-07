@@ -63,7 +63,7 @@ public:
 
     Synthesizer(uint32_t sampleRate);
 
-    uint32_t generate(int8_t *samples, uint32_t size, const char *mes);
+    uint32_t generate(int16_t *samples, uint32_t size, const char *mes);
 
     wsl::sound_symbol findSymbol(char ch);
 

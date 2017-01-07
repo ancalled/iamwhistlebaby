@@ -24,12 +24,10 @@
 
 using namespace std::chrono;
 
-int play(int8_t* samples, size_t size, uint32_t sampleRate) {
+int play(int16_t* samples, size_t size, uint32_t sampleRate) {
     static const pa_sample_spec ss = {
             .format = PA_SAMPLE_S16LE,
             .rate = sampleRate,
-//            .format = PA_SAMPLE_S16RE,
-//            .rate = sampleRate / 2,
             .channels = 1
     };
 
@@ -41,30 +39,29 @@ int play(int8_t* samples, size_t size, uint32_t sampleRate) {
         return 1;
     }
 
-//    if (pa_simple_write(s, samples, size, &error)) {
-//        fprintf(stderr, __FILE__": pa_simple_write() failed: %s\n", pa_strerror(error));
-//        return 3;
-//    }
-
-    int from = 0;
-    uint32_t bufSize = 1024;
-    int8_t buf[bufSize];
-    while (from < size) {
-
-        ssize_t r = bufSize;
-
-        for (int i = 0; i < bufSize; i += 2) {
-            buf[i] = 0;
-            buf[i + 1] = samples[from++];
-        }
-
-        printf("Play next %d, from %d\n", (int) r, from);
-        /* ... and play it */
-        if (pa_simple_write(s, buf, (size_t) r, &error) < 0) {
-            fprintf(stderr, __FILE__": pa_simple_write() failed: %s\n", pa_strerror(error));
-            return 3;
-        }
+    if (pa_simple_write(s, samples, size, &error)) {
+        fprintf(stderr, __FILE__": pa_simple_write() failed: %s\n", pa_strerror(error));
+        return 3;
     }
+
+//    int from = 0;
+//    uint32_t bufSize = 1024;
+//    int16_t buf[bufSize];
+//    while (from < size) {
+//
+//        ssize_t r = bufSize;
+//        for (int i = 0; i < bufSize; i += 2) {
+//            buf[i] = 0;
+//            buf[i + 1] = samples[from++];
+//        }
+//
+//        printf("Play next %d, from %d\n", (int) r, from);
+//        /* ... and play it */
+//        if (pa_simple_write(s, buf, (size_t) r, &error) < 0) {
+//            fprintf(stderr, __FILE__": pa_simple_write() failed: %s\n", pa_strerror(error));
+//            return 3;
+//        }
+//    }
 
     if (pa_simple_drain(s, &error) < 0) {
         fprintf(stderr, __FILE__": pa_simple_drain() failed: %s\n", pa_strerror(error));
