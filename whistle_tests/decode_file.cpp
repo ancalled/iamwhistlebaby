@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <cstring>
 #include <MessageDecoder.h>
-#include "command.h"
+#include "media_tests/command.h"
 
 #define PLOT_SAMPLES 1
 #define PLOT_PITCHES 2

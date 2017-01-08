@@ -10,10 +10,10 @@ ADD_EXECUTABLE(media_encodetest encode_test.cpp)
 ADD_EXECUTABLE(media_decodetest decode_test.cpp)
 ADD_EXECUTABLE(recorder record.cpp)
 ADD_EXECUTABLE(player play.cpp)
-ADD_EXECUTABLE(decode_file decode_file.cpp)
+
 
 TARGET_LINK_LIBRARIES(media_encodetest whistle pulse pulse-simple)
 TARGET_LINK_LIBRARIES(media_decodetest whistle pulse pulse-simple)
 TARGET_LINK_LIBRARIES(recorder whistle pulse pulse-simple)
 TARGET_LINK_LIBRARIES(player whistle pulse pulse-simple)
-TARGET_LINK_LIBRARIES(decode_file whistle)
+

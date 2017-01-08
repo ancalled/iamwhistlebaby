@@ -7,6 +7,7 @@ ADD_SUBDIRECTORY(lib/gtest-1.7.0)
 INCLUDE_DIRECTORIES(../ ${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 ADD_EXECUTABLE(run_whistle_tests WhistleTest.cc)
+ADD_EXECUTABLE(decode_file decode_file.cpp)
 
-TARGET_LINK_LIBRARIES(run_whistle_tests gtest gtest_main)
-TARGET_LINK_LIBRARIES(run_whistle_tests whistle)
+TARGET_LINK_LIBRARIES(run_whistle_tests gtest gtest_main whistle)
+TARGET_LINK_LIBRARIES(decode_file whistle)

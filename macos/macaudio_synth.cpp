@@ -13,15 +13,15 @@ void callback(void *ptr, AudioQueueRef queue, AudioQueueBufferRef buf_ref) {
 
 
 int main(int argc, char *argv[]) {
-    int sr = 44100;
+//    uint32_t sr = 44100;
+    uint32_t sr = 62000;
     Synthesizer synth(sr);
 
-//    std::string toEncode = "hjntdb982ilj6etj6e3l\0";
     std::string toEncode = "hjntdb982ilj6etj6e3l\0";
     int16_t samplesPerSoud = (int16_t) (sr * (RAMP_TIME + TOP_TIME) / 1000);
     uint32_t size = (uint32_t) (2 * toEncode.size() * samplesPerSoud) + 1;
+    printf("Size: %d\n", size);
 
-    AudioQueueRef queue;
     AudioStreamBasicDescription fmt = {0};
     fmt.mSampleRate = sr;
     fmt.mFormatID = kAudioFormatLinearPCM;
@@ -31,20 +31,18 @@ int main(int argc, char *argv[]) {
     fmt.mBytesPerPacket = fmt.mBytesPerFrame = 2;
     fmt.mBitsPerChannel = 16;
 
-    AudioQueueBufferRef queueBuffer;
+    AudioQueueRef queue;
     OSStatus status = AudioQueueNewOutput(&fmt, callback, NULL, CFRunLoopGetCurrent(),
                                           kCFRunLoopCommonModes, 0, &queue);
-
     if (status == kAudioFormatUnsupportedDataFormatError) {
         puts("oops!");
     }
 
+    AudioQueueBufferRef queueBuffer;
     AudioQueueAllocateBuffer(queue, size, &queueBuffer);
-
     queueBuffer->mAudioDataByteSize = size;
-    printf("Size: %d\n", queueBuffer->mAudioDataByteSize);
-
     int16_t *samp = (int16_t *) queueBuffer->mAudioData;
+
     uint32_t gen = synth.generate(samp, size, toEncode.c_str());
     printf("Generated %d samples.", gen);
 
@@ -52,11 +50,7 @@ int main(int argc, char *argv[]) {
     AudioQueueSetParameter(queue, kAudioQueueParam_Volume, 20.0);
     AudioQueueStart(queue, NULL);
 
-    CFRunLoopRunInMode(
-            kCFRunLoopDefaultMode,
-            5, // seconds
-            false // don't return after source handled
-    );
+    CFRunLoopRunInMode(kCFRunLoopDefaultMode, 5, false);
 
 }
 
