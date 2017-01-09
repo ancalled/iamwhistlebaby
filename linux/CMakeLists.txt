@@ -6,14 +6,14 @@ set(CMAKE_CXX_STANDARD 11)
 INCLUDE_DIRECTORIES(/usr/local/include ../)
 LINK_DIRECTORIES(/usr/local/lib)
 
-ADD_EXECUTABLE(media_encodetest encode_test.cpp)
-ADD_EXECUTABLE(media_decodetest decode_test.cpp)
+ADD_EXECUTABLE(linux_synth linux_synth.cpp)
+ADD_EXECUTABLE(linux_listen linux_listen.cpp)
 ADD_EXECUTABLE(recorder record.cpp)
 ADD_EXECUTABLE(player play.cpp)
 
 
-TARGET_LINK_LIBRARIES(media_encodetest whistle pulse pulse-simple)
-TARGET_LINK_LIBRARIES(media_decodetest whistle pulse pulse-simple)
+TARGET_LINK_LIBRARIES(linux_synth whistle pulse pulse-simple)
+TARGET_LINK_LIBRARIES(linux_listen whistle pulse pulse-simple)
 TARGET_LINK_LIBRARIES(recorder whistle pulse pulse-simple)
 TARGET_LINK_LIBRARIES(player whistle pulse pulse-simple)
 

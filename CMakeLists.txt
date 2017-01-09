@@ -7,9 +7,9 @@ SET(SOURCE_FILES PitchDetector.cpp PitchDetector.h Synthesizer.cpp Synthesizer.h
 
 ADD_SUBDIRECTORY(whistle_tests)
 
-IF (LINUX)
-    ADD_SUBDIRECTORY(media_tests)
-ENDIF()
+#IF (LINUX)
+    ADD_SUBDIRECTORY(linux)
+#ENDIF()
 
 IF (APPLE)
     ADD_SUBDIRECTORY(macos)

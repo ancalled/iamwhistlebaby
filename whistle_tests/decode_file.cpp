@@ -10,7 +10,6 @@
 #include <algorithm>
 #include <cstring>
 #include <MessageDecoder.h>
-#include "media_tests/command.h"
 
 #define PLOT_SAMPLES 1
 #define PLOT_PITCHES 2
@@ -28,27 +27,17 @@ using namespace std::chrono;
 
 int main(int argc, char *argv[]) {
 
-    char *fname;
-    if (cmdOptionExists(argv, argv + argc, "-file")) {
-        fname = getCmdOption(argv, argv + argc, "-file");
-    } else {
-        printf("Please specify filename with '-file' parameter!\n");
-        return 1;
+    if (argc < 1) {
+        printf("Please specify filename as program parameter!\n");
+        return -1;
     }
-
-    uint32_t sampleRate;
-    if (cmdOptionExists(argv, argv + argc, "-samplerate")) {
-        char *srCh = getCmdOption(argv, argv + argc, "-samplerate");
-        sampleRate = (uint32_t) atoi(srCh);
-    } else {
-        sampleRate = DEFAULT_DECODE_SAMPLE_RATE;
-    }
+    char *fname = argv[1];
 
     uint16_t bufSize = DEFAULT_BUFFER_SIZE;
 
     FILE *pFILE = fopen(fname, "rb");
 
-    MessageDecoder dec(sampleRate, bufSize);
+    MessageDecoder dec(DEFAULT_DECODE_SAMPLE_RATE, bufSize);
     int16_t buf[bufSize];
 
     bool print_pitches = true;

@@ -24,7 +24,7 @@
 
 using namespace std::chrono;
 
-int play(int16_t* samples, size_t size, uint32_t sampleRate) {
+int play(int16_t *samples, size_t size, uint32_t sampleRate) {
     static const pa_sample_spec ss = {
             .format = PA_SAMPLE_S16LE,
             .rate = sampleRate,
@@ -45,19 +45,23 @@ int play(int16_t* samples, size_t size, uint32_t sampleRate) {
     }
 
 //    int from = 0;
-//    uint32_t bufSize = 1024;
+//    size_t bufSize = 1024 * 10;
 //    int16_t buf[bufSize];
+//
 //    while (from < size) {
 //
-//        ssize_t r = bufSize;
-//        for (int i = 0; i < bufSize; i += 2) {
-//            buf[i] = 0;
-//            buf[i + 1] = samples[from++];
+//        for (int i = 0; i < bufSize; i++) {
+//            if (from < size) {
+//                buf[i] = samples[from++];
+//            } else {
+//                break;
+//            }
 //        }
 //
-//        printf("Play next %d, from %d\n", (int) r, from);
+//
+//        printf("Play next %d, from %d\n", (int) bufSize, from);
 //        /* ... and play it */
-//        if (pa_simple_write(s, buf, (size_t) r, &error) < 0) {
+//        if (pa_simple_write(s, buf, bufSize, &error) < 0) {
 //            fprintf(stderr, __FILE__": pa_simple_write() failed: %s\n", pa_strerror(error));
 //            return 3;
 //        }
@@ -94,13 +98,13 @@ int main(int argc, char *argv[]) {
     Synthesizer synth(sampleRate);
     uint32_t size = synth.expectedSize(len);
 
-    int8_t samples[size];
+    int16_t samples[size];
     uint32_t gen = synth.generate(samples, size, mes);
 
-    printf("Generated %d samples\n", gen);
-    for (int i = 0; i < gen; i++) {
-        printf("%d\n", samples[i]);
-    }
+//    printf("Generated %d samples\n", gen);
+//    for (int i = 0; i < gen; i++) {
+//        printf("%d\n", samples[i]);
+//    }
 
     return play(samples, gen, sampleRate);
 }
