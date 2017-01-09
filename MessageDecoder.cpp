@@ -2,6 +2,7 @@
 // Created by ancalled on 12/15/16.
 //
 
+#include <cmath>
 #include "MessageDecoder.h"
 #include "Synthesizer.h"
 
@@ -14,8 +15,8 @@ MessageDecoder::MessageDecoder(uint32_t sr, uint16_t frameSize) :
         frameSize(frameSize),
         detector(sr, DEFAULT_BUF_SIZE, minFreq, maxFreq) {
 
-    transitionFrames = (uint8_t) (sampleRate * RAMP_TIME / 1000 / frameSize);
-    sustainedFrames = (uint8_t) (sampleRate * TOP_TIME / 1000 / frameSize);
+    transitionFrames = (uint8_t) round(sampleRate * RAMP_TIME / 1000 / frameSize);
+    sustainedFrames = (uint8_t) round(sampleRate * TOP_TIME / 1000 / frameSize)  - 1;
     frameCnt = 0;
     lastEffectiveFrame = 0;
 
@@ -27,6 +28,7 @@ MessageDecoder::ProcessResult MessageDecoder::processFrame(int16_t *samples, uin
     PitchDetector::DetectResult pdr;
     pdr = detector.getPitch(samples, from, frameSize, DETECTOR_THRESHOLD);
 
+
     if (pdr.pitch > 0) {
         if (detectorState == DS_NONE) detectorState = DS_TRANSITION_FREQ;
 
@@ -35,14 +37,19 @@ MessageDecoder::ProcessResult MessageDecoder::processFrame(int16_t *samples, uin
             float diff = abs((pdr.pitch - candidate.freq) / (maxFreq - minFreq));
 
             if (print_pitches) {
-                const char* switchSt = diff < FREQ_DIFF ? " " : "@";
-                printf("%.2f\t%c\t%.2f\t%.4f %s\t%d\n",
+                const char* switchSt = diff < FREQ_DIFF ? "" : "@";
+                printf("%.2f\t%c\t%.2f\t%.4f\t%s\t%d",
                        candidate.freq,
                        candidate.symbol,
                        candidate.error,
                        diff,
                        switchSt,
                        candidate.sustFrames);
+
+                if (candidate.sustFrames == sustainedFrames) {
+                    printf("\t'%c'", candidate.symbol);
+                }
+                printf("\n");
             }
 
             if (diff < FREQ_DIFF) {
@@ -61,12 +68,15 @@ MessageDecoder::ProcessResult MessageDecoder::processFrame(int16_t *samples, uin
 
             if (candidate.sustFrames == sustainedFrames) {
                 currMessage += candidate.symbol;
-                initCandidate(pdr.pitch);
                 if (messageState == MS_NONE) messageState = MS_DETECTING;
             }
 
         } else {
             initCandidate(pdr.pitch);
+        }
+    } else {
+        if (print_pitches) {
+            printf("- no pitch -\n");
         }
     }
 

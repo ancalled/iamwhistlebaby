@@ -16,7 +16,8 @@
 #define DEFAULT_BUF_SIZE 512
 
 #define DETECTOR_THRESHOLD 0.15
-#define FREQ_DIFF 0.001
+#define FREQ_DIFF 0.01
+//#define FREQ_DIFF 0.001
 #define MIN_MESSAGE_LEN 3
 #define MAX_VOID_FRAMES 4
 

@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
     uint32_t size = synth.expectedSize(len);
 
     int16_t samples[size];
-    uint32_t gen = synth.generate(samples, size, mes);
+    uint32_t gen = synth.generate(samples, size, mes, 50);
 
 //    printf("Generated %d samples\n", gen);
 //    for (int i = 0; i < gen; i++) {

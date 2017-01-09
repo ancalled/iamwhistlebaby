@@ -46,8 +46,8 @@ uint32_t Synthesizer::generate(int16_t *samples, uint32_t size, const char *mes,
                 samples[proc++] = bt;
                 if (j < rampSamples) {
                     freq += freqGradient;
-                    if (!(j % amplStep)) {
-//                    if (!(j % amplStep)&& !(amplitude & 0x80)) {
+//                    if (!(j % amplStep)) {
+                    if (!(j % amplStep)&& !(amplitude & 0x80)) {
                         amplitude++;
 //                    }
                     }

@@ -24,6 +24,21 @@
 
 using namespace std::chrono;
 
+#include <algorithm>
+
+template<typename T, size_t size>
+int getposition(T const (&array)[size], T const &c) {
+    T const *found = std::find(&array[0], &array[size], c);
+    return found == &array[size] ? -1 : found - array;
+}
+
+
+long fsize(FILE *pFile) {
+    fseek(pFile, 0, SEEK_END);
+    long lSize = ftell(pFile);
+    rewind(pFile);
+    return lSize;
+}
 
 int main(int argc, char *argv[]) {
 
@@ -31,20 +46,31 @@ int main(int argc, char *argv[]) {
         printf("Please specify filename as program parameter!\n");
         return -1;
     }
-    char *fname = argv[1];
+    const char *fname = argv[1];
 
-    uint16_t bufSize = DEFAULT_BUFFER_SIZE;
+//    uint16_t bufSize = DEFAULT_BUFFER_SIZE;
+    uint16_t bufSize = 500;
 
-    FILE *pFILE = fopen(fname, "rb");
+    FILE *pFile = fopen(fname, "rb");
+    size_t elSize = 2;
 
-    MessageDecoder dec(DEFAULT_DECODE_SAMPLE_RATE, bufSize);
+//    int pos = getposition(fname, '.');
+
+    printf("File size: %ld bytes, reading by %d\n", fsize(pFile), elSize);
+
+    uint32_t sr = DEFAULT_DECODE_SAMPLE_RATE;
+    MessageDecoder dec(sr, bufSize);
     int16_t buf[bufSize];
 
     bool print_pitches = true;
 
-    while (fread(buf, bufSize, 1, pFILE)) {
+    uint64_t read = 0;
+    while (fread(buf, elSize, bufSize, pFile)) {
         dec.processFrame(buf, 0, print_pitches);
+        read += bufSize;
     }
+    printf("Read %ld elements (exp %ld sec)\n", read, (read / sr));
+//    dec.stopDetection();
 
     if (dec.hasResult()) {
         std::string mes = dec.popMessage();
@@ -53,6 +79,8 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    fclose(pFile);
+    return 0;
 }
 
 
