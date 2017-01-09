@@ -15,12 +15,11 @@ Synthesizer::Synthesizer(uint32_t sampleRate) : sampleRate(sampleRate),
 }
 
 
-uint32_t Synthesizer::generate(int16_t *samples, uint32_t size, const char *mes) {
+uint32_t Synthesizer::generate(int16_t *samples, uint32_t size, const char *mes, double volume) {
     uint32_t proc = 0;
     size_t len = strlen(mes);
     float freq = 0, prevFreq = 0;
-    const int16_t halfampl = 1 << 8;
-//    const int16_t halfampl = 1 << 4;
+    const int16_t halfampl = 1 << 5;
     const uint8_t amplStep = (uint8_t) (rampSamples / halfampl);
     int frame = 0;
     int argument = 0;
@@ -42,7 +41,7 @@ uint32_t Synthesizer::generate(int16_t *samples, uint32_t size, const char *mes)
             for (int j = 0; j < topSamples + rampSamples; j++) {
                 double arg = (2 * PI * (argument++) * freq) / sampleRate;
                 double sn = sin(arg);
-                double smpl = amplitude * sn;
+                double smpl = volume * amplitude * sn;
                 int16_t bt = (int16_t) round(smpl);
                 samples[proc++] = bt;
                 if (j < rampSamples) {

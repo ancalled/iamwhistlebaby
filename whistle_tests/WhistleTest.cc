@@ -67,14 +67,15 @@ TEST(WhistleTest, Generate) {
 
     for (int i = 0; i < SR_SIZE; i++) {
         uint32_t sampleRate = SAMPLE_RATES[i];
+        printf("Generate for sample rate %d\n", sampleRate);
 
         Synthesizer synth(sampleRate);
 
-        uint32_t size = (uint32_t) (mesLen * sampleRate * (TOP_TIME + RAMP_TIME) / 1000);
+        uint32_t size = synth.expectedSize(mesLen);
         int16_t samples[size];
 
         uint32_t gen = synth.generate(samples, size, mes);
-//        EXPECT_EQ(size, gen);
+        printf("\tGot %d samples\n", gen);
     }
 };
 
