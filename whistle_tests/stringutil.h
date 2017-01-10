@@ -3,10 +3,13 @@
 //
 
 #include <iostream>
+#include <dirent.h>
+
 using namespace std;
 
 #ifndef WHISTLE_STRINGUTIL_H
 #define WHISTLE_STRINGUTIL_H
+
 
 #endif //WHISTLE_STRINGUTIL_H
 
@@ -44,4 +47,21 @@ long fsize(FILE *pFile) {
     long lSize = ftell(pFile);
     rewind(pFile);
     return lSize;
+}
+
+vector<string> listFiles(const char *folder) {
+    vector<string> res;
+    DIR *dir;
+    struct dirent *ent;
+    if ((dir = opendir(folder)) != NULL) {
+        while ((ent = readdir(dir)) != NULL) {
+            if (ent->d_type == 0x8) {
+                const string fname = ent->d_name;
+                res.push_back(fname);
+            }
+        }
+        closedir(dir);
+    }
+
+    return res;
 }

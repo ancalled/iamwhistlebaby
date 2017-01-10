@@ -165,10 +165,16 @@ TEST(WhistleTest, CodeAndDecodeMultiple) {
 
 
 TEST(WhistleTest, DecodeLiveRecorded) {
-    const char* dataHome = "../../data/";
+    const char *dataHome = "../../data/";
     char fname[100];
     strcpy(fname, dataHome);
-    strcat(fname, "hjntdb982ilj6etj6e3l.bin"); //todo process recursively all files in data folder
+    strcat(fname, "hjntdb982ilj6etj6e3l.bin");
+//    strcat(fname, "hjntdb982ilj6etj6e3l_4.bin");
+//    vector<string> files = listFiles(dataHome);
+//    for (string &f: files) {
+//        printf("\t\t%s\n", f.c_str());
+//    }
+    //todo process recursively all files in data folder
 
     string mes = find_mes(fname);
     FILE *pFile = fopen(fname, "rb");

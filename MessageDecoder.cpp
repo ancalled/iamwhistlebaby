@@ -16,7 +16,7 @@ MessageDecoder::MessageDecoder(uint32_t sr, uint16_t frameSize) :
         detector(sr, DEFAULT_BUF_SIZE, minFreq, maxFreq) {
 
     transitionFrames = (uint8_t) round(sampleRate * RAMP_TIME / 1000 / frameSize);
-    sustainedFrames = (uint8_t) round(sampleRate * TOP_TIME / 1000 / frameSize) - 1;
+    sustainedFrames = (uint8_t) round(sampleRate * TOP_TIME / 1000 / frameSize);
     frameCnt = 0;
     lastEffectiveFrame = 0;
 
@@ -36,19 +36,17 @@ MessageDecoder::ProcessResult MessageDecoder::processFrame(int16_t *samples, uin
             float diff = abs((pitch.pitch - candidate.freq) / (maxFreq - minFreq));
 
             if (print_pitches) {
-                const char* switchSt = diff < FREQ_DIFF ? "" : "@";
-                printf("%.2f\t%c\t%.2f\t%.4f\t%s\t%d",
+                printf("%.2f\t%c\t%.2f\t%.4f\t%d",
                        candidate.freq,
                        candidate.symbol,
                        candidate.error,
                        diff,
-                       switchSt,
-                       candidate.sustFrames);
+                       candidate.sustFrames
+                );
 
                 if (candidate.sustFrames == sustainedFrames) {
                     printf("\t'%c'", candidate.symbol);
                 }
-                printf("\n");
             }
 
             if (diff < FREQ_DIFF) {
@@ -70,10 +68,17 @@ MessageDecoder::ProcessResult MessageDecoder::processFrame(int16_t *samples, uin
                 currMessage += candidate.symbol;
                 symbolState = SS_SYMBOL_CANDIDATE;
                 candidate.freq = 0;
+                if (print_pitches) {
+                    printf("\t'%c'", candidate.symbol);
+                }
             }
 
             if (candidate.sustFrames >= 2) {
                 if (messageState == MS_NONE) messageState = MS_DETECTING;
+            }
+
+            if (print_pitches) {
+                printf("\n");
             }
 
         } else {

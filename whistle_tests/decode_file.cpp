@@ -49,9 +49,28 @@ int main(int argc, char *argv[]) {
     uint32_t sr = DEFAULT_DECODE_SAMPLE_RATE;
     MessageDecoder dec(sr, bufSize);
     int16_t buf[bufSize];
+    vector<MessageDecoder::ProcessResult> results;
+    uint64_t read = 0;
+    bool debug = /*false*/true;
 
-    bool print_pitches = true;
-    bool debug = false;
+    while (fread(buf, elSize, bufSize, pFile)) {
+        if (debug) printf("%ld\t", read);
+        const MessageDecoder::ProcessResult &r = dec.processFrame(buf, 0, debug);
+        results.push_back(r);
+        read += bufSize;
+//        if (debug && r.detector.pitch < 0) printf("\n");
+    }
+    fclose(pFile);
+    //    dec.stopDetection();
+    printf("Read %ld elements (exp %ld sec)\n", read, (read / sr));
+    if (dec.hasResult()) {
+        std::string decMes = dec.popMessage();
+        if (decMes.length() > 0) {
+            printf("Detected: %s\n", decMes.c_str());
+        }
+    }
+
+    printf("\n\n----------------------------------------------------\n\n");
 
     int frameCnt = 0;
     int symIdx = 0;
@@ -64,24 +83,20 @@ int main(int argc, char *argv[]) {
     bool nextSymb = true;
 
 
-    uint64_t read = 0;
-    while (fread(buf, elSize, bufSize, pFile)) {
-        MessageDecoder::ProcessResult res = dec.processFrame(buf, 0, print_pitches);
+    for (MessageDecoder::ProcessResult &res: results) {
         if (res.messageState == MessageDecoder::MessageState::MS_GOT_RESULT) {
             processing = false;
         }
 
-//        if (frameCnt >= 103 && frameCnt < 111) {
+//        if (frameCnt >= 9 && frameCnt < 20) {
 //            dec.printTaus();
 //        }
 
 
         if (res.detector.pitch > 0 || processing) {
             if (nextSymb) {
-                if (debug) {
-                    printf("--------------------\n");
-                    printf("\t\t%d / %ld\n", frameCnt, read);
-                }
+                printf("--------------------\n");
+                printf("#%d\n", frameCnt);
                 nextSymb = false;
             }
 
@@ -91,18 +106,16 @@ int main(int argc, char *argv[]) {
             char actual = res.detector.pitch > 0 ? res.candidate.symbol : '-';
             if (actual == expected) eqCnt++;
 
-            if (debug) {
-                printf("%c\t%c\n", expected, actual);
-            }
+            printf("%c\t%c\n", expected, actual);
 
             procSamples += bufSize;
             if (procSamples >= samplesPerSymbol) {
-                if (debug) printf("\t\t");
+//                printf("\t\t");
                 if (eqCnt >= framesPerSymbol - 2) {
                     corDetected++;
-                    if (debug) printf("[ok]");
+                    printf("[ok]");
                 } else {
-                    if (debug) printf("[wrong]");
+                    printf("[wrong]");
                 }
 
                 symIdx++;
@@ -110,25 +123,18 @@ int main(int argc, char *argv[]) {
                 eqCnt = 0;
                 nextSymb = true;
 
-                if (debug) printf("\n");
+                printf("\n");
             }
 
 
         }
 
-        read += bufSize;
+
         frameCnt++;
     }
 
-    printf("Read %ld elements (exp %ld sec)\n", read, (read / sr));
-//    dec.stopDetection();
 
-    if (dec.hasResult()) {
-        std::string decMes = dec.popMessage();
-        if (decMes.length() > 0) {
-            printf("Detected: %s\n", decMes.c_str());
-        }
-    }
+
     if (corDetected != mes.length()) {
         printf("%d of %ld\n", corDetected, mes.length());
 
@@ -136,7 +142,6 @@ int main(int argc, char *argv[]) {
         printf("Successfully detected!\n");
     }
 
-    fclose(pFile);
     return 0;
 }
 
