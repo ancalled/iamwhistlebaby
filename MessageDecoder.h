@@ -17,13 +17,23 @@
 
 #define DETECTOR_THRESHOLD 0.15
 //#define FREQ_DIFF 0.01
-#define FREQ_DIFF 0.001
+#define FREQ_DIFF 0.005
+//#define FREQ_DIFF 0.001
 #define MIN_MESSAGE_LEN 3
 #define MAX_VOID_FRAMES 4
 
 class MessageDecoder {
 
 public:
+
+    struct Candidate {
+        float freq;
+        int transFrames;
+        int sustFrames;
+        char symbol;
+        float error;
+        bool trusted;
+    };
 
     enum MessageState {
         MS_NONE = 0,
@@ -33,10 +43,10 @@ public:
 
     struct ProcessResult {
         MessageState messageState;
-        int sustFrames;
-        float pitch;
-        float probability;
+        Candidate candidate;
+        PitchDetector::DetectResult detector;
     };
+
 
     MessageDecoder(uint32_t sr, uint16_t frameSize);
 
@@ -50,29 +60,20 @@ public:
 
     void clearState();
 
+    void printTaus();
+
 private:
 
-    enum DetectorState {
-        DS_NONE = 1,
-        DS_TRANSITION_FREQ = 2,
-        DS_SUSTAINED_FREQ = 3,
-        DS_FREQ_ERROR = 4,
-    };
-
-    struct Candidate {
-        float freq;
-        int transFrames;
-        int sustFrames;
-        char symbol;
-        float error;
+    enum SymbolState {
+        SS_NO_SYMBOL = 1,
+        SS_SYMBOL_CANDIDATE = 2,
+        SS_CONFIRMED_SYMBOL = 3,
     };
 
     struct SymbMatch {
         char symbol;
         float error;
     };
-
-
 
     const uint32_t sampleRate;
     const float minFreq;
@@ -81,9 +82,9 @@ private:
     uint8_t transitionFrames;
     uint8_t sustainedFrames;
     PitchDetector detector;
-    DetectorState detectorState = DS_NONE;
+    SymbolState symbolState = SS_NO_SYMBOL;
     MessageState messageState = MS_NONE;
-    Candidate candidate = {0, 0, '\0', 0};
+    Candidate candidate = {0, 0, '\0', 0, false};
     std::string lastMessage;
     std::string currMessage;
     uint32_t frameCnt;

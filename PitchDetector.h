@@ -19,6 +19,7 @@ public:
 
     PitchDetector::DetectResult getPitch(int16_t *samples, uint32_t from, uint32_t size, float threshold);
 
+    void printTaus();
 
 private:
 

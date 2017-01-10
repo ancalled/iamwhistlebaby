@@ -16,25 +16,24 @@ MessageDecoder::MessageDecoder(uint32_t sr, uint16_t frameSize) :
         detector(sr, DEFAULT_BUF_SIZE, minFreq, maxFreq) {
 
     transitionFrames = (uint8_t) round(sampleRate * RAMP_TIME / 1000 / frameSize);
-    sustainedFrames = (uint8_t) round(sampleRate * TOP_TIME / 1000 / frameSize)  - 1;
+    sustainedFrames = (uint8_t) round(sampleRate * TOP_TIME / 1000 / frameSize) - 1;
     frameCnt = 0;
     lastEffectiveFrame = 0;
 
-    detectorState = DS_NONE;
+    symbolState = SS_NO_SYMBOL;
     messageState = MS_NONE;
 }
 
 MessageDecoder::ProcessResult MessageDecoder::processFrame(int16_t *samples, uint32_t from, bool print_pitches) {
-    PitchDetector::DetectResult pdr;
-    pdr = detector.getPitch(samples, from, frameSize, DETECTOR_THRESHOLD);
+    PitchDetector::DetectResult pitch;
+    pitch = detector.getPitch(samples, from, frameSize, DETECTOR_THRESHOLD);
 
+    if (pitch.pitch > 0) {
+        if (symbolState == SS_NO_SYMBOL) symbolState = SS_SYMBOL_CANDIDATE;
 
-    if (pdr.pitch > 0) {
-        if (detectorState == DS_NONE) detectorState = DS_TRANSITION_FREQ;
+        if (candidate.freq > 0 /*symbolState == SS_SYMBOL_CANDIDATE || symbolState == SS_CONFIRMED_SYMBOL*/) {
 
-        if (candidate.freq > 0 /*detectorState == DS_TRANSITION_FREQ || detectorState == DS_SUSTAINED_FREQ*/) {
-
-            float diff = abs((pdr.pitch - candidate.freq) / (maxFreq - minFreq));
+            float diff = abs((pitch.pitch - candidate.freq) / (maxFreq - minFreq));
 
             if (print_pitches) {
                 const char* switchSt = diff < FREQ_DIFF ? "" : "@";
@@ -56,23 +55,29 @@ MessageDecoder::ProcessResult MessageDecoder::processFrame(int16_t *samples, uin
                 if (candidate.transFrames < transitionFrames) {
                     candidate.transFrames++;
                 } else {
-                    if (detectorState != DS_SUSTAINED_FREQ) detectorState = DS_SUSTAINED_FREQ;
+                    if (symbolState != SS_CONFIRMED_SYMBOL) symbolState = SS_CONFIRMED_SYMBOL;
                     candidate.sustFrames++;
                 }
                 lastEffectiveFrame = frameCnt;
             } else {
-                initCandidate(pdr.pitch);
+                initCandidate(pitch.pitch);
             }
 
-            candidate.freq = pdr.pitch;
+            candidate.freq = pitch.pitch;
 
             if (candidate.sustFrames == sustainedFrames) {
+                candidate.trusted = true;
                 currMessage += candidate.symbol;
+                symbolState = SS_SYMBOL_CANDIDATE;
+                candidate.freq = 0;
+            }
+
+            if (candidate.sustFrames >= 2) {
                 if (messageState == MS_NONE) messageState = MS_DETECTING;
             }
 
         } else {
-            initCandidate(pdr.pitch);
+            initCandidate(pitch.pitch);
         }
     } else {
         if (print_pitches) {
@@ -89,7 +94,7 @@ MessageDecoder::ProcessResult MessageDecoder::processFrame(int16_t *samples, uin
 
     frameCnt++;
 
-    return {messageState, candidate.sustFrames, pdr.pitch, pdr.probability};
+    return {messageState, candidate, pitch};
 }
 
 
@@ -156,9 +161,14 @@ void MessageDecoder::initCandidate(float pitch) {
     candidate.freq = pitch;
     candidate.sustFrames = 1;
     candidate.transFrames = 1;
+    candidate.trusted = false;
     SymbMatch m = match(pitch);
     if (m.symbol != '\0') {
         candidate.symbol = m.symbol;
         candidate.error = m.error;
     }
+}
+
+void MessageDecoder::printTaus() {
+    detector.printTaus();
 }

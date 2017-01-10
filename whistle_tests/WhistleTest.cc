@@ -6,6 +6,7 @@
 #include <MessageDecoder.h>
 #include "gtest/gtest.h"
 #include "Synthesizer.h"
+#include "stringutil.h"
 #include <cstring>
 #include <WhistleConfig.h>
 
@@ -92,8 +93,8 @@ TEST(WhistleTest, CodeAndDecode) {
     Synthesizer synth(sampleRate);
     MessageDecoder decoder(sampleRate, frameSize);
 
-    string toEncode = "hjntdb982ilj6etj6e3l\0";
-//    string toEncode = "hjpk93soli6k530de9\0";
+//    string toEncode = "hjntdb982ilj6etj6e3l\0";
+    string toEncode = "3f1kt6fj7jt784tr2b70g1643a6nm0\0";
 
     uint32_t size = (uint32_t) (toEncode.size() * samplesPerSoud) + 1;
     int16_t samples[size];
@@ -155,13 +156,32 @@ TEST(WhistleTest, CodeAndDecodeMultiple) {
 
         string decoded = decoder.popMessage();
 //        cout << "Decoded: " << decoded << endl;
-        EXPECT_EQ(toEncode, decoded);
+        ASSERT_EQ(toEncode, decoded);
         size_t dist = levDist(toEncode.c_str(), toEncode.size(), decoded.c_str(), decoded.size());
 //        cout << "Dist: " << dist << endl;
         decoder.clearState();
     }
 }
 
+
+TEST(WhistleTest, DecodeLiveRecorded) {
+    const char* dataHome = "../../data/";
+    char fname[100];
+    strcpy(fname, dataHome);
+    strcat(fname, "hjntdb982ilj6etj6e3l.bin"); //todo process recursively all files in data folder
+
+    string mes = find_mes(fname);
+    FILE *pFile = fopen(fname, "rb");
+    uint32_t sampleRate = 44100;
+    uint16_t bufSize = 500;
+    MessageDecoder dec(sampleRate, bufSize);
+    int16_t buf[bufSize];
+    while (fread(buf, 2, bufSize, pFile)) {
+        dec.processFrame(buf);
+    }
+    std::string decMes = dec.popMessage();
+    ASSERT_EQ(mes, decMes);
+}
 
 
 int main(int argc, char **argv) {

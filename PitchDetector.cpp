@@ -4,6 +4,7 @@
 
 #include <cstdlib>
 #include <cstdint>
+#include <cstdio>
 #include "PitchDetector.h"
 
 
@@ -124,3 +125,10 @@ float PitchDetector::parabolicInterpolation(int tauEstimate) {
     return betterTau;
 }
 
+void PitchDetector::printTaus() {
+    printf("Taus:\t");
+    for (int i = 0; i < maxLag; i++) {
+        printf("%.4f\t", buf[i]);
+    }
+    printf("\n");
+}
