@@ -9,6 +9,7 @@
 #include <vector>
 #include <string>
 #include "PitchDetector.h"
+#include "VarianceTree.h"
 
 #define DEFAULT_MIN_FREQ 1000
 #define DEFAULT_MAX_FREQ 20000
@@ -55,7 +56,7 @@ private:
     PitchDetector detector;
     std::vector<SymbolCandidate> candidates;
     uint64_t frameCnt;
-    
+
     bool matchCandidate(PitchDetector::PitchCandidate &pc, SymbMatch &sm);
     void initCandidate(PitchDetector::PitchCandidate &pc, SymbMatch &sm);
 
