@@ -27,7 +27,6 @@
 class MessageDecoder {
 
 public:
-
     struct Candidate {
         float freq;
         int transFrames;
@@ -98,7 +97,6 @@ private:
 
     void initCandidate(float pitch);
 };
-
 
 
 #endif //WHISTLE_DECODER_H

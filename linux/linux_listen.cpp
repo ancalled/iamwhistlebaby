@@ -142,8 +142,7 @@ int main(int argc, char *argv[]) {
                 }
 
             } else if (plotType == PLOT_PITCHES) {
-                printf("%.2f\t%.2f\n", r.pitch, r.probability);
-
+                printf("%.2f\t%.2f\n", r.detector.pitch, r.detector.probability);
             }
 //            else if (plotType == PLOT_TAUS) {
 //                for (int tau = 0; tau < maxTau; tau++) {

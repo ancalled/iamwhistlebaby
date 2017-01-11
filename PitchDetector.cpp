@@ -25,7 +25,6 @@ PitchDetector::DetectResult PitchDetector::getPitch(int16_t *samples, uint32_t f
 
     cumulativeMeanNormalizedDifference();
     ThresholdResult tr = absoluteThreshold(threshold);
-
     float ftau;
     if (tr.tau != -1) {
         ftau = parabolicInterpolation(tr.tau);
@@ -35,6 +34,13 @@ PitchDetector::DetectResult PitchDetector::getPitch(int16_t *samples, uint32_t f
     return {pitchInHertz, tr.probability};
 }
 
+
+std::vector<PitchDetector::PitchCandidate>
+PitchDetector::getPitchCandidates(int16_t *samples, uint32_t from, uint32_t size, float threshold) {
+    difference(samples, from, size);
+    cumulativeMeanNormalizedDifference();
+    return findLocalMinimums(threshold);
+}
 
 void PitchDetector::difference(int16_t *samples, uint32_t from, uint32_t size) {
     int i;
@@ -85,6 +91,29 @@ PitchDetector::ThresholdResult PitchDetector::absoluteThreshold(float threshold)
         probability = 0;
     }
     return {tau, probability};
+}
+
+std::vector<PitchDetector::PitchCandidate> PitchDetector::findLocalMinimums(float threshold) {
+    std::vector<PitchDetector::PitchCandidate> res;
+
+    int resCnt = 0;
+    for (int tau = minLag + 2; tau < maxLag; tau++) {
+        float v = buf[tau];
+        if (v < threshold) {
+            while (tau + 1 < maxLag && buf[tau + 1] < buf[tau]) {
+                tau++;
+            }
+
+            float ftau = parabolicInterpolation(tau);
+            float pitchInHertz = sampleRate / ftau;
+            float reduction = (float) (1 - (resCnt++) * REDUCTION_FACTOR);
+            float probability = (1 - buf[tau]) * reduction;
+            PitchCandidate c = {tau, pitchInHertz, probability};
+            res.push_back(c);
+        }
+    }
+
+    return res;
 }
 
 
