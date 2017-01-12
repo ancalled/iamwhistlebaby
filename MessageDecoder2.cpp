@@ -43,12 +43,13 @@ void MessageDecoder2::processFrame(int16_t *samples, uint32_t from) {
     if (candidates.empty()) {
         if (state == STEP) {
             state = SEEK;
-            printf("Seeking...\n");
             vector<Line> result = mesTree.allVariances();
             printf("------------------------------------------------\n");
             printf("[%ld] Message candidates:\n", frameCnt);
+            int num = 1;
             for (Line &line: result) {
-                printf("%s\t%.2f\n", line.reversed().c_str(), line.prob);
+                const string &str = line.reversed();
+                printf("%d\t%s\t%.4f\n", num++, str.c_str(), line.confidence());
             }
             printf("\n");
         }
@@ -60,11 +61,16 @@ void MessageDecoder2::processFrame(int16_t *samples, uint32_t from) {
         while (it != candidates.end()) {
             SymbolCandidate &sc = *it;
             bool removed = false;
-            if (frameCnt - sc.lastFrame > sustainedFrames) {
+            if (frameCnt - sc.lastFrame > sustainedFrames * 1.5) {
                 //remove candidates which were not updating last sustFrames
                 it = candidates.erase(it);
                 removed = true;
             } else {
+                if (sc.lastFrame != frameCnt) {
+                    //touch candidates which were not matched on this iteration
+                    sc.voidFrame();
+                }
+
                 if (state == SEEK) {
                     if (sc.frames == sustainedFrames) {
                         if (sc.cumulativeProbability >= PROB_THRESHOLD) {

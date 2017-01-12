@@ -15,7 +15,8 @@
 #define DEFAULT_MAX_FREQ 20000
 #define DEFAULT_BUF_SIZE 512
 
-#define PROB_THRESHOLD 0.7
+//#define PROB_THRESHOLD 0.79
+#define PROB_THRESHOLD 0.65
 
 // pow(2, 1/12) - 1
 #define DIFF_COEF 0.0595
@@ -61,6 +62,11 @@ public:
             cumulativeProbability = (cumulativeProbability * frames + frame.probability) / (frames + 1);
             frames++;
             lastFrame = frame.cnt;
+        }
+
+        void voidFrame() {
+            cumulativeProbability = (cumulativeProbability * frames) / (frames + 1);
+            frames++;
         }
 
         void removeFirst() {

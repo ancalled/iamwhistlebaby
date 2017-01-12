@@ -15,8 +15,6 @@ using namespace std;
 struct Content {
     char symbol;
     float probability;
-
-
 };
 
 struct Line {
@@ -27,6 +25,10 @@ struct Line {
         std::string copy(mes);
         std::reverse(copy.begin(), copy.end());
         return copy;
+    }
+
+    float confidence() {
+        return mes.empty() ? 0 : prob / mes.size();
     }
 };
 
