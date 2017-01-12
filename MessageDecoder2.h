@@ -15,11 +15,16 @@
 #define DEFAULT_MAX_FREQ 20000
 #define DEFAULT_BUF_SIZE 512
 
+
 //#define PROB_THRESHOLD 0.79
 #define PROB_THRESHOLD 0.65
+//#define PROB_THRESHOLD 0.5
 
 // pow(2, 1/12) - 1
 #define DIFF_COEF 0.0595
+
+#define VAR_TREE_CAP 16
+//#define VAR_TREE_CAP 0 // no limit
 
 class MessageDecoder2 {
 
@@ -33,7 +38,7 @@ public:
     };
 
     struct Frame {
-        long cnt;
+        uint64_t cnt;
         char symbol;
         float pitch;
         float probability;
@@ -45,36 +50,36 @@ public:
     };
 
     struct SymbolCandidate {
-        std::vector<Frame> candidates;
+        std::vector<Frame> frames;
         char symbol;
-        int frames;
-        float cumulativeProbability;
+        int framesCnt;
+        float probability;
         long lastFrame;
 
         SymbolCandidate(Frame &frame) {
-            frames = 0;
+            framesCnt = 0;
             symbol = frame.symbol;
             attach(frame);
         }
 
         void attach(Frame &frame) {
-            candidates.push_back(frame);
-            cumulativeProbability = (cumulativeProbability * frames + frame.probability) / (frames + 1);
-            frames++;
+            frames.push_back(frame);
+            probability = (probability * framesCnt + frame.probability) / (framesCnt + 1);
+            framesCnt++;
             lastFrame = frame.cnt;
         }
 
         void voidFrame() {
-            cumulativeProbability = (cumulativeProbability * frames) / (frames + 1);
-            frames++;
+            probability = (probability * framesCnt) / (framesCnt + 1);
+            framesCnt++;
         }
 
         void removeFirst() {
-            const vector<Frame>::iterator &first = candidates.begin();
+            const vector<Frame>::iterator &first = frames.begin();
             Frame frame = *first;
-            frames--;
-            cumulativeProbability = (cumulativeProbability * frames - frame.probability) / (frames + 1);
-            candidates.erase(first);
+            framesCnt--;
+            probability = (probability * framesCnt - frame.probability) / (framesCnt + 1);
+            frames.erase(first);
         }
 
         bool matched(Frame &frame) {
@@ -103,7 +108,7 @@ private:
 
     VarianceTree mesTree;
 
-    bool matchCandidate(Frame &frame);
+    bool attachFrame(Frame &frame);
 
     void initCandidate(Frame &frame);
 

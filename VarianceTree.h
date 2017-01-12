@@ -8,29 +8,20 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
-
+#include <algorithm>
 using namespace std;
 
 
 struct Content {
     char symbol;
     float probability;
-};
+    float cumulProbability;
 
-struct Line {
-    std::string mes;
-    float prob;
-
-    std::string reversed() {
-        std::string copy(mes);
-        std::reverse(copy.begin(), copy.end());
-        return copy;
-    }
-
-    float confidence() {
-        return mes.empty() ? 0 : prob / mes.size();
+    void calcCumulProbability(float parentProb, int parentDepth) {
+        cumulProbability = (parentProb * parentDepth + probability) / (parentDepth + 1);
     }
 };
+
 
 class VarianceTree {
 
@@ -38,32 +29,64 @@ public:
 
     struct Node {
         Content content;
-        vector<Node *> leafs;
+        vector<Node *> children;
+        Node* parent;
         int depth;
     };
 
-    VarianceTree();
+    struct Branch {
+        std::string body;
+        float probability;
+
+        std::string reversed() {
+            std::string copy(body);
+            std::reverse(copy.begin(), copy.end());
+            return copy;
+        }
+    };
+
+    VarianceTree(int capacity = 0);
 
     ~VarianceTree();
 
 
-    void addElements(vector<Content> els);
+    void nextTier(vector<Content> items);
 
-    vector<Line> allVariances();
+    void printBranches();
+
+
 
 private:
-    void addElement(Node *leaf, vector<Content> items);
 
-    void destroyNode(Node *leaf);
+    vector<Branch> getBranches();
 
-    vector<Line> harvestContent(Node *leaf);
+    void addItems(Node *node, vector<Content> items);
 
-    static bool sortByProb(const Line &l1, const Line &l2) {
-        return l1.prob > l2.prob;
+    void destroyNode(Node *node);
+
+    void destroyLeaf(Node *leaf);
+
+    vector<Branch> getBranches(Node *node);
+
+    vector<Node *> getLeafs(Node *node);
+
+    void cleanUp(int restSize);
+
+    static bool compareContents(const Content &c1, const Content &c2) {
+        return c1.probability > c2.probability;
+    }
+
+    static bool compareBranches(const Branch &l1, const Branch &l2) {
+        return l1.probability > l2.probability;
+    }
+
+    static bool compareNodes(const Node *n1, const Node *n2) {
+        return n1->content.cumulProbability > n2->content.cumulProbability;
     }
 
     Node *root;
     int depth;
+    int capacity;
 
 };
 
