@@ -15,11 +15,19 @@ using namespace std;
 struct Content {
     char symbol;
     float probability;
+
+
 };
 
 struct Line {
     std::string mes;
     float prob;
+
+    std::string reversed() {
+        std::string copy(mes);
+        std::reverse(copy.begin(), copy.end());
+        return copy;
+    }
 };
 
 class VarianceTree {
@@ -47,6 +55,10 @@ private:
     void destroyNode(Node *leaf);
 
     vector<Line> harvestContent(Node *leaf);
+
+    static bool sortByProb(const Line &l1, const Line &l2) {
+        return l1.prob > l2.prob;
+    }
 
     Node *root;
     int depth;

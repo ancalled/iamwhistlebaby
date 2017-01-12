@@ -15,30 +15,65 @@
 #define DEFAULT_MAX_FREQ 20000
 #define DEFAULT_BUF_SIZE 512
 
-#define CUMULATIVE_PROBABILITY_THRESHOLD 0.7
+#define PROB_THRESHOLD 0.7
+
+// pow(2, 1/12) - 1
+#define DIFF_COEF 0.0595
 
 class MessageDecoder2 {
 
 public:
+    enum DecState {
+        NONE = 0,
+        SEEK = 1,
+        ALIGN = 2,
+        STEP = 3,
+        CHECK = 4
+    };
+
+    struct Frame {
+        long cnt;
+        char symbol;
+        float pitch;
+        float probability;
+    };
+
     struct SymbMatch {
         char symbol;
         float error;
     };
 
     struct SymbolCandidate {
-        std::vector<PitchDetector::PitchCandidate> candidates;
+        std::vector<Frame> candidates;
         char symbol;
         int frames;
         float cumulativeProbability;
-        uint64_t lastFrame;
+        long lastFrame;
 
-        void addPitch(PitchDetector::PitchCandidate &pc, SymbMatch &sm) {
-            candidates.push_back(pc);
-            float symProb = 1 - sm.error;
-            float prob = pc.probability * symProb;
-            cumulativeProbability = (cumulativeProbability * frames + prob) / (frames + 1);
+        SymbolCandidate(Frame &frame) {
+            frames = 0;
+            symbol = frame.symbol;
+            attach(frame);
+        }
+
+        void attach(Frame &frame) {
+            candidates.push_back(frame);
+            cumulativeProbability = (cumulativeProbability * frames + frame.probability) / (frames + 1);
             frames++;
+            lastFrame = frame.cnt;
+        }
 
+        void removeFirst() {
+            const vector<Frame>::iterator &first = candidates.begin();
+            Frame frame = *first;
+            frames--;
+            cumulativeProbability = (cumulativeProbability * frames - frame.probability) / (frames + 1);
+            candidates.erase(first);
+        }
+
+        bool matched(Frame &frame) {
+            return symbol == frame.symbol;
+            //todo also check pitch diff
         }
     };
 
@@ -46,23 +81,29 @@ public:
 
     void processFrame(int16_t *samples, uint32_t from);
 
+
+
 private:
+    DecState state;
     const uint32_t sampleRate;
     const float minFreq;
     const float maxFreq;
     uint16_t frameSize;
     uint8_t transitionFrames;
     uint8_t sustainedFrames;
+    uint64_t frameCnt;
     PitchDetector detector;
     std::vector<SymbolCandidate> candidates;
-    uint64_t frameCnt;
 
-    bool matchCandidate(PitchDetector::PitchCandidate &pc, SymbMatch &sm);
-    void initCandidate(PitchDetector::PitchCandidate &pc, SymbMatch &sm);
+    VarianceTree mesTree;
+
+    bool matchCandidate(Frame &frame);
+
+    void initCandidate(Frame &frame);
 
     MessageDecoder2::SymbMatch matchSymbol(float pitch);
 
-    float abs(float val) {return val > 0 ? val : -val;};
+    float abs(float val) { return val > 0 ? val : -val; };
 
 };
 

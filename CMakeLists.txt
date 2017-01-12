@@ -7,9 +7,9 @@ SET(SOURCE_FILES VarianceTree.cpp PitchDetector.cpp Synthesizer.cpp MessageDecod
 
 ADD_SUBDIRECTORY(whistle_tests)
 
-IF (LINUX)
+#IF (LINUX)
     ADD_SUBDIRECTORY(linux)
-ENDIF()
+#ENDIF()
 
 IF (APPLE)
     ADD_SUBDIRECTORY(macos)

@@ -27,7 +27,8 @@ public:
 
     PitchDetector::DetectResult getPitch(int16_t *samples, uint32_t from, uint32_t size, float threshold);
 
-    std::vector<PitchDetector::PitchCandidate> getPitchCandidates(int16_t *samples, uint32_t from, uint32_t size, float threshold);
+    std::vector<PitchDetector::PitchCandidate> getPitchCandidates(int16_t *samples, uint32_t from, uint32_t size,
+                                                                  float threshold, int resSize);
 
     void printTaus();
 
@@ -53,7 +54,7 @@ private:
 
     float parabolicInterpolation(int tauEstimate);
 
-    std::vector<PitchDetector::PitchCandidate> findLocalMinimums(float threshold);
+    std::vector<PitchDetector::PitchCandidate> findLocalMinimums(float threshold, int maxSize);
 
 };
 

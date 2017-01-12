@@ -36,10 +36,10 @@ PitchDetector::DetectResult PitchDetector::getPitch(int16_t *samples, uint32_t f
 
 
 std::vector<PitchDetector::PitchCandidate>
-PitchDetector::getPitchCandidates(int16_t *samples, uint32_t from, uint32_t size, float threshold) {
+PitchDetector::getPitchCandidates(int16_t *samples, uint32_t from, uint32_t size, float threshold, int resSize) {
     difference(samples, from, size);
     cumulativeMeanNormalizedDifference();
-    return findLocalMinimums(threshold);
+    return findLocalMinimums(threshold, resSize);
 }
 
 void PitchDetector::difference(int16_t *samples, uint32_t from, uint32_t size) {
@@ -93,7 +93,7 @@ PitchDetector::ThresholdResult PitchDetector::absoluteThreshold(float threshold)
     return {tau, probability};
 }
 
-std::vector<PitchDetector::PitchCandidate> PitchDetector::findLocalMinimums(float threshold) {
+std::vector<PitchDetector::PitchCandidate> PitchDetector::findLocalMinimums(float threshold, int maxSize) {
     std::vector<PitchDetector::PitchCandidate> res;
 
     int resCnt = 0;
@@ -110,6 +110,11 @@ std::vector<PitchDetector::PitchCandidate> PitchDetector::findLocalMinimums(floa
             float probability = (1 - buf[tau]) * reduction;
             PitchCandidate c = {tau, pitchInHertz, probability};
             res.push_back(c);
+            if (res.size() >= maxSize) break;
+
+            while (tau + 1 < maxLag && buf[tau + 1] > buf[tau]) {
+                tau++;
+            }
         }
     }
 

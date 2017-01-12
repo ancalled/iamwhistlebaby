@@ -2,6 +2,7 @@
 // Created by Andrey Koltochnik on 1/11/17.
 //
 
+#include <algorithm>
 #include "VarianceTree.h"
 
 VarianceTree::VarianceTree() {
@@ -28,8 +29,10 @@ void VarianceTree::destroyNode(VarianceTree::Node *leaf) {
 
 
 void VarianceTree::addElements(std::vector<Content> els) {
-    addElement(root, els);
-    depth++;
+    if (!els.empty()) {
+        addElement(root, els);
+        depth++;
+    }
 }
 
 
@@ -50,7 +53,9 @@ void VarianceTree::addElement(Node *leaf, vector<Content> items) {
 }
 
 vector<Line> VarianceTree::allVariances() {
-    return harvestContent(root);
+    vector<Line> res = harvestContent(root);
+    sort(res.begin(), res.end(), sortByProb);
+    return res;
 }
 
 vector<Line> VarianceTree::harvestContent(VarianceTree::Node *leaf) {

@@ -34,8 +34,8 @@ int main() {
     mes.addElements(lvl3);
 
     std::vector<Content> lvl4;
-    lvl4.push_back({'a', 0.43});
     lvl4.push_back({'d', 0.75});
+    lvl4.push_back({'a', 0.43});
     mes.addElements(lvl4);
 
     vector<Line> result = mes.allVariances();
