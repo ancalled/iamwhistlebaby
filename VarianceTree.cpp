@@ -139,5 +139,10 @@ void VarianceTree::destroyLeaf(VarianceTree::Node *leaf) {
     delete leaf;
 }
 
+VarianceTree::Branch VarianceTree::getTopBranch() {
+    const vector<Branch> &branches = getBranches();
+    return branches.front();
+}
+
 
 

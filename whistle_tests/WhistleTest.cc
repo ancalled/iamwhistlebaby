@@ -9,6 +9,7 @@
 #include "stringutil.h"
 #include <cstring>
 #include <WhistleConfig.h>
+#include <MessageDecoder2.h>
 
 using namespace std;
 
@@ -112,7 +113,6 @@ TEST(WhistleTest, CodeAndDecode) {
         decoder.processFrame(samples, n);
 
         n += frameSize;
-        frame++;
     }
 
     decoder.stopDetection();
@@ -122,6 +122,35 @@ TEST(WhistleTest, CodeAndDecode) {
     size_t dist = levDist(toEncode.c_str(), toEncode.size(), decoded.c_str(), decoded.size());
     cout << "Dist: " << dist << endl;
     decoder.clearState();
+}
+
+TEST(WhistleTest, CodeAndDecode2) {
+    uint32_t sampleRate = 44100;
+    string toEncode = "hjntdb982ilj6etj6e3l\0";
+
+    int8_t framesPerSound = 10;
+    int16_t samplesPerSoud = (int16_t) (sampleRate * (RAMP_TIME + TOP_TIME) / 1000);
+    uint16_t frameSize = (uint16_t) (samplesPerSoud / framesPerSound);
+    uint32_t size = (uint32_t) (toEncode.size() * samplesPerSoud) + 1;
+    int16_t samples[size];
+
+    Synthesizer synth(sampleRate);
+    MessageDecoder2 decoder(sampleRate, frameSize);
+    uint32_t gen = synth.generate(samples, size, toEncode.c_str());
+    printf("\n");
+
+    uint32_t n = 0;
+    uint32_t frame = 0;
+    while (n < gen) {
+        decoder.processFrame(samples, n);
+        n += frameSize;
+        frame++;
+    }
+
+    string decoded = decoder.popMessage();
+    EXPECT_EQ(toEncode, decoded);
+    size_t dist = levDist(toEncode.c_str(), toEncode.size(), decoded.c_str(), decoded.size());
+    cout << "Dist: " << dist << endl;
 }
 
 

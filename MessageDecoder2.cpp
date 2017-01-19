@@ -9,6 +9,9 @@
 using namespace wsl;
 using namespace std;
 
+static char *stateNames[] = {"NONE", "SEEK", "ALIGN", "STEP", "CHECK"};
+
+
 MessageDecoder2::MessageDecoder2(uint32_t sr, uint16_t frameSize) :
         sampleRate(sr),
         minFreq(DEFAULT_MIN_FREQ),
@@ -19,7 +22,20 @@ MessageDecoder2::MessageDecoder2(uint32_t sr, uint16_t frameSize) :
     transitionFrames = (uint8_t) round(sampleRate * RAMP_TIME / 1000 / frameSize);
     sustainedFrames = (uint8_t) round(sampleRate * TOP_TIME / 1000 / frameSize);
     frameCnt = 0;
+    candidateFrames = 0;
     state = SEEK;
+    printf("Frames %d + %d\n", transitionFrames, sustainedFrames);
+}
+
+
+static void printContent(vector<Content> &vec, uint64_t frameCnt) {
+    printf("[%ld] ", frameCnt);
+    int i = 0;
+    for (Content c: vec) {
+        printf("%c (%.2f)", c.symbol, c.probability);
+        if (i++ < vec.size() - 1) printf(", ");
+    }
+    printf("\n");
 }
 
 
@@ -34,8 +50,7 @@ void MessageDecoder2::processFrame(int16_t *samples, uint32_t from) {
             float relProb = pc.probability * symProb;
             Frame frame = {frameCnt, sm.symbol, pc.pitch, relProb};
 
-            bool found = attachFrame(frame);
-            if (!found) {
+            if (!attachFrame(frame)) {
                 initCandidate(frame);
             }
         }
@@ -44,78 +59,87 @@ void MessageDecoder2::processFrame(int16_t *samples, uint32_t from) {
     if (candidates.empty()) {
         if (state == STEP) {
             state = SEEK;
-            printf("------------------------------------------------\n");
-            printf("[%ld] Message frames:\n", frameCnt);
-//            mesTree.cleanUp(10);
-            mesTree.printBranches();
+            printf("[%ld] STEP -> SEEK\n", frameCnt);
         }
     } else {
 
         vector<Content> confirmed;
         DecState newState = NONE;
-        vector<SymbolCandidate>::iterator it = candidates.begin();
-        while (it != candidates.end()) {
-            SymbolCandidate &c = *it;
-            bool removed = false;
-            if (frameCnt - c.lastFrame > sustainedFrames) {
-                //remove candidates which were not updating last sustFrames
-                it = candidates.erase(it);
-                removed = true;
-            } else {
-                if (c.lastFrame != frameCnt) {
-                    //touch candidates which were not matched on this iteration
-                    c.voidFrame();
-                }
 
-                if (state == SEEK) {
+        if (state == SEEK) {
+            vector<SymbolCandidate>::iterator it = candidates.begin();
+            while (it != candidates.end()) {
+                SymbolCandidate &c = *it;
+                bool rem = false;
+                if (frameCnt - c.lastFrame > sustainedFrames) {
+                    //remove candidates which were not updating last sustFrames
+                    rem = true;
+                } else {
+                    if (c.lastFrame != frameCnt) {
+                        //touch candidates which were not matched on this iteration
+                        c.voidFrame();
+                    }
+
                     if (c.framesCnt == sustainedFrames) {
-                        if (c.probability >= PROB_THRESHOLD) {
+//                            if (c.probability >= PROB_THRESHOLD) {
+                        if (c.trusted(sustainedFrames)) {
                             //got probable candidate, try to align it during next few steps
                             newState = ALIGN;
-
-                            confirmed.push_back({c.symbol, c.probability});
-                            it = candidates.erase(it);
-                            removed = true;
-                        } else {
-                            it = candidates.erase(it);
-                            removed = true;
-                        }
-                    }
-
-                } else if (state == ALIGN) {
-                    if (c.framesCnt < sustainedFrames && frameCnt - c.lastFrame > 0) {
-                        //this candidate is no more relevant, remove it
-                        it = candidates.erase(it);
-                        removed = true;
-                    } else {
-                        //todo implement frame alignment
-                        //c.removeFirst();
-                        //newState = STEP;
-                    }
-
-                    newState = STEP;
-
-                } else if (state == STEP) {
-                    if (c.framesCnt == sustainedFrames) {
-                        if (c.probability >= PROB_THRESHOLD) {
                             confirmed.push_back({c.symbol, c.probability});
                         }
-                        it = candidates.erase(it);
-                        removed = true;
+                        rem = true;
                     }
+                }
+                if (rem) {
+                    it = candidates.erase(it);
+                } else {
+                    it++;
                 }
             }
 
-            if (!removed) it++;
-        }
+        } else if (state == ALIGN) {
+//            if (c.framesCnt < sustainedFrames && frameCnt - c.lastFrame > 0) {
+//                //this candidate is no more relevant, remove it
+//                it = candidates.erase(it);
+//                removed = true;
+//            } else {
+//                //todo implement frame alignment
+//                //c.removeFirst();
+//                //newState = STEP;
+//            }
+//
+//            newState = STEP;
+//            candidateFrames = 0;
+            newState = STEP;
 
+        } else if (state == STEP) {
+            if (++candidateFrames == sustainedFrames) {
+                for (SymbolCandidate &c: candidates) {
+//                    if (c.probability >= PROB_THRESHOLD) {
+                    if (c.trusted(sustainedFrames)) {
+                        confirmed.push_back({c.symbol, c.probability});
+                    }
+                }
 
-        if (newState != NONE) {
-            state = newState;
+                candidateFrames = 0;
+                candidates.clear();
+
+                if (confirmed.empty()) {
+                    newState = SEEK;
+                } else {
+                    newState = ALIGN;
+                }
+            }
+
         }
 
         if (!confirmed.empty()) {
+            printContent(confirmed, frameCnt);
             mesTree.nextTier(confirmed);
+        }
+
+        if (newState != NONE) {
+            changeState(newState);
         }
     }
 
@@ -166,4 +190,11 @@ MessageDecoder2::SymbMatch MessageDecoder2::matchSymbol(float pitch) {
     return {'#', 1.0};
 }
 
+const std::string MessageDecoder2::popMessage() {
+    return mesTree.getTopBranch().reversed();
+}
 
+void MessageDecoder2::changeState(MessageDecoder2::DecState newState) {
+    printf("[%ld] %s -> %s\n", frameCnt, stateNames[state], stateNames[newState]);
+    state = newState;
+}

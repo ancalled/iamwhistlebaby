@@ -54,6 +54,8 @@ public:
 
     void printBranches();
 
+    Branch getTopBranch();
+
 
 
 private:
@@ -83,6 +85,8 @@ private:
     static bool compareNodes(const Node *n1, const Node *n2) {
         return n1->content.cumulProbability > n2->content.cumulProbability;
     }
+
+
 
     Node *root;
     int depth;

@@ -18,6 +18,7 @@
 
 //#define PROB_THRESHOLD 0.79
 #define PROB_THRESHOLD 0.65
+//#define PROB_THRESHOLD 0.6
 //#define PROB_THRESHOLD 0.5
 
 // pow(2, 1/12) - 1
@@ -25,6 +26,7 @@
 
 #define VAR_TREE_CAP 16
 //#define VAR_TREE_CAP 0 // no limit
+
 
 class MessageDecoder2 {
 
@@ -36,6 +38,7 @@ public:
         STEP = 3,
         CHECK = 4
     };
+
 
     struct Frame {
         uint64_t cnt;
@@ -58,19 +61,21 @@ public:
 
         SymbolCandidate(Frame &frame) {
             framesCnt = 0;
+            probability = 0;
             symbol = frame.symbol;
             attach(frame);
         }
 
         void attach(Frame &frame) {
             frames.push_back(frame);
-            probability = (probability * framesCnt + frame.probability) / (framesCnt + 1);
+//            probability = (probability * framesCnt + frame.probability) / (framesCnt + 1);
+            probability += frame.probability;
             framesCnt++;
             lastFrame = frame.cnt;
         }
 
         void voidFrame() {
-            probability = (probability * framesCnt) / (framesCnt + 1);
+//            probability = (probability * framesCnt) / (framesCnt + 1);
             framesCnt++;
         }
 
@@ -78,7 +83,8 @@ public:
             const vector<Frame>::iterator &first = frames.begin();
             Frame frame = *first;
             framesCnt--;
-            probability = (probability * framesCnt - frame.probability) / (framesCnt + 1);
+//            probability = (probability * framesCnt - frame.probability) / (framesCnt + 1);
+            probability -= frame.probability;
             frames.erase(first);
         }
 
@@ -86,12 +92,17 @@ public:
             return symbol == frame.symbol;
             //todo also check pitch diff
         }
+
+        bool trusted(uint16_t expectedFrames) {
+            return probability > PROB_THRESHOLD * expectedFrames;
+        }
     };
 
     MessageDecoder2(uint32_t sr, uint16_t frameSize);
 
     void processFrame(int16_t *samples, uint32_t from);
 
+    const std::string popMessage();
 
 
 private:
@@ -103,6 +114,7 @@ private:
     uint8_t transitionFrames;
     uint8_t sustainedFrames;
     uint64_t frameCnt;
+    uint32_t candidateFrames;
     PitchDetector detector;
     std::vector<SymbolCandidate> candidates;
 
@@ -114,7 +126,10 @@ private:
 
     MessageDecoder2::SymbMatch matchSymbol(float pitch);
 
+    void changeState(DecState newState);
+
     float abs(float val) { return val > 0 ? val : -val; };
+
 
 };
 
