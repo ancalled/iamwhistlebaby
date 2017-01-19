@@ -18,9 +18,16 @@ VarianceTree::~VarianceTree() {
 
 void VarianceTree::destroyNode(VarianceTree::Node *node) {
     if (node != NULL) {
-        for (Node *child: node->children) {
+        vector<Node *>::iterator it = node->children.begin();
+        while (it != node->children.end()) {
+            Node *child = *it;
             destroyNode(child);
+            it = node->children.erase(it);
         }
+//        for (Node *child: node->children) {
+//            destroyNode(child);
+//        }
+        depth = node->depth;
         delete node;
     }
 }
@@ -142,6 +149,25 @@ void VarianceTree::destroyLeaf(VarianceTree::Node *leaf) {
 VarianceTree::Branch VarianceTree::getTopBranch() {
     const vector<Branch> &branches = getBranches();
     return branches.front();
+}
+
+vector<VarianceTree::Branch> VarianceTree::getTopBranches(int size) {
+    const vector<Branch> &branches = getBranches();
+    vector<Branch> filter(branches.begin(), branches.begin() + size);
+    return filter;
+}
+
+void VarianceTree::clear() {
+    vector<Node *>::iterator it = root->children.begin();
+    while (it != root->children.end()) {
+        Node *child = *it;
+        destroyNode(child);
+        it = root->children.erase(it);
+    }
+//    for (Node *nd: root->children) {
+//        destroyNode(nd);
+//    }
+//    depth = 0;
 }
 
 

@@ -49,8 +49,9 @@ size_t levDist(const char *s, size_t n, const char *t, size_t m) {
 string randomMes(int maxLength) {
     int len = rand() % maxLength;
     string mes = "";
+    int symlen = SYMBS - 1;
     for (int i = 0; i < len; i++) {
-        char symbol = wsl::SYMBOLS[rand() % SYMBS].symbol;
+        char symbol = wsl::SYMBOLS[rand() % symlen].symbol;
         mes += symbol;
     }
     return mes;
@@ -124,35 +125,6 @@ TEST(WhistleTest, CodeAndDecode) {
     decoder.clearState();
 }
 
-TEST(WhistleTest, CodeAndDecode2) {
-    uint32_t sampleRate = 44100;
-    string toEncode = "hjntdb982ilj6etj6e3l\0";
-
-    int8_t framesPerSound = 10;
-    int16_t samplesPerSoud = (int16_t) (sampleRate * (RAMP_TIME + TOP_TIME) / 1000);
-    uint16_t frameSize = (uint16_t) (samplesPerSoud / framesPerSound);
-    uint32_t size = (uint32_t) (toEncode.size() * samplesPerSoud) + 1;
-    int16_t samples[size];
-
-    Synthesizer synth(sampleRate);
-    MessageDecoder2 decoder(sampleRate, frameSize);
-    uint32_t gen = synth.generate(samples, size, toEncode.c_str());
-    printf("\n");
-
-    uint32_t n = 0;
-    uint32_t frame = 0;
-    while (n < gen) {
-        decoder.processFrame(samples, n);
-        n += frameSize;
-        frame++;
-    }
-
-    string decoded = decoder.popMessage();
-    EXPECT_EQ(toEncode, decoded);
-    size_t dist = levDist(toEncode.c_str(), toEncode.size(), decoded.c_str(), decoded.size());
-    cout << "Dist: " << dist << endl;
-}
-
 
 TEST(WhistleTest, CodeAndDecodeMultiple) {
     uint32_t sampleRate = 62500;
@@ -193,6 +165,97 @@ TEST(WhistleTest, CodeAndDecodeMultiple) {
 }
 
 
+
+TEST(WhistleTest, CodeAndDecode2) {
+    uint32_t sampleRate = 44100;
+//    string toEncode = "hjntdb982ilj6etj6e3l\0";
+    string toEncode = "69jhvac9dq\0";
+
+    int8_t framesPerSound = 10;
+    int16_t samplesPerSoud = (int16_t) (sampleRate * (RAMP_TIME + TOP_TIME) / 1000);
+    uint16_t frameSize = (uint16_t) (samplesPerSoud / framesPerSound);
+    uint32_t size = (uint32_t) (toEncode.size() * samplesPerSoud) + 1;
+    int16_t samples[size];
+    bool printDebug = true;
+
+    Synthesizer synth(sampleRate);
+    MessageDecoder2 decoder(sampleRate, frameSize, printDebug);
+    uint32_t gen = synth.generate(samples, size, toEncode.c_str());
+    printf("\n");
+
+    uint32_t n = 0;
+    uint32_t frame = 0;
+    while (n < gen) {
+        decoder.processFrame(samples, n);
+        n += frameSize;
+        frame++;
+    }
+
+
+    vector<string> top = decoder.popMessages(3);
+    printf("%s\n", toEncode.c_str());
+    printf("--------------------\n");
+    for (string st: top) {
+        printf("%s\n", st.c_str());
+    }
+    printf("\n");
+//    string decoded = decoder.popMessage();
+//    EXPECT_EQ(toEncode, decoded);
+//    size_t dist = levDist(toEncode.c_str(), toEncode.size(), decoded.c_str(), decoded.size());
+//    cout << "Dist: " << dist << endl;
+    bool eq = std::find(top.begin(), top.end(), toEncode) != top.end();
+    EXPECT_TRUE(eq);
+
+}
+
+
+TEST(WhistleTest, CodeAndDecodeMultiple2) {
+    uint32_t sampleRate = 62500;
+
+    int8_t framesPerSound = 10;
+    int16_t samplesPerSoud = (int16_t) (sampleRate * (RAMP_TIME + TOP_TIME) / 1000);
+    uint16_t frameSize = (uint16_t) (samplesPerSoud / framesPerSound);
+    Synthesizer synth(sampleRate);
+//    MessageDecoder2 decoder(sampleRate, frameSize);
+    printf("\n");
+    for (int i = 0; i < 100; i++) {
+        MessageDecoder2 decoder(sampleRate, frameSize);
+
+        string toEncode = randomMes(31);
+
+        uint32_t size = (uint32_t) (toEncode.size() * samplesPerSoud) + 1;
+        int16_t samples[size];
+        uint32_t gen = synth.generate(samples, size, toEncode.c_str());
+
+        int frame = 0;
+        uint32_t n = 0;
+//        int16_t buf[frameSize];
+        while (n < gen) {
+//            fill(samples, n, gen, buf, frameSize);
+            decoder.processFrame(samples, n);
+
+            n += frameSize;
+            frame++;
+        }
+
+        vector<string> top = decoder.popMessages(3);
+//        printf("%s\n", toEncode.c_str());
+//        ASSERT_
+        bool found = std::find(top.begin(), top.end(), toEncode) != top.end();
+        EXPECT_TRUE(found);
+        if (!found) {
+            printf("%s\n", toEncode.c_str());
+            printf("%s\n", top.front().c_str());
+            printf("\n");
+        }
+
+//        decoder.clearState();
+    }
+}
+
+
+
+
 TEST(WhistleTest, DecodeLiveRecorded) {
     const char *dataHome = "../../data/";
     char fname[100];
@@ -220,7 +283,6 @@ TEST(WhistleTest, DecodeLiveRecorded) {
 
 
 int main(int argc, char **argv) {
-
     cout << "Running tests for libwhistle ver: " << getVersion() << "" << endl;
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

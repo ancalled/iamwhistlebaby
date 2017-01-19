@@ -52,11 +52,15 @@ public:
 
     void nextTier(vector<Content> items);
 
-    void printBranches();
-
     Branch getTopBranch();
 
+    vector<Branch> getTopBranches(int size);
 
+
+    void printBranches();
+
+
+    void clear();
 
 private:
 

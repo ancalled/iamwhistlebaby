@@ -12,13 +12,14 @@
 #include "VarianceTree.h"
 
 #define DEFAULT_MIN_FREQ 1000
-#define DEFAULT_MAX_FREQ 20000
+//#define DEFAULT_MAX_FREQ 20000
+#define DEFAULT_MAX_FREQ 25000
 #define DEFAULT_BUF_SIZE 512
 
 
 //#define PROB_THRESHOLD 0.79
-#define PROB_THRESHOLD 0.65
-//#define PROB_THRESHOLD 0.6
+//#define PROB_THRESHOLD 0.65
+#define PROB_THRESHOLD 0.6
 //#define PROB_THRESHOLD 0.5
 
 // pow(2, 1/12) - 1
@@ -98,14 +99,19 @@ public:
         }
     };
 
-    MessageDecoder2(uint32_t sr, uint16_t frameSize);
+    MessageDecoder2(uint32_t sr, uint16_t frameSize, bool debugPrint = false);
 
     void processFrame(int16_t *samples, uint32_t from);
 
     const std::string popMessage();
 
+    const vector<string> popMessages(int size);
+
+    void clearState();
+
 
 private:
+    bool debugPrint;
     DecState state;
     const uint32_t sampleRate;
     const float minFreq;

@@ -35,7 +35,15 @@ int main() {
 
     mes.printBranches();
 
-    printf("");
+    printf("\n\n");
+
+    mes.clear();
+    mes.nextTier(lvl1);
+    mes.nextTier(lvl2);
+    mes.nextTier(lvl3);
+    mes.printBranches();
+
+
 //    const unsigned char *message = reinterpret_cast<const unsigned char *> ("hjntdb982ilj6etj6e3k");
 //    uint32_t  c = crc32b(message);
 //    printf("%d\n", c);//1053339487

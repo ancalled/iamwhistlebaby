@@ -12,19 +12,21 @@ using namespace std;
 static char *stateNames[] = {"NONE", "SEEK", "ALIGN", "STEP", "CHECK"};
 
 
-MessageDecoder2::MessageDecoder2(uint32_t sr, uint16_t frameSize) :
+MessageDecoder2::MessageDecoder2(uint32_t sr, uint16_t frameSize, bool debugPrint) :
         sampleRate(sr),
         minFreq(DEFAULT_MIN_FREQ),
         maxFreq(DEFAULT_MAX_FREQ),
         frameSize(frameSize),
         detector(sr, DEFAULT_BUF_SIZE, minFreq, maxFreq),
-        mesTree(VAR_TREE_CAP) {
+        mesTree(VAR_TREE_CAP),
+        debugPrint(debugPrint) {
     transitionFrames = (uint8_t) round(sampleRate * RAMP_TIME / 1000 / frameSize);
     sustainedFrames = (uint8_t) round(sampleRate * TOP_TIME / 1000 / frameSize);
     frameCnt = 0;
     candidateFrames = 0;
     state = SEEK;
-    printf("Frames %d + %d\n", transitionFrames, sustainedFrames);
+    if (debugPrint)
+        printf("Frames %d + %d\n", transitionFrames, sustainedFrames);
 }
 
 
@@ -58,8 +60,7 @@ void MessageDecoder2::processFrame(int16_t *samples, uint32_t from) {
 
     if (candidates.empty()) {
         if (state == STEP) {
-            state = SEEK;
-            printf("[%ld] STEP -> SEEK\n", frameCnt);
+            changeState(SEEK) ;
         }
     } else {
 
@@ -98,18 +99,6 @@ void MessageDecoder2::processFrame(int16_t *samples, uint32_t from) {
             }
 
         } else if (state == ALIGN) {
-//            if (c.framesCnt < sustainedFrames && frameCnt - c.lastFrame > 0) {
-//                //this candidate is no more relevant, remove it
-//                it = candidates.erase(it);
-//                removed = true;
-//            } else {
-//                //todo implement frame alignment
-//                //c.removeFirst();
-//                //newState = STEP;
-//            }
-//
-//            newState = STEP;
-//            candidateFrames = 0;
             newState = STEP;
 
         } else if (state == STEP) {
@@ -134,7 +123,8 @@ void MessageDecoder2::processFrame(int16_t *samples, uint32_t from) {
         }
 
         if (!confirmed.empty()) {
-            printContent(confirmed, frameCnt);
+            if (debugPrint)
+                printContent(confirmed, frameCnt);
             mesTree.nextTier(confirmed);
         }
 
@@ -182,7 +172,7 @@ MessageDecoder2::SymbMatch MessageDecoder2::matchSymbol(float pitch) {
     }
 
     const sound_symbol &last = SYMBOLS[SYMBS - 1];
-    if (last.freq < pitch && pitch < last.freq + 300) {
+    if (last.freq < pitch && pitch < last.freq + 390) {
         float er = abs(last.freq - pitch) / 500;
         return {last.symbol, er};
     }
@@ -195,6 +185,23 @@ const std::string MessageDecoder2::popMessage() {
 }
 
 void MessageDecoder2::changeState(MessageDecoder2::DecState newState) {
-    printf("[%ld] %s -> %s\n", frameCnt, stateNames[state], stateNames[newState]);
+    if (debugPrint)
+        printf("[%ld]      %s -> %s\n", frameCnt, stateNames[state], stateNames[newState]);
     state = newState;
+}
+
+const vector<string> MessageDecoder2::popMessages(int size) {
+    vector<VarianceTree::Branch> branches = mesTree.getTopBranches(size);
+    vector<string> res(size);
+    for (int i = 0; i < size; i++) {
+        res[i] = branches[i].reversed();
+    }
+    return res;
+}
+
+void MessageDecoder2::clearState() {
+    changeState(SEEK);
+    candidates.clear();
+    candidateFrames = 0;
+    mesTree.clear();
 }
