@@ -9,7 +9,7 @@
 #include <cmath>
 #include <algorithm>
 #include <cstring>
-#include <MessageDecoder.h>
+#include <SimpleMessageDecoder.h>
 #include <Synthesizer.h>
 #include "stringutil.h"
 
@@ -47,15 +47,15 @@ int main(int argc, char *argv[]) {
     printf("File size: %ld bytes, reading by %ld\n", fsize(pFile), elSize);
 
     uint32_t sr = DEFAULT_DECODE_SAMPLE_RATE;
-    MessageDecoder dec(sr, bufSize);
+    SimpleMessageDecoder dec(sr, bufSize);
     int16_t buf[bufSize];
-    vector<MessageDecoder::ProcessResult> results;
+    vector<SimpleMessageDecoder::ProcessResult> results;
     uint64_t read = 0;
     bool debug = /*false*/true;
 
     while (fread(buf, elSize, bufSize, pFile)) {
         if (debug) printf("%ld\t", read);
-        const MessageDecoder::ProcessResult &r = dec.processFrame(buf, 0, debug);
+        const SimpleMessageDecoder::ProcessResult &r = dec.processFrame(buf, 0, debug);
         results.push_back(r);
         read += bufSize;
 //        if (debug && r.detector.pitch < 0) printf("\n");
@@ -83,8 +83,8 @@ int main(int argc, char *argv[]) {
     bool nextSymb = true;
 
 
-    for (MessageDecoder::ProcessResult &res: results) {
-        if (res.messageState == MessageDecoder::MessageState::MS_GOT_RESULT) {
+    for (SimpleMessageDecoder::ProcessResult &res: results) {
+        if (res.messageState == SimpleMessageDecoder::MessageState::MS_GOT_RESULT) {
             processing = false;
         }
 

@@ -12,7 +12,7 @@
 #include <PitchDetector.h>
 #include <algorithm>
 #include <cstring>
-#include <MessageDecoder.h>
+#include <SimpleMessageDecoder.h>
 #include "command.h"
 
 #define PLOT_SAMPLES 1
@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
 
     pa_simple *s = NULL;
     int error;
-    MessageDecoder dec(sampleRate , bufSize);
+    SimpleMessageDecoder dec(sampleRate , bufSize);
 //    PitchDetector dec(sampleRate, bufSize, minFreq, maxFreq);
 
     if (!(s = pa_simple_new(NULL, PULSE_AUDIO_NAME, PA_STREAM_RECORD, NULL, "record", &ss, NULL, NULL, &error))) {
@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
             return 2;
         }
 
-        MessageDecoder::ProcessResult r = dec.processFrame(buf);
+        SimpleMessageDecoder::ProcessResult r = dec.processFrame(buf);
         if (dec.hasResult()) {
             std::string mes = dec.popMessage();
             if (mes.length() > 0) {

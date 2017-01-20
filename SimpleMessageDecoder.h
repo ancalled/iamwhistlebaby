@@ -24,7 +24,7 @@
 #define MIN_MESSAGE_LEN 3
 #define MAX_VOID_FRAMES 4
 
-class MessageDecoder {
+class SimpleMessageDecoder {
 
 public:
     struct Candidate {
@@ -49,9 +49,9 @@ public:
     };
 
 
-    MessageDecoder(uint32_t sr, uint16_t frameSize);
+    SimpleMessageDecoder(uint32_t sr, uint16_t frameSize);
 
-    MessageDecoder::ProcessResult processFrame(int16_t *samples, uint32_t from = 0, bool print_pitches = false);
+    SimpleMessageDecoder::ProcessResult processFrame(int16_t *samples, uint32_t from = 0, bool print_pitches = false);
 
     bool hasResult();
 

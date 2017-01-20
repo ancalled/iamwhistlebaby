@@ -3,13 +3,13 @@
 //
 
 
-#include <MessageDecoder.h>
+#include <SimpleMessageDecoder.h>
 #include "gtest/gtest.h"
 #include "Synthesizer.h"
 #include "stringutil.h"
 #include <cstring>
 #include <WhistleConfig.h>
-#include <MessageDecoder2.h>
+#include <VarienceMessageDecoder.h>
 
 using namespace std;
 
@@ -105,86 +105,86 @@ TEST(WhistleTest, Generate) {
 };
 
 
-TEST(WhistleTest, CodeAndDecode) {
-//    uint32_t sampleRate = 19000;
-//    uint32_t sampleRate = 38000;
-    uint32_t sampleRate = 44100;
-//    uint32_t sampleRate = 62500;
-
-    int8_t framesPerSound = 10;
-    int16_t samplesPerSoud = (int16_t) (sampleRate * (RAMP_TIME + TOP_TIME) / 1000);
-    uint16_t frameSize = (uint16_t) (samplesPerSoud / framesPerSound);
-    Synthesizer synth(sampleRate);
-    MessageDecoder decoder(sampleRate, frameSize);
-
+//TEST(WhistleTest, CodeAndDecode) {
+////    uint32_t sampleRate = 19000;
+////    uint32_t sampleRate = 38000;
+//    uint32_t sampleRate = 44100;
+////    uint32_t sampleRate = 62500;
+//
+//    int8_t framesPerSound = 10;
+//    int16_t samplesPerSoud = (int16_t) (sampleRate * (RAMP_TIME + TOP_TIME) / 1000);
+//    uint16_t frameSize = (uint16_t) (samplesPerSoud / framesPerSound);
+//    Synthesizer synth(sampleRate);
+//    SimpleMessageDecoder decoder(sampleRate, frameSize);
+//
 //    string toEncode = "hjntdb982ilj6etj6e3l\0";
-    string toEncode = "3f1kt6fj7jt784tr2b70g1643a6nm0\0";
-
-    uint32_t size = (uint32_t) (toEncode.size() * samplesPerSoud) + 1;
-    int16_t samples[size];
-
-    uint32_t gen = synth.generate(samples, size, toEncode.c_str());
-
-    // Decoding
-
-    int frame = 0;
-    uint32_t n = 0;
-//    int16_t buf[frameSize];
-
-    while (n < gen) {
-//        fill(samples, n, gen, buf, frameSize);
-        decoder.processFrame(samples, n);
-
-        n += frameSize;
-    }
-
-    decoder.stopDetection();
-
-    string decoded = decoder.popMessage();
-    EXPECT_EQ(toEncode, decoded);
-    size_t dist = levDist(toEncode.c_str(), toEncode.size(), decoded.c_str(), decoded.size());
-    cout << "Dist: " << dist << endl;
-    decoder.clearState();
-}
-
-
-TEST(WhistleTest, CodeAndDecodeMultiple) {
-    uint32_t sampleRate = 62500;
-
-    int8_t framesPerSound = 10;
-    int16_t samplesPerSoud = (int16_t) (sampleRate * (RAMP_TIME + TOP_TIME) / 1000);
-    uint16_t frameSize = (uint16_t) (samplesPerSoud / framesPerSound);
-    Synthesizer synth(sampleRate);
-    MessageDecoder decoder(sampleRate, frameSize);
-
-    for (int i = 0; i < 100; i++) {
-
-        string toEncode = randomMes(1, 31, SYMBS);
-
-        uint32_t size = (uint32_t) (toEncode.size() * samplesPerSoud) + 1;
-        int16_t samples[size];
-        uint32_t gen = synth.generate(samples, size, toEncode.c_str());
-
-        int frame = 0;
-        uint32_t n = 0;
-//        int16_t buf[frameSize];
-        while (n < gen) {
-//            fill(samples, n, gen, buf, frameSize);
-            decoder.processFrame(samples, n);
-
-            n += frameSize;
-            frame++;
-        }
-        decoder.stopDetection();
-
-        string decoded = decoder.popMessage();
-//        cout << "Decoded: " << decoded << endl;
-        ASSERT_EQ(toEncode, decoded);
-        size_t dist = levDist(toEncode.c_str(), toEncode.size(), decoded.c_str(), decoded.size());
-//        cout << "Dist: " << dist << endl;
-        decoder.clearState();
-    }
-}
+////    string toEncode = "3f1kt6fj7jt784tr2b70g1643a6nm0\0";
+//
+//    uint32_t size = (uint32_t) (toEncode.size() * samplesPerSoud) + 1;
+//    int16_t samples[size];
+//
+//    uint32_t gen = synth.generate(samples, size, toEncode.c_str());
+//
+//    // Decoding
+//
+//    int frame = 0;
+//    uint32_t n = 0;
+////    int16_t buf[frameSize];
+//
+//    while (n < gen) {
+////        fill(samples, n, gen, buf, frameSize);
+//        decoder.processFrame(samples, n);
+//
+//        n += frameSize;
+//    }
+//
+//    decoder.stopDetection();
+//
+//    string decoded = decoder.popMessage();
+//    EXPECT_EQ(toEncode, decoded);
+//    size_t dist = levDist(toEncode.c_str(), toEncode.size(), decoded.c_str(), decoded.size());
+//    cout << "Dist: " << dist << endl;
+//    decoder.clearState();
+//}
+//
+//
+//TEST(WhistleTest, CodeAndDecodeMultiple) {
+//    uint32_t sampleRate = 62500;
+//
+//    int8_t framesPerSound = 10;
+//    int16_t samplesPerSoud = (int16_t) (sampleRate * (RAMP_TIME + TOP_TIME) / 1000);
+//    uint16_t frameSize = (uint16_t) (samplesPerSoud / framesPerSound);
+//    Synthesizer synth(sampleRate);
+//    SimpleMessageDecoder decoder(sampleRate, frameSize);
+//
+//    for (int i = 0; i < 100; i++) {
+//
+//        string toEncode = randomMes(1, 31, SYMBS);
+//
+//        uint32_t size = (uint32_t) (toEncode.size() * samplesPerSoud) + 1;
+//        int16_t samples[size];
+//        uint32_t gen = synth.generate(samples, size, toEncode.c_str());
+//
+//        int frame = 0;
+//        uint32_t n = 0;
+////        int16_t buf[frameSize];
+//        while (n < gen) {
+////            fill(samples, n, gen, buf, frameSize);
+//            decoder.processFrame(samples, n);
+//
+//            n += frameSize;
+//            frame++;
+//        }
+//        decoder.stopDetection();
+//
+//        string decoded = decoder.popMessage();
+////        cout << "Decoded: " << decoded << endl;
+//        ASSERT_EQ(toEncode, decoded);
+//        size_t dist = levDist(toEncode.c_str(), toEncode.size(), decoded.c_str(), decoded.size());
+////        cout << "Dist: " << dist << endl;
+//        decoder.clearState();
+//    }
+//}
 
 
 
@@ -205,7 +205,7 @@ TEST(WhistleTest, CodeAndDecode2) {
     bool printDebug = true;
 
     Synthesizer synth(sampleRate);
-    MessageDecoder2 decoder(sampleRate, frameSize, printDebug);
+    VarienceMessageDecoder decoder(sampleRate, frameSize, printDebug);
     uint32_t gen = synth.generate(samples, size, toEncode.c_str());
     printf("\n");
 
@@ -244,10 +244,10 @@ TEST(WhistleTest, CodeAndDecodeMultiple2) {
     int16_t samplesPerSoud = (int16_t) (sampleRate * (RAMP_TIME + TOP_TIME) / 1000);
     uint16_t frameSize = (uint16_t) (samplesPerSoud / framesPerSound);
     Synthesizer synth(sampleRate);
-//    MessageDecoder2 decoder(sampleRate, frameSize);
+//    VarienceMessageDecoder decoder(sampleRate, frameSize);
     printf("\n");
     for (int i = 0; i < 100; i++) {
-        MessageDecoder2 decoder(sampleRate, frameSize);
+        VarienceMessageDecoder decoder(sampleRate, frameSize);
 
         string toEncode = randomMes(10, 20, SYMBS - 2);
 
@@ -299,7 +299,7 @@ TEST(WhistleTest, DecodeLiveRecorded) {
     int16_t samplesPerSoud = (int16_t) (sampleRate * (RAMP_TIME + TOP_TIME) / 1000);
     uint16_t bufSize = (uint16_t) (samplesPerSoud / framesPerSound);
 
-    MessageDecoder2 dec(sampleRate, bufSize, true);
+    VarienceMessageDecoder dec(sampleRate, bufSize, true);
     int16_t buf[bufSize];
     while (fread(buf, 2, bufSize, pFile)) {
         dec.processFrame(buf);

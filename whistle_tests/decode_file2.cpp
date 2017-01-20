@@ -9,7 +9,7 @@
 #include <cmath>
 #include <algorithm>
 #include <cstring>
-#include <MessageDecoder2.h>
+#include <VarienceMessageDecoder.h>
 #include <Synthesizer.h>
 #include "stringutil.h"
 
@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
     printf("File size: %ld bytes, reading by %ld\n", fsize(pFile), elSize);
 
     uint32_t sr = 44100;
-    MessageDecoder2 dec(sr, bufSize);
+    VarienceMessageDecoder dec(sr, bufSize);
     int16_t buf[bufSize];
     uint64_t read = 0;
 

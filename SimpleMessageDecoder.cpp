@@ -3,12 +3,12 @@
 //
 
 #include <cmath>
-#include "MessageDecoder.h"
+#include "SimpleMessageDecoder.h"
 #include "Synthesizer.h"
 
 using namespace wsl;
 
-MessageDecoder::MessageDecoder(uint32_t sr, uint16_t frameSize) :
+SimpleMessageDecoder::SimpleMessageDecoder(uint32_t sr, uint16_t frameSize) :
         sampleRate(sr),
         minFreq(DEFAULT_MIN_FREQ),
         maxFreq(DEFAULT_MAX_FREQ),
@@ -24,7 +24,7 @@ MessageDecoder::MessageDecoder(uint32_t sr, uint16_t frameSize) :
     messageState = MS_NONE;
 }
 
-MessageDecoder::ProcessResult MessageDecoder::processFrame(int16_t *samples, uint32_t from, bool print_pitches) {
+SimpleMessageDecoder::ProcessResult SimpleMessageDecoder::processFrame(int16_t *samples, uint32_t from, bool print_pitches) {
     PitchDetector::DetectResult pitch;
     pitch = detector.getPitch(samples, from, frameSize, DETECTOR_THRESHOLD);
 
@@ -103,11 +103,11 @@ MessageDecoder::ProcessResult MessageDecoder::processFrame(int16_t *samples, uin
 }
 
 
-float MessageDecoder::abs(float val) {
+float SimpleMessageDecoder::abs(float val) {
     return val > 0 ? val : -val;
 }
 
-MessageDecoder::SymbMatch MessageDecoder::match(float pitch) {
+SimpleMessageDecoder::SymbMatch SimpleMessageDecoder::match(float pitch) {
     const sound_symbol &first = SYMBOLS[0];
     if (first.freq - 40 < pitch && pitch < first.freq) {
         float er = abs(first.freq - pitch) / 100;
@@ -133,11 +133,11 @@ MessageDecoder::SymbMatch MessageDecoder::match(float pitch) {
     return {0, 0};
 }
 
-bool MessageDecoder::hasResult() {
+bool SimpleMessageDecoder::hasResult() {
     return messageState == MS_GOT_RESULT;
 }
 
-const std::string MessageDecoder::popMessage() {
+const std::string SimpleMessageDecoder::popMessage() {
     if (messageState == MS_GOT_RESULT && lastMessage.size() > 0) {
         std::string res = lastMessage;
         lastMessage.clear();
@@ -147,13 +147,13 @@ const std::string MessageDecoder::popMessage() {
     }
 }
 
-void MessageDecoder::stopDetection() {
+void SimpleMessageDecoder::stopDetection() {
     lastMessage = currMessage;
     currMessage.clear();
     if (messageState == MS_DETECTING) messageState = MS_GOT_RESULT;
 }
 
-void MessageDecoder::clearState() {
+void SimpleMessageDecoder::clearState() {
     currMessage.clear();
     lastMessage.clear();
     candidate.freq = 0;
@@ -162,7 +162,7 @@ void MessageDecoder::clearState() {
     candidate.error = 0;
 }
 
-void MessageDecoder::initCandidate(float pitch) {
+void SimpleMessageDecoder::initCandidate(float pitch) {
     candidate.freq = pitch;
     candidate.sustFrames = 1;
     candidate.transFrames = 1;
@@ -174,6 +174,6 @@ void MessageDecoder::initCandidate(float pitch) {
     }
 }
 
-void MessageDecoder::printTaus() {
+void SimpleMessageDecoder::printTaus() {
     detector.printTaus();
 }

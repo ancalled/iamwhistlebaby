@@ -3,7 +3,7 @@
 //
 #include <cmath>
 #include <algorithm>
-#include "MessageDecoder2.h"
+#include "VarienceMessageDecoder.h"
 #include "Synthesizer.h"
 
 using namespace wsl;
@@ -12,7 +12,7 @@ using namespace std;
 static char *stateNames[] = {"NONE", "SEEK", "ALIGN", "STEP", "CHECK"};
 
 
-MessageDecoder2::MessageDecoder2(uint32_t sr, uint16_t frameSize, bool debugPrint) :
+VarienceMessageDecoder::VarienceMessageDecoder(uint32_t sr, uint16_t frameSize, bool debugPrint) :
         sampleRate(sr),
         minFreq(DEFAULT_MIN_FREQ),
         maxFreq(DEFAULT_MAX_FREQ),
@@ -41,7 +41,7 @@ static void printContent(vector<Content> &vec, uint64_t frameCnt) {
 }
 
 
-void MessageDecoder2::processFrame(int16_t *samples, uint32_t from) {
+void VarienceMessageDecoder::processFrame(int16_t *samples, uint32_t from) {
     vector<PitchDetector::PitchCandidate> pcs =
             detector.getPitchCandidates(samples, from, frameSize, 0.5, 2);
 
@@ -142,7 +142,7 @@ void MessageDecoder2::processFrame(int16_t *samples, uint32_t from) {
 }
 
 
-bool MessageDecoder2::attachFrame(Frame &frame) {
+bool VarienceMessageDecoder::attachFrame(Frame &frame) {
     for (SymbolCandidate &sc: candidates) {
         if (sc.matched(frame)) {
             sc.attach(frame);
@@ -153,13 +153,13 @@ bool MessageDecoder2::attachFrame(Frame &frame) {
 }
 
 
-void MessageDecoder2::initCandidate(Frame &frame) {
+void VarienceMessageDecoder::initCandidate(Frame &frame) {
     SymbolCandidate sc(frame);
     candidates.push_back(sc);
 }
 
 
-MessageDecoder2::SymbMatch MessageDecoder2::matchSymbol(float pitch) {
+VarienceMessageDecoder::SymbMatch VarienceMessageDecoder::matchSymbol(float pitch) {
     const sound_symbol &first = SYMBOLS[0];
     if (first.freq - 40 < pitch && pitch < first.freq) {
         float er = abs(first.freq - pitch) / 100;
@@ -185,17 +185,17 @@ MessageDecoder2::SymbMatch MessageDecoder2::matchSymbol(float pitch) {
     return {'#', 1.0};
 }
 
-const std::string MessageDecoder2::popMessage() {
+const std::string VarienceMessageDecoder::popMessage() {
     return mesTree.getTopBranch().reversed();
 }
 
-void MessageDecoder2::changeState(MessageDecoder2::DecState newState) {
+void VarienceMessageDecoder::changeState(VarienceMessageDecoder::DecState newState) {
     if (debugPrint)
         printf("[%ld]      %s -> %s\n", frameCnt, stateNames[state], stateNames[newState]);
     state = newState;
 }
 
-const vector<string> MessageDecoder2::popMessages(int size) {
+const vector<string> VarienceMessageDecoder::popMessages(int size) {
     vector<VarianceTree::Branch> branches = mesTree.getTopBranches(size);
     vector<string> res(size);
     for (int i = 0; i < size; i++) {
@@ -204,14 +204,14 @@ const vector<string> MessageDecoder2::popMessages(int size) {
     return res;
 }
 
-void MessageDecoder2::clearState() {
+void VarienceMessageDecoder::clearState() {
     changeState(SEEK);
     candidates.clear();
     candidateFrames = 0;
     mesTree.clear();
 }
 
-void MessageDecoder2::printCandidates() {
+void VarienceMessageDecoder::printCandidates() {
     printf("[%ld] ", frameCnt);
     for (SymbolCandidate &c: candidates) {
         if (c.probability > sustainedFrames * PROB_THRESHOLD / 2) {

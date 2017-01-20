@@ -29,7 +29,7 @@
 //#define VAR_TREE_CAP 0 // no limit
 
 
-class MessageDecoder2 {
+class VarienceMessageDecoder {
 
 public:
     enum DecState {
@@ -99,7 +99,7 @@ public:
         }
     };
 
-    MessageDecoder2(uint32_t sr, uint16_t frameSize, bool debugPrint = false);
+    VarienceMessageDecoder(uint32_t sr, uint16_t frameSize, bool debugPrint = false);
 
     void processFrame(int16_t *samples, uint32_t from = 0);
 
@@ -130,7 +130,7 @@ private:
 
     void initCandidate(Frame &frame);
 
-    MessageDecoder2::SymbMatch matchSymbol(float pitch);
+    VarienceMessageDecoder::SymbMatch matchSymbol(float pitch);
 
     void changeState(DecState newState);
 
