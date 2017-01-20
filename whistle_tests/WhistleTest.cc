@@ -22,6 +22,8 @@ static const uint32_t SAMPLE_RATES[SR_SIZE] = {
         62500
 };
 
+
+
 size_t levDist(const char *s, size_t n, const char *t, size_t m) {
     ++n;
     ++m;
@@ -46,10 +48,17 @@ size_t levDist(const char *s, size_t n, const char *t, size_t m) {
     return r;
 }
 
-string randomMes(int maxLength) {
-    int len = rand() % maxLength;
+size_t levDist(string str1, string str2) {
+    return levDist(str1.c_str(), str1.size(), str2.c_str(), str2.size());
+}
+
+string randomMes(int minLength, int maxLength, int symlen) {
+    int len = 0;
+    while (len < minLength) {
+        len = rand() % maxLength;
+    }
     string mes = "";
-    int symlen = SYMBS - 1;
+
     for (int i = 0; i < len; i++) {
         char symbol = wsl::SYMBOLS[rand() % symlen].symbol;
         mes += symbol;
@@ -62,6 +71,19 @@ void fill(int16_t *source, uint32_t from, int srcSize, int16_t *dest, uint16_t d
     for (uint32_t i = 0; i < sz; i++) {
         dest[i] = (int16_t) (source[from + i] - 127);
     }
+}
+
+string findNearest(string &pattern, vector<string> &vec) {
+    size_t minDist = 1000;
+    string closest = "";
+    for (string &st: vec) {
+        size_t d = levDist(pattern, st);
+        if (d < minDist) {
+            minDist = d;
+            closest = st;
+        }
+    }
+    return closest;
 }
 
 TEST(WhistleTest, Generate) {
@@ -137,7 +159,7 @@ TEST(WhistleTest, CodeAndDecodeMultiple) {
 
     for (int i = 0; i < 100; i++) {
 
-        string toEncode = randomMes(31);
+        string toEncode = randomMes(1, 31, SYMBS);
 
         uint32_t size = (uint32_t) (toEncode.size() * samplesPerSoud) + 1;
         int16_t samples[size];
@@ -169,7 +191,11 @@ TEST(WhistleTest, CodeAndDecodeMultiple) {
 TEST(WhistleTest, CodeAndDecode2) {
     uint32_t sampleRate = 44100;
 //    string toEncode = "hjntdb982ilj6etj6e3l\0";
-    string toEncode = "69jhvac9dq\0";
+//    string toEncode = "69jhvac9dq\0";
+//    string toEncode = "537ji7chmt\0";
+//    string toEncode = "n6t5tt47b1dss\0";
+    string toEncode = "grpnpgc912\0";
+//    string toEncode = "ferq5g9dhofcferee3k7i688o3bejc\0";
 
     int8_t framesPerSound = 10;
     int16_t samplesPerSoud = (int16_t) (sampleRate * (RAMP_TIME + TOP_TIME) / 1000);
@@ -192,7 +218,9 @@ TEST(WhistleTest, CodeAndDecode2) {
     }
 
 
-    vector<string> top = decoder.popMessages(3);
+    int tops = 3;
+//    int tops = 10;
+    vector<string> top = decoder.popMessages(tops);
     printf("%s\n", toEncode.c_str());
     printf("--------------------\n");
     for (string st: top) {
@@ -221,7 +249,7 @@ TEST(WhistleTest, CodeAndDecodeMultiple2) {
     for (int i = 0; i < 100; i++) {
         MessageDecoder2 decoder(sampleRate, frameSize);
 
-        string toEncode = randomMes(31);
+        string toEncode = randomMes(10, 20, SYMBS - 2);
 
         uint32_t size = (uint32_t) (toEncode.size() * samplesPerSoud) + 1;
         int16_t samples[size];
@@ -229,26 +257,21 @@ TEST(WhistleTest, CodeAndDecodeMultiple2) {
 
         int frame = 0;
         uint32_t n = 0;
-//        int16_t buf[frameSize];
         while (n < gen) {
-//            fill(samples, n, gen, buf, frameSize);
             decoder.processFrame(samples, n);
-
             n += frameSize;
             frame++;
         }
 
-        vector<string> top = decoder.popMessages(3);
-//        printf("%s\n", toEncode.c_str());
-//        ASSERT_
+        vector<string> top = decoder.popMessages(5);
         bool found = std::find(top.begin(), top.end(), toEncode) != top.end();
         EXPECT_TRUE(found);
         if (!found) {
-            printf("%s\n", toEncode.c_str());
-            printf("%s\n", top.front().c_str());
+            string nearest = findNearest(toEncode, top);
+            printf("Exp: %s\n", toEncode.c_str());
+            printf("Act: %s\n", nearest.c_str());
             printf("\n");
         }
-
 //        decoder.clearState();
     }
 }
@@ -271,8 +294,12 @@ TEST(WhistleTest, DecodeLiveRecorded) {
     string mes = find_mes(fname);
     FILE *pFile = fopen(fname, "rb");
     uint32_t sampleRate = 44100;
-    uint16_t bufSize = 500;
-    MessageDecoder dec(sampleRate, bufSize);
+//    uint16_t bufSize = 500;  //todo test fails on larger frame
+    int8_t framesPerSound = 10;
+    int16_t samplesPerSoud = (int16_t) (sampleRate * (RAMP_TIME + TOP_TIME) / 1000);
+    uint16_t bufSize = (uint16_t) (samplesPerSoud / framesPerSound);
+
+    MessageDecoder2 dec(sampleRate, bufSize, true);
     int16_t buf[bufSize];
     while (fread(buf, 2, bufSize, pFile)) {
         dec.processFrame(buf);

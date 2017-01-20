@@ -26,7 +26,7 @@ MessageDecoder2::MessageDecoder2(uint32_t sr, uint16_t frameSize, bool debugPrin
     candidateFrames = 0;
     state = SEEK;
     if (debugPrint)
-        printf("Frames %d + %d\n", transitionFrames, sustainedFrames);
+        printf("\nFrames %d + %d, model prob threshold: %.2f\n", transitionFrames, sustainedFrames, sustainedFrames * PROB_THRESHOLD);
 }
 
 
@@ -34,7 +34,7 @@ static void printContent(vector<Content> &vec, uint64_t frameCnt) {
     printf("[%ld] ", frameCnt);
     int i = 0;
     for (Content c: vec) {
-        printf("%c (%.2f)", c.symbol, c.probability);
+        printf("%c+ (%.2f)", c.symbol, c.probability);
         if (i++ < vec.size() - 1) printf(", ");
     }
     printf("\n");
@@ -60,7 +60,7 @@ void MessageDecoder2::processFrame(int16_t *samples, uint32_t from) {
 
     if (candidates.empty()) {
         if (state == STEP) {
-            changeState(SEEK) ;
+            changeState(SEEK);
         }
     } else {
 
@@ -98,6 +98,9 @@ void MessageDecoder2::processFrame(int16_t *samples, uint32_t from) {
                 }
             }
 
+            if (debugPrint && !confirmed.empty())
+                printContent(confirmed, frameCnt);
+
         } else if (state == ALIGN) {
             newState = STEP;
 
@@ -108,6 +111,10 @@ void MessageDecoder2::processFrame(int16_t *samples, uint32_t from) {
                     if (c.trusted(sustainedFrames)) {
                         confirmed.push_back({c.symbol, c.probability});
                     }
+                }
+
+                if (debugPrint) {
+                   printCandidates();
                 }
 
                 candidateFrames = 0;
@@ -123,8 +130,6 @@ void MessageDecoder2::processFrame(int16_t *samples, uint32_t from) {
         }
 
         if (!confirmed.empty()) {
-            if (debugPrint)
-                printContent(confirmed, frameCnt);
             mesTree.nextTier(confirmed);
         }
 
@@ -204,4 +209,17 @@ void MessageDecoder2::clearState() {
     candidates.clear();
     candidateFrames = 0;
     mesTree.clear();
+}
+
+void MessageDecoder2::printCandidates() {
+    printf("[%ld] ", frameCnt);
+    for (SymbolCandidate &c: candidates) {
+        if (c.probability > sustainedFrames * PROB_THRESHOLD / 2) {
+            char mark = c.trusted(sustainedFrames) ? '+' : '-';
+            printf("%c%c (%.2f, %ld)\t", c.symbol, mark, c.probability, c.frames.size());
+        } else {
+            continue;
+        }
+    }
+    printf("\n");
 }

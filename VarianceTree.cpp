@@ -3,6 +3,7 @@
 //
 
 #include "VarianceTree.h"
+
 VarianceTree::VarianceTree(int capacity) : capacity(capacity) {
     depth = 0;
     root = new Node;
@@ -39,7 +40,7 @@ void VarianceTree::nextTier(std::vector<Content> items) {
         addItems(root, items);
         depth++;
         if (capacity > 0) {
-            cleanUp(capacity);
+//            cleanUp(capacity);
         }
     }
 }
@@ -62,9 +63,14 @@ void VarianceTree::addItems(Node *node, vector<Content> items) {
             }
         }
     } else {
-        for (Node *child: node->children) {
-            addItems(child, items);
-        }
+        try {
+            for (Node *child: node->children) {
+                addItems(child, items);
+
+            }
+        } catch (std::exception& e) {
+            printf("Exception in VarianceTree!\n");
+        };
     }
 }
 
@@ -153,7 +159,8 @@ VarianceTree::Branch VarianceTree::getTopBranch() {
 
 vector<VarianceTree::Branch> VarianceTree::getTopBranches(int size) {
     const vector<Branch> &branches = getBranches();
-    vector<Branch> filter(branches.begin(), branches.begin() + size);
+    int len = size < branches.size() ? size : branches.size();
+    vector<Branch> filter(branches.begin(), branches.begin() + len);
     return filter;
 }
 

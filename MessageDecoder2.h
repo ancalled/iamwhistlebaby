@@ -19,8 +19,8 @@
 
 //#define PROB_THRESHOLD 0.79
 //#define PROB_THRESHOLD 0.65
-#define PROB_THRESHOLD 0.6
-//#define PROB_THRESHOLD 0.5
+//#define PROB_THRESHOLD 0.6
+#define PROB_THRESHOLD 0.5
 
 // pow(2, 1/12) - 1
 #define DIFF_COEF 0.0595
@@ -101,7 +101,7 @@ public:
 
     MessageDecoder2(uint32_t sr, uint16_t frameSize, bool debugPrint = false);
 
-    void processFrame(int16_t *samples, uint32_t from);
+    void processFrame(int16_t *samples, uint32_t from = 0);
 
     const std::string popMessage();
 
@@ -133,6 +133,8 @@ private:
     MessageDecoder2::SymbMatch matchSymbol(float pitch);
 
     void changeState(DecState newState);
+
+    void printCandidates();
 
     float abs(float val) { return val > 0 ? val : -val; };
 
