@@ -280,7 +280,8 @@ TEST(WhistleTest, CodeAndDecodeMultiple2) {
 
 
 TEST(WhistleTest, DecodeLiveRecorded) {
-    const char *dataHome = "../../data/";
+//    const char *dataHome = "../../data/";
+    const char *dataHome = "./data/";
     char fname[100];
     strcpy(fname, dataHome);
     strcat(fname, "hjntdb982ilj6etj6e3l.bin");

@@ -31,6 +31,5 @@ ADD_LIBRARY(whistle ${SOURCE_FILES})
 ADD_EXECUTABLE(treetest treetest.cpp ${SOURCE_FILES})
 #TARGET_LINK_LIBRARIES(treetest whistle)
 
-
 ENABLE_TESTING()
 ADD_TEST(NAME gtests COMMAND whistle_tests/run_whistle_tests)
