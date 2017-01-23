@@ -33,10 +33,11 @@ static uint16_t crc10(const char *message) {
     return (value ^ 0) & 0xFFF;
 }
 
-static void generateTail(const char* body, char* tail, int size = 2) {
+static char* generateCrc(const char *body) {
+    char* tail = new char[3];
     uint16_t c = crc10(body);
     int pow = 5;
-
+    int size = 2;
     int mask = (1 << pow) - 1;
     int div = 0;
     for (int i = 0; i < size; i++) {
@@ -45,4 +46,5 @@ static void generateTail(const char* body, char* tail, int size = 2) {
         div += pow;
     }
     tail[size] = '\0';
+    return tail;
 }

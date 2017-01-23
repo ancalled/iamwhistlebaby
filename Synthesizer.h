@@ -55,17 +55,17 @@ namespace wsl {
             {'v', 10548.0}
     };
 
-    static int16_t toNum(char c) {
+    static uint8_t toNum(char c) {
         if (c < '0') {
-            return -1;
+            return 128;
         } else if (c <= '9') {
             return c - 48;
         } else if (c < 'a') {
-            return -1;
+            return 128;
         } else if (c <= 'v') {
             return c + 10 - 97;
         } else {
-            return -1;
+            return 128;
         }
     }
 

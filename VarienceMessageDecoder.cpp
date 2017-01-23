@@ -223,3 +223,8 @@ void VarienceMessageDecoder::printCandidates() {
     }
     printf("\n");
 }
+
+bool VarienceMessageDecoder::gotMessage() {
+
+    return false;
+}

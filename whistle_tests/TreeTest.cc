@@ -6,27 +6,21 @@
 #include "gtest/gtest.h"
 #include "VarianceTree.h"
 #include "CRC.h"
-#include <stdlib.h>
-#include <vector>
+#include "LoopbackWhistleProtocol.h"
 #include <WhistleConfig.h>
 #include <Base32.h>
 
 using namespace std;
 
-static char *copy(const char *orig) {
-    char *res = new char[strlen(orig) + 1];
-    strcpy(res, orig);
-    return res;
-}
 
 static void generateVariance(VarianceTree &tree, string &mesBody) {
 
     for (char c: mesBody) {
-        int16_t n = wsl::toNum(c);
-        if (n < 0) continue;
+        uint8_t n = wsl::toNum(c);
+        if (n == 128) continue;
 
         vector<Content> candidates;
-        int16_t cn = n;
+        uint8_t cn = n;
         float prob = 1.0;
         while (cn < 32) {
             prob -= (rand() % 15) / 100.0;
@@ -38,22 +32,6 @@ static void generateVariance(VarianceTree &tree, string &mesBody) {
     }
 }
 
-
-static char *toWhistle(unsigned char *in, int len) {
-    char *res = new char[len];
-    for (int i = 0; i < len; i++) {
-        res[i] = wsl::SYMBOLS[in[i]].symbol;
-    }
-    return res;
-}
-
-static unsigned char *fromWhistle(char *in, int len) {
-    unsigned char *res = new unsigned char[len];
-    for (int i = 0; i < len; i++) {
-        res[i] = (unsigned char) wsl::toNum(in[i]);
-    }
-    return res;
-}
 
 TEST(TreeTest, InitTree) {
     VarianceTree mes;
@@ -72,8 +50,7 @@ TEST(TreeTest, CRCCheck) {
 
     string mesBody = "hjntdb982ilj6etj6e3l";
 //    string mesBody = "hjntdb";
-    char tail[3];
-    generateTail(mesBody.c_str(), tail);
+    char *tail = generateCrc(mesBody.c_str());
     string message = mesBody + tail;
     printf("Mes: %s\n", message.c_str());
 
@@ -83,32 +60,48 @@ TEST(TreeTest, CRCCheck) {
 
     string matched = tree.crcMatched();
     ASSERT_EQ(message, matched);
+    delete tail;
 }
 
 
 TEST(TreeTest, CRCTest) {
-    char tail[3];
-    generateTail("hjntdb982ilj6etj6e3l", tail);
+    char *tail = generateCrc("hjntdb982ilj6etj6e3l");
     ASSERT_STREQ("ar", tail);
+    delete tail;
 }
 
 TEST(TreeTest, Base32Test) {
-    string text = "Testy text here!";
+    string text = "Test text 2 is here!";
     printf("\nTo encode: %s\n", text.c_str());
 
-    unsigned char *in = reinterpret_cast<unsigned char *>(copy(text.c_str()));
-    unsigned char out[500];
-
     Base32 b32;
-    b32.Encode32(in, text.size(), out);
-    size_t len = strlen((char *) out);
-    char *whistle = toWhistle(out, len);
-    printf("Encoded: %s\n", whistle);
+    char *wCode = b32.toWhistle(text.c_str(), text.length());
+    printf("\nWhistle code: %s\n", wCode);
 
-    unsigned char rev[500];
-    b32.Decode32(fromWhistle(whistle, len), len, rev);
-    printf("Decoded: %s\n", rev);
-//    ASSERT_EQ(in, rev);
+    char *dec = b32.fromWhistle(wCode, strlen(wCode));
+    printf("\nDecoded: %s\n", dec);
+
+    ASSERT_STREQ(text.c_str(), dec);
+}
+
+
+TEST(TreeTest, ProtocolTest) {
+    int size = 441000;
+    int16_t buf1[size];
+    int16_t buf2[size];
+    
+    LoopbackWhistleProtocol client1(buf1, buf2);
+    LoopbackWhistleProtocol client2(buf2, buf1);
+
+    string sndMes1 = "Hi, how r u?";
+    client1.sendMessage(sndMes1);
+    string recMes1 = client2.receiveMessage();
+    ASSERT_EQ(sndMes1, recMes1);
+
+    string sndMes2 = "I'm fine, so u?";
+    client2.sendMessage(sndMes2);
+    string recMes2 = client1.receiveMessage();
+    ASSERT_EQ(sndMes2, recMes2);
 }
 
 

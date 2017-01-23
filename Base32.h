@@ -20,17 +20,19 @@
 */
 
 struct Base32 {
-    static bool Decode32(unsigned char *in, int inLen, unsigned char *out);
 
-    static bool Encode32(unsigned char *in, int inLen, unsigned char *out);
+    static char* toWhistle(const char* text, size_t len);
 
-    static int GetDecode32Length(int bytes);
+    static char* fromWhistle(char* text, size_t len);
 
-    static int GetEncode32Length(int bytes);
+    static bool decode32(const uint8_t *in, size_t inLen, char *out);
 
-    static bool Map32(unsigned char *inout32, int inout32Len, unsigned char *alpha32);
+    static bool encode32(const char *in, size_t inLen, uint8_t *out);
 
-    static bool Unmap32(unsigned char *inout32, int inout32Len, unsigned char *alpha32);
+    static size_t getDecode32Length(size_t bytes);
+
+    static size_t getEncode32Length(size_t bytes);
+
 };
 
 #endif //WHISTLE_BASE32_H

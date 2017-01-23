@@ -4,37 +4,37 @@
 
 #include <cstdint>
 #include "Base32.h"
+#include "Synthesizer.h"
 
 
-int Base32::GetEncode32Length(int bytes) {
-    int bits = bytes * 8;
-    int length = bits / 5;
+size_t Base32::getEncode32Length(size_t bytes) {
+    size_t bits = bytes * 8;
+    size_t length = bits / 5;
     if ((bits % 5) > 0) {
         length++;
     }
     return length;
 }
 
-int Base32::GetDecode32Length(int bytes) {
-    int bits = bytes * 5;
-    int length = bits / 8;
+size_t Base32::getDecode32Length(size_t bytes) {
+    size_t bits = bytes * 5;
+    size_t length = bits / 8;
     return length;
 }
 
-static bool Encode32Block(unsigned char *in5, unsigned char *out8) {
+
+static bool encode32Block(const char *in5, uint8_t *out8) {
     // pack 5 bytes
     uint64_t buffer = 0;
     for (int i = 0; i < 5; i++) {
-        if (i != 0) {
-            buffer = (buffer << 8);
-        }
-        buffer = buffer | in5[i];
+        if (i != 0) buffer <<= 8;
+        buffer |= in5[i];
     }
     // output 8 bytes
     for (int j = 7; j >= 0; j--) {
-        buffer = buffer << (24 + (7 - j) * 5);
-        buffer = buffer >> (24 + (7 - j) * 5);
-        unsigned char c = (unsigned char) (buffer >> (j * 5));
+        buffer <<= (24 + (7 - j) * 5);
+        buffer >>= (24 + (7 - j) * 5);
+        uint8_t c = (uint8_t) (buffer >> (j * 5));
         // self check
         if (c >= 32) return false;
         out8[7 - j] = c;
@@ -42,31 +42,35 @@ static bool Encode32Block(unsigned char *in5, unsigned char *out8) {
     return true;
 }
 
-bool Base32::Encode32(unsigned char *in, int inLen, unsigned char *out) {
+
+bool Base32::encode32(const char *in, size_t inLen, uint8_t *out) {
     if ((in == 0) || (inLen <= 0) || (out == 0)) return false;
 
-    int d = inLen / 5;
-    int r = inLen % 5;
+    size_t d = inLen / 5;
+    size_t r = inLen % 5;
 
-    unsigned char outBuff[8];
+    uint8_t outBuff[8];
 
     for (int j = 0; j < d; j++) {
-        if (!Encode32Block(&in[j * 5], &outBuff[0])) return false;
-        memmove(&out[j * 8], &outBuff[0], sizeof(unsigned char) * 8);
+        if (!encode32Block(&in[j * 5], &outBuff[0])) return false;
+        memmove(&out[j * 8], &outBuff[0], sizeof(uint8_t) * 8);
     }
 
-    unsigned char padd[5];
-    memset(padd, 0, sizeof(unsigned char) * 5);
-    for (int i = 0; i < r; i++) {
-        padd[i] = in[inLen - r + i];
+    if (r > 0) {
+        char padd[5];
+        memset(padd, 0, sizeof(uint8_t) * 5);
+        for (int i = 0; i < r; i++) {
+            padd[i] = in[inLen - r + i];
+        }
+        if (!encode32Block(&padd[0], &outBuff[0])) return false;
+        memmove(&out[d * 8], &outBuff[0], sizeof(uint8_t) * getEncode32Length(r));
     }
-    if (!Encode32Block(&padd[0], &outBuff[0])) return false;
-    memmove(&out[d * 8], &outBuff[0], sizeof(unsigned char) * GetEncode32Length(r));
 
     return true;
 }
 
-static bool Decode32Block(unsigned char *in8, unsigned char *out5) {
+
+static bool decode32Block(const uint8_t *in8, char *out5) {
     // pack 8 bytes
     uint64_t buffer = 0;
     for (int i = 0; i < 8; i++) {
@@ -84,16 +88,17 @@ static bool Decode32Block(unsigned char *in8, unsigned char *out5) {
     return true;
 }
 
-bool Base32::Decode32(unsigned char *in, int inLen, unsigned char *out) {
+
+bool Base32::decode32(const uint8_t *in, size_t inLen, char *out) {
     if ((in == 0) || (inLen <= 0) || (out == 0)) return false;
 
-    int d = inLen / 8;
-    int r = inLen % 8;
+    size_t d = inLen / 8;
+    size_t r = inLen % 8;
 
-    unsigned char outBuff[5];
+    char outBuff[5];
 
     for (int j = 0; j < d; j++) {
-        if (!Decode32Block(&in[j * 8], &outBuff[0])) return false;
+        if (!decode32Block(&in[j * 8], &outBuff[0])) return false;
         memmove(&out[j * 5], &outBuff[0], sizeof(unsigned char) * 5);
     }
 
@@ -102,34 +107,34 @@ bool Base32::Decode32(unsigned char *in, int inLen, unsigned char *out) {
     for (int i = 0; i < r; i++) {
         padd[i] = in[inLen - r + i];
     }
-    if (!Decode32Block(&padd[0], &outBuff[0])) return false;
-    memmove(&out[d * 5], &outBuff[0], sizeof(unsigned char) * GetDecode32Length(r));
+    if (!decode32Block(&padd[0], &outBuff[0])) return false;
+    memmove(&out[d * 5], &outBuff[0], sizeof(unsigned char) * getDecode32Length(r));
 
     return true;
 }
 
-bool Base32::Map32(unsigned char *inout32, int inout32Len, unsigned char *alpha32) {
-    if ((inout32 == 0) || (inout32Len <= 0) || (alpha32 == 0)) return false;
-    for (int i = 0; i < inout32Len; i++) {
-        if (inout32[i] >= 32) return false;
-        inout32[i] = alpha32[inout32[i]];
+
+char *Base32::toWhistle(const char *text, size_t len) {
+    size_t quints = len % 5 != 0 ? len / 5 + 1 : len / 5;
+    size_t outSize = quints * 8;
+    uint8_t out[outSize];
+    encode32(text, len, out);
+
+    char *res = new char[outSize];
+    for (int i = 0; i < outSize; i++) {
+        res[i] = wsl::SYMBOLS[out[i]].symbol;
     }
-    return true;
+    return res;
 }
 
-static void ReverseMap(unsigned char *inAlpha32, unsigned char *outMap) {
-    memset(outMap, 0, sizeof(unsigned char) * 256);
-    for (int i = 0; i < 32; i++) {
-        outMap[(int) inAlpha32[i]] = i;
+char *Base32::fromWhistle(char *text, size_t len) {
+    uint8_t indecies[len];
+    for (int i = 0; i < len; i++) {
+        indecies[i] = wsl::toNum(text[i]);
     }
+    char *out = new char[100];
+    decode32(indecies, len, out);
+    return out;
 }
 
-bool Base32::Unmap32(unsigned char *inout32, int inout32Len, unsigned char *alpha32) {
-    if ((inout32 == 0) || (inout32Len <= 0) || (alpha32 == 0)) return false;
-    unsigned char rmap[256];
-    ReverseMap(alpha32, rmap);
-    for (int i = 0; i < inout32Len; i++) {
-        inout32[i] = rmap[(int) inout32[i]];
-    }
-    return true;
-}
+

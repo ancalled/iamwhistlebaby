@@ -109,6 +109,8 @@ public:
 
     void clearState();
 
+    bool gotMessage();
+
 
 private:
     bool debugPrint;

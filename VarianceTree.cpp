@@ -114,10 +114,10 @@ void VarianceTree::printBranches(bool withCrc) {
         if (withCrc) {
             string body = str.substr(0, str.size() - 2);
             string tail = str.substr(str.size() - 2, 2);
-            char gen[3];
-            generateTail(body.c_str(), gen, 2);
+            char *gen = generateCrc(body.c_str());
             char matches = strcmp(gen, tail.c_str()) == 0 ? 'v' : 'x';
             printf("%d\t%s\t%.4f\t%s [%c]\n", num++, str.c_str(), branch.probability, gen, matches);
+            delete gen;
         } else {
             printf("%d\t%s\t%.4f\n", num++, str.c_str(), branch.probability);
         }
@@ -195,9 +195,10 @@ string VarianceTree::crcMatched() {
         string candidate = b.reversed();
         string body = candidate.substr(0, candidate.size() - tailSize);
         string tail = candidate.substr(candidate.size() - tailSize, tailSize);
-        char gen[tailSize + 1];
-        generateTail(body.c_str(), gen, tailSize);
-        if (strcmp(gen, tail.c_str()) == 0) {
+        char *gen = generateCrc(body.c_str());
+        bool matches = strcmp(gen, tail.c_str()) == 0;
+        delete gen;
+        if (matches) {
             return candidate;
         }
     }
