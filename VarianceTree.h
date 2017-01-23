@@ -53,7 +53,7 @@ public:
 
     void addTiers(vector<vector<Content>> tiers);
 
-    string getMessage();
+    string crcMatched();
 
     Branch getTopBranch();
 

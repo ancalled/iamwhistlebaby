@@ -188,7 +188,7 @@ void VarianceTree::clear() {
 //    depth = 0;
 }
 
-string VarianceTree::getMessage() {
+string VarianceTree::crcMatched() {
     int tailSize = 2;
     const vector<Branch> &branches = getBranches();
     for (Branch b : branches) {
@@ -202,7 +202,7 @@ string VarianceTree::getMessage() {
         }
     }
 
-    return std::__cxx11::string();
+    return "";
 }
 
 void VarianceTree::addTiers(vector<vector<Content>> tiers) {

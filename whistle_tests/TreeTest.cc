@@ -81,7 +81,7 @@ TEST(TreeTest, CRCCheck) {
     generateVariance(tree, message);
     tree.printBranches(true);
 
-    string matched = tree.getMessage();
+    string matched = tree.crcMatched();
     ASSERT_EQ(message, matched);
 }
 
