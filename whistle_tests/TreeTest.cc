@@ -9,9 +9,15 @@
 #include <stdlib.h>
 #include <vector>
 #include <WhistleConfig.h>
+#include <Base32.h>
 
 using namespace std;
 
+static char *copy(const char *orig) {
+    char *res = new char[strlen(orig) + 1];
+    strcpy(res, orig);
+    return res;
+}
 
 static void generateVariance(VarianceTree &tree, string &mesBody) {
 
@@ -30,7 +36,23 @@ static void generateVariance(VarianceTree &tree, string &mesBody) {
         }
         tree.nextTier(candidates);
     }
+}
 
+
+static char *toWhistle(unsigned char *in, int len) {
+    char *res = new char[len];
+    for (int i = 0; i < len; i++) {
+        res[i] = wsl::SYMBOLS[in[i]].symbol;
+    }
+    return res;
+}
+
+static unsigned char *fromWhistle(char *in, int len) {
+    unsigned char *res = new unsigned char[len];
+    for (int i = 0; i < len; i++) {
+        res[i] = (unsigned char) wsl::toNum(in[i]);
+    }
+    return res;
 }
 
 TEST(TreeTest, InitTree) {
@@ -40,7 +62,6 @@ TEST(TreeTest, InitTree) {
                          {{'h', 0.9}, {'h' + 12, 0.5}},
                          {{'j', 0.85}},
                          {{'3', 0.9}},
-
                  });
 
     mes.printBranches();
@@ -69,6 +90,25 @@ TEST(TreeTest, CRCTest) {
     char tail[3];
     generateTail("hjntdb982ilj6etj6e3l", tail);
     ASSERT_STREQ("ar", tail);
+}
+
+TEST(TreeTest, Base32Test) {
+    string text = "Testy text here!";
+    printf("\nTo encode: %s\n", text.c_str());
+
+    unsigned char *in = reinterpret_cast<unsigned char *>(copy(text.c_str()));
+    unsigned char out[500];
+
+    Base32 b32;
+    b32.Encode32(in, text.size(), out);
+    size_t len = strlen((char *) out);
+    char *whistle = toWhistle(out, len);
+    printf("Encoded: %s\n", whistle);
+
+    unsigned char rev[500];
+    b32.Decode32(fromWhistle(whistle, len), len, rev);
+    printf("Decoded: %s\n", rev);
+//    ASSERT_EQ(in, rev);
 }
 
 

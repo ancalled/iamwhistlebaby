@@ -3,7 +3,7 @@ PROJECT(whistle)
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-SET(SOURCE_FILES CRC.h VarianceTree.cpp PitchDetector.cpp Synthesizer.cpp SimpleMessageDecoder.cpp VarienceMessageDecoder.cpp WhistleConfig.h )
+SET(SOURCE_FILES CRC.h VarianceTree.cpp PitchDetector.cpp Synthesizer.cpp SimpleMessageDecoder.cpp VarienceMessageDecoder.cpp WhistleConfig.h Base32.cpp Base32.h)
 
 ADD_SUBDIRECTORY(whistle_tests)
 
