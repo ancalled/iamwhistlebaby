@@ -49,8 +49,11 @@ public:
 
     ~VarianceTree();
 
-
     void nextTier(vector<Content> items);
+
+    void addTiers(vector<vector<Content>> tiers);
+
+    string getMessage();
 
     Branch getTopBranch();
 

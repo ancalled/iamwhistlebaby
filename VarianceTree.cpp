@@ -3,6 +3,7 @@
 //
 
 #include "VarianceTree.h"
+#include "CRC.h"
 
 VarianceTree::VarianceTree(int capacity) : capacity(capacity) {
     depth = 0;
@@ -175,6 +176,29 @@ void VarianceTree::clear() {
 //        destroyNode(nd);
 //    }
 //    depth = 0;
+}
+
+string VarianceTree::getMessage() {
+    int tailSize = 2;
+    const vector<Branch> &branches = getBranches();
+    for (Branch b : branches) {
+        string candidate = b.reversed();
+        string body = candidate.substr(0, candidate.size() - tailSize);
+        string tail = candidate.substr(candidate.size() - tailSize, tailSize);
+        char gen[tailSize];
+        generateTail(body.c_str(), gen, tailSize);
+        if (strcmp(gen, tail.c_str()) == 0) {
+            return candidate;
+        }
+    }
+
+    return std::__cxx11::string();
+}
+
+void VarianceTree::addTiers(vector<vector<Content>> tiers) {
+    for (vector<Content> &items: tiers) {
+        nextTier(items);
+    }
 }
 
 
