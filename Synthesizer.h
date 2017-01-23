@@ -55,6 +55,33 @@ namespace wsl {
             {'v', 10548.0}
     };
 
+    static int16_t toNum(char c) {
+        if (c < '0') {
+            return -1;
+        } else if (c <= '9') {
+            return c - 48;
+        } else if (c < 'a') {
+            return -1;
+        } else if (c <= 'v') {
+            return c + 10 - 97;
+        } else {
+            return -1;
+        }
+    }
+
+    static char toChar(uint8_t n) {
+        if (n < 0) {
+            return '\0';
+        } else if (n < 10) {
+            return 48 + n;
+        } else if (n < 32) {
+            return 97 + (n - 10);
+        } else {
+            return '\0';
+        }
+    }
+
+
 }
 
 class Synthesizer {

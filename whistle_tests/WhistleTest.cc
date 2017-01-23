@@ -247,7 +247,7 @@ TEST(WhistleTest, CodeAndDecodeMultiple2) {
 //    VarienceMessageDecoder decoder(sampleRate, frameSize);
     printf("\n");
     for (int i = 0; i < 100; i++) {
-        VarienceMessageDecoder decoder(sampleRate, frameSize);
+        VarienceMessageDecoder decoder(sampleRate, frameSize, false, 0);
 
         string toEncode = randomMes(10, 20, SYMBS - 2);
 
@@ -300,7 +300,7 @@ TEST(WhistleTest, DecodeLiveRecorded) {
     int16_t samplesPerSoud = (int16_t) (sampleRate * (RAMP_TIME + TOP_TIME) / 1000);
     uint16_t bufSize = (uint16_t) (samplesPerSoud / framesPerSound);
 
-    VarienceMessageDecoder dec(sampleRate, bufSize, true);
+    VarienceMessageDecoder dec(sampleRate, bufSize, true, 16);
     int16_t buf[bufSize];
     while (fread(buf, 2, bufSize, pFile)) {
         dec.processFrame(buf);

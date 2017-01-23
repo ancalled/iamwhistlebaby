@@ -60,7 +60,7 @@ public:
     vector<Branch> getTopBranches(int size);
 
 
-    void printBranches();
+    void printBranches(bool withCrc = false);
 
 
     void clear();

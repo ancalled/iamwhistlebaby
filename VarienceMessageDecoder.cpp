@@ -12,13 +12,13 @@ using namespace std;
 static char *stateNames[] = {"NONE", "SEEK", "ALIGN", "STEP", "CHECK"};
 
 
-VarienceMessageDecoder::VarienceMessageDecoder(uint32_t sr, uint16_t frameSize, bool debugPrint) :
+VarienceMessageDecoder::VarienceMessageDecoder(uint32_t sr, uint16_t frameSize, bool debugPrint, int treeCap) :
         sampleRate(sr),
         minFreq(DEFAULT_MIN_FREQ),
         maxFreq(DEFAULT_MAX_FREQ),
         frameSize(frameSize),
         detector(sr, DEFAULT_BUF_SIZE, minFreq, maxFreq),
-        mesTree(VAR_TREE_CAP),
+        mesTree(treeCap),
         debugPrint(debugPrint) {
     transitionFrames = (uint8_t) round(sampleRate * RAMP_TIME / 1000 / frameSize);
     sustainedFrames = (uint8_t) round(sampleRate * TOP_TIME / 1000 / frameSize);

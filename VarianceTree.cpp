@@ -41,7 +41,7 @@ void VarianceTree::nextTier(std::vector<Content> items) {
         addItems(root, items);
         depth++;
         if (capacity > 0) {
-//            cleanUp(capacity);
+            cleanUp(capacity);
         }
     }
 }
@@ -106,12 +106,22 @@ vector<VarianceTree::Branch> VarianceTree::getBranches(VarianceTree::Node *node)
     }
 }
 
-void VarianceTree::printBranches() {
+void VarianceTree::printBranches(bool withCrc) {
     vector<Branch> result = getBranches();
     int num = 1;
     for (Branch &branch: result) {
         const string &str = branch.reversed();
-        printf("%d\t%s\t%.4f\n", num++, str.c_str(), branch.probability);
+        if (withCrc) {
+            string body = str.substr(0, str.size() - 2);
+            string tail = str.substr(str.size() - 2, 2);
+            char gen[3];
+            generateTail(body.c_str(), gen, 2);
+            char matches = strcmp(gen, tail.c_str()) == 0 ? 'v' : 'x';
+            printf("%d\t%s\t%.4f\t%s [%c]\n", num++, str.c_str(), branch.probability, gen, matches);
+        } else {
+            printf("%d\t%s\t%.4f\n", num++, str.c_str(), branch.probability);
+        }
+
     }
     printf("\n");
 
@@ -185,7 +195,7 @@ string VarianceTree::getMessage() {
         string candidate = b.reversed();
         string body = candidate.substr(0, candidate.size() - tailSize);
         string tail = candidate.substr(candidate.size() - tailSize, tailSize);
-        char gen[tailSize];
+        char gen[tailSize + 1];
         generateTail(body.c_str(), gen, tailSize);
         if (strcmp(gen, tail.c_str()) == 0) {
             return candidate;

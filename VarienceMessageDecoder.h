@@ -99,7 +99,7 @@ public:
         }
     };
 
-    VarienceMessageDecoder(uint32_t sr, uint16_t frameSize, bool debugPrint = false);
+    VarienceMessageDecoder(uint32_t sr, uint16_t frameSize, bool debugPrint = false, int treeCap = VAR_TREE_CAP);
 
     void processFrame(int16_t *samples, uint32_t from = 0);
 
