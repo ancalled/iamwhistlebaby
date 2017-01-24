@@ -25,9 +25,9 @@ struct Base32 {
 
     static char* fromWhistle(char* text, size_t len);
 
-    static bool decode32(const uint8_t *in, size_t inLen, char *out);
+    static int decode32(const uint8_t *in, size_t inLen, char *out);
 
-    static bool encode32(const char *in, size_t inLen, uint8_t *out);
+    static int encode32(const char *in, size_t inLen, uint8_t *out);
 
     static size_t getDecode32Length(size_t bytes);
 

@@ -71,7 +71,7 @@ TEST(TreeTest, CRCTest) {
 }
 
 TEST(TreeTest, Base32Test) {
-    string text = "Test text 2 is here!";
+    string text = "Test text 2134 is here!";
     printf("\nTo encode: %s\n", text.c_str());
 
     Base32 b32;
