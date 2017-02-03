@@ -65,6 +65,8 @@ public:
 
     void clear();
 
+    int size();
+
 private:
 
     vector<Branch> getBranches();

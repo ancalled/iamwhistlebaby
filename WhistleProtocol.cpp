@@ -6,9 +6,9 @@
 #include "CRC.h"
 
 
-WhistleProtocol::WhistleProtocol() : base32(),
-                                     decoder(44100, 385),
-                                     synth(44100), listenBufferSize(1024) {
+WhistleProtocol::WhistleProtocol(uint32_t sampleRate) : base32(),
+                                                        decoder(sampleRate, 385),
+                                                        synth(sampleRate), listenBufferSize(1024) {
 
     listenBuffer = new int16_t[listenBufferSize];
 }
@@ -22,6 +22,8 @@ void WhistleProtocol::sendMessage(string text) {
     strcpy(message, "hj");
     strcat(message, body);
     strcat(message, tail);
+
+    printf("Playing %s...\n", message);
 
     uint32_t expSize = synth.expectedSize(size);
     int16_t samples[expSize];
@@ -37,7 +39,8 @@ string WhistleProtocol::receiveMessage() {
         listen(listenBuffer, listenBufferSize);
         decoder.processFrame(listenBuffer);
         if (decoder.gotMessage()) {
-            return decoder.popMessage();
+            const string &res = decoder.popMessage();
+            return res;
         }
     }
 }

@@ -25,8 +25,10 @@ VarienceMessageDecoder::VarienceMessageDecoder(uint32_t sr, uint16_t frameSize, 
     frameCnt = 0;
     candidateFrames = 0;
     state = SEEK;
+    foundMessage = false;
     if (debugPrint)
-        printf("\nFrames %d + %d, model prob threshold: %.2f\n", transitionFrames, sustainedFrames, sustainedFrames * PROB_THRESHOLD);
+        printf("\nFrames %d + %d, model prob threshold: %.2f\n", transitionFrames, sustainedFrames,
+               sustainedFrames * PROB_THRESHOLD);
 }
 
 
@@ -61,6 +63,9 @@ void VarienceMessageDecoder::processFrame(int16_t *samples, uint32_t from) {
     if (candidates.empty()) {
         if (state == STEP) {
             changeState(SEEK);
+            if (mesTree.size() > 2) {
+                foundMessage = true;
+            }
         }
     } else {
 
@@ -114,7 +119,7 @@ void VarienceMessageDecoder::processFrame(int16_t *samples, uint32_t from) {
                 }
 
                 if (debugPrint) {
-                   printCandidates();
+                    printCandidates();
                 }
 
                 candidateFrames = 0;
@@ -185,7 +190,7 @@ VarienceMessageDecoder::SymbMatch VarienceMessageDecoder::matchSymbol(float pitc
     return {'#', 1.0};
 }
 
-const std::string VarienceMessageDecoder::popMessage() {
+const std::string VarienceMessageDecoder::getTopMessageCandidate() {
     return mesTree.getTopBranch().reversed();
 }
 
@@ -195,7 +200,7 @@ void VarienceMessageDecoder::changeState(VarienceMessageDecoder::DecState newSta
     state = newState;
 }
 
-const vector<string> VarienceMessageDecoder::popMessages(int size) {
+const vector<string> VarienceMessageDecoder::getMessageCandidates(int size) {
     vector<VarianceTree::Branch> branches = mesTree.getTopBranches(size);
     vector<string> res(size);
     for (int i = 0; i < size; i++) {
@@ -209,6 +214,7 @@ void VarienceMessageDecoder::clearState() {
     candidates.clear();
     candidateFrames = 0;
     mesTree.clear();
+    foundMessage = false;
 }
 
 void VarienceMessageDecoder::printCandidates() {
@@ -225,6 +231,11 @@ void VarienceMessageDecoder::printCandidates() {
 }
 
 bool VarienceMessageDecoder::gotMessage() {
+    return foundMessage;
+}
 
-    return false;
+const std::string VarienceMessageDecoder::popMessage() {
+    string res = mesTree.crcMatched();
+    clearState();
+    return res;
 }

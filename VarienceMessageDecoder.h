@@ -105,9 +105,10 @@ public:
 
     const std::string popMessage();
 
-    const vector<string> popMessages(int size);
+    const std::string getTopMessageCandidate();
 
-    void clearState();
+    const vector<string> getMessageCandidates(int size);
+
 
     bool gotMessage();
 
@@ -127,6 +128,7 @@ private:
     std::vector<SymbolCandidate> candidates;
 
     VarianceTree mesTree;
+    bool foundMessage;
 
     bool attachFrame(Frame &frame);
 
@@ -140,6 +142,7 @@ private:
 
     float abs(float val) { return val > 0 ? val : -val; };
 
+    void clearState();
 
 };
 

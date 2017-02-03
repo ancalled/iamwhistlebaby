@@ -212,5 +212,9 @@ void VarianceTree::addTiers(vector<vector<Content>> tiers) {
     }
 }
 
+int VarianceTree::size() {
+    return depth;
+}
+
 
 

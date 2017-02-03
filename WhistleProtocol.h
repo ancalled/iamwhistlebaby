@@ -14,7 +14,8 @@ using namespace std;
 
 class WhistleProtocol {
 public:
-    WhistleProtocol();
+
+    WhistleProtocol(uint32_t sampleRate);
 
     void sendMessage(string text);
 

@@ -140,7 +140,7 @@ TEST(WhistleTest, Generate) {
 //
 //    decoder.stopDetection();
 //
-//    string decoded = decoder.popMessage();
+//    string decoded = decoder.getTopMessageCandidate();
 //    EXPECT_EQ(toEncode, decoded);
 //    size_t dist = levDist(toEncode.c_str(), toEncode.size(), decoded.c_str(), decoded.size());
 //    cout << "Dist: " << dist << endl;
@@ -177,7 +177,7 @@ TEST(WhistleTest, Generate) {
 //        }
 //        decoder.stopDetection();
 //
-//        string decoded = decoder.popMessage();
+//        string decoded = decoder.getTopMessageCandidate();
 ////        cout << "Decoded: " << decoded << endl;
 //        ASSERT_EQ(toEncode, decoded);
 //        size_t dist = levDist(toEncode.c_str(), toEncode.size(), decoded.c_str(), decoded.size());
@@ -220,14 +220,14 @@ TEST(WhistleTest, CodeAndDecode2) {
 
     int tops = 3;
 //    int tops = 10;
-    vector<string> top = decoder.popMessages(tops);
+    vector<string> top = decoder.getMessageCandidates(tops);
     printf("%s\n", toEncode.c_str());
     printf("--------------------\n");
     for (string st: top) {
         printf("%s\n", st.c_str());
     }
     printf("\n");
-//    string decoded = decoder.popMessage();
+//    string decoded = decoder.getTopMessageCandidate();
 //    EXPECT_EQ(toEncode, decoded);
 //    size_t dist = levDist(toEncode.c_str(), toEncode.size(), decoded.c_str(), decoded.size());
 //    cout << "Dist: " << dist << endl;
@@ -263,7 +263,7 @@ TEST(WhistleTest, CodeAndDecodeMultiple2) {
             frame++;
         }
 
-        vector<string> top = decoder.popMessages(5);
+        vector<string> top = decoder.getMessageCandidates(5);
         bool found = std::find(top.begin(), top.end(), toEncode) != top.end();
         EXPECT_TRUE(found);
         if (!found) {
@@ -305,7 +305,7 @@ TEST(WhistleTest, DecodeLiveRecorded) {
     while (fread(buf, 2, bufSize, pFile)) {
         dec.processFrame(buf);
     }
-    std::string decMes = dec.popMessage();
+    std::string decMes = dec.getTopMessageCandidate();
     ASSERT_EQ(mes, decMes);
 }
 
