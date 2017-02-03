@@ -86,12 +86,13 @@ TEST(TreeTest, Base32Test) {
 
 
 TEST(TreeTest, ProtocolTest) {
-    int size = 441000;
+    uint32_t sampleRate = 44100;
+    int size = sampleRate * 10;
     int16_t buf1[size];
     int16_t buf2[size];
     
-    LoopbackWhistleProtocol client1(buf1, buf2);
-    LoopbackWhistleProtocol client2(buf2, buf1);
+    LoopbackWhistleProtocol client1(sampleRate, buf1, buf2);
+    LoopbackWhistleProtocol client2(sampleRate, buf2, buf1);
 
     string sndMes1 = "Hi, how r u?";
     client1.sendMessage(sndMes1);

@@ -5,13 +5,15 @@
 #include "LoopbackWhistleProtocol.h"
 
 
-
-LoopbackWhistleProtocol::LoopbackWhistleProtocol(int16_t *inBuffer, int16_t *outBuffer) : inBuffer(inBuffer),
-                                                                                          outBuffer(outBuffer) {
+LoopbackWhistleProtocol::LoopbackWhistleProtocol(uint32_t sampleRate, int16_t *inBuffer, int16_t *outBuffer)
+        : WhistleProtocol(sampleRate),
+          inBuffer(inBuffer),
+          outBuffer(outBuffer),
+          inBufCoursor(0),
+          outBufCoursor(0) {
     std::fill(inBuffer, inBuffer + BUF_SIZE, 0);
     std::fill(outBuffer, outBuffer + BUF_SIZE, 0);
 }
-
 
 
 LoopbackWhistleProtocol::~LoopbackWhistleProtocol() {

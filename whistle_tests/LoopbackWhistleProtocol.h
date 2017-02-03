@@ -10,7 +10,7 @@
 
 class LoopbackWhistleProtocol : public WhistleProtocol {
 public:
-    LoopbackWhistleProtocol(int16_t *inBuffer, int16_t *outBuffer);
+    LoopbackWhistleProtocol(uint32_t sampleRate, int16_t *inBuffer, int16_t *outBuffer);
 
     virtual ~LoopbackWhistleProtocol();
 
