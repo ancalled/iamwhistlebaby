@@ -20,7 +20,7 @@ public:
 
     bool play(int16_t *samples, size_t size);
 
-    bool listen(int16_t *samples, size_t size);
+    size_t listen(int16_t *samples, size_t size);
 
 //    virtual ~PAWhistleProtocol();
 

@@ -7,9 +7,8 @@
 
 
 WhistleProtocol::WhistleProtocol(uint32_t sampleRate) : base32(),
-                                                        decoder(sampleRate, 385),
+                                                        decoder(sampleRate, 385, true),
                                                         synth(sampleRate), listenBufferSize(1024) {
-
     listenBuffer = new int16_t[listenBufferSize];
 }
 
@@ -35,12 +34,17 @@ void WhistleProtocol::sendMessage(string text) {
 
 string WhistleProtocol::receiveMessage() {
     for (;;) {
-
-        listen(listenBuffer, listenBufferSize);
-        decoder.processFrame(listenBuffer);
-        if (decoder.gotMessage()) {
-            const string &res = decoder.popMessage();
-            return res;
+        size_t read = listen(listenBuffer, listenBufferSize);
+        if (read >= listenBufferSize) {
+            decoder.processFrame(listenBuffer);
+        } else {
+//            if (decoder.gotMessage()) {
+                const string &res = decoder.popMessage();
+                return res;
+//            } else {
+//                return "";
+//            }
         }
+
     }
 }

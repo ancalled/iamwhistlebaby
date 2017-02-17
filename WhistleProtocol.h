@@ -23,7 +23,7 @@ public:
 
     virtual bool play(int16_t* samples, size_t size) = 0;
 
-    virtual bool listen(int16_t* samples, size_t size) = 0;
+    virtual size_t listen(int16_t* samples, size_t size) = 0;
 
 private:
 

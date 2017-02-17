@@ -194,7 +194,8 @@ TEST(WhistleTest, CodeAndDecode2) {
 //    string toEncode = "69jhvac9dq\0";
 //    string toEncode = "537ji7chmt\0";
 //    string toEncode = "n6t5tt47b1dss\0";
-    string toEncode = "grpnpgc912\0";
+//    string toEncode = "grpnpgc912\0";
+    string toEncode = "91kio838dtri0sh0ekg\0";
 //    string toEncode = "ferq5g9dhofcferee3k7i688o3bejc\0";
 
     int8_t framesPerSound = 10;
@@ -218,8 +219,8 @@ TEST(WhistleTest, CodeAndDecode2) {
     }
 
 
-    int tops = 3;
-//    int tops = 10;
+//    int tops = 3;
+    int tops = 10;
     vector<string> top = decoder.getMessageCandidates(tops);
     printf("%s\n", toEncode.c_str());
     printf("--------------------\n");

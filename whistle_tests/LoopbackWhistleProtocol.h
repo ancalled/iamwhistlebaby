@@ -7,20 +7,21 @@
 #define BUF_SIZE 441000
 
 #include <WhistleProtocol.h>
+#include <vector>
 
 class LoopbackWhistleProtocol : public WhistleProtocol {
 public:
-    LoopbackWhistleProtocol(uint32_t sampleRate, int16_t *inBuffer, int16_t *outBuffer);
+    LoopbackWhistleProtocol(uint32_t sampleRate, std::vector<int16_t> &inBuffer, std::vector<int16_t> &outBuffer);
 
     virtual ~LoopbackWhistleProtocol();
 
     bool play(int16_t *samples, size_t size);
 
-    bool listen(int16_t *samples, size_t size);
+    size_t listen(int16_t *samples, size_t size);
 
 private:
-    int16_t *inBuffer;
-    int16_t *outBuffer;
+    std::vector<int16_t> &inBuffer;
+    std::vector<int16_t> &outBuffer;
     size_t inBufCoursor;
     size_t outBufCoursor;
 };

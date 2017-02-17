@@ -40,12 +40,12 @@ bool PAWhistleProtocol::play(int16_t *samples, size_t size) {
     return true;
 }
 
-bool PAWhistleProtocol::listen(int16_t *samples, size_t size) {
+size_t PAWhistleProtocol::listen(int16_t *samples, size_t size) {
     int error;
     if (pa_simple_read(recs, samples, size, &error) < 0) {
         fprintf(stderr, __FILE__": pa_simple_read() failed: %s\n", pa_strerror(error));
-        return false;
+        return 0;
     }
-    return true;
+    return size;
 }
 
